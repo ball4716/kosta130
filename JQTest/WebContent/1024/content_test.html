@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+	<script type="text/javascript" src="../js/jquery-1.min.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			$('#b1').click(function(){//getText var v = div.innerText;
+				alert($('div').text());
+			});
+			$('#b2').click(function(){//setText div.innerText='안녕';
+				alert($('div').text('2016년 10월 24일'));			
+			});
+			$('#b3').click(function(){//getHTML var v = div.innerHTML;
+				alert($('div').html());
+			});
+			$('#b4').click(function(){//setHTML div.innerHTML='<b>안녕</b>'
+				alert($('div').html('<font color=green size=30px>2016년 10월 24일</font>'));
+			});
+			$('#b5').click(function(){//이름얻기 var v = document.frm.username.value;
+				alert('아이디로접근 id=u\n'+$('#u').val());
+				alert('클래스로접근 class=u\n'+$('.u').val());
+				alert('네임으로접근 name=username\n'+$('[name=username]').val());
+			});
+			$('#b6').click(function(){//이름설정 document.frm.username.value='홍길동';
+				alert($('div').html('<font color=green size=30px>2016년 10월 24일</font>'));
+			});
+		});
+	</script>
+</head>
+<!-- content_test.html -->
+<body>
+	<div>안녕,<br><font color="red"> Ajax~!!</font></div>
+	<button id="b1">getText</button>
+	<button id="b2">setText</button>
+	<button id="b3">getHTML</button>
+	<button id="b4">setHTML</button>
+	<br><br>
+	<form name="frm">
+	이름: <input type="text" name="username" id="u" class="u">
+	<button id="b5">아이디 얻어오기</button>
+	<button id="b5">아이디 설정하기</button>
+	</form>
+</body>
+</html>

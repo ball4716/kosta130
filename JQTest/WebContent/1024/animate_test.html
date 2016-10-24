@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+	<script type="text/javascript" src="../js/jquery-1.min.js"></script>
+	<script type="text/javascript">
+	/*
+	
+	*/
+		$(function(){
+			$('button').click(function() {
+				//alert('클릭!!');
+				$('div').animate({left:'250px',
+								  height:'300px',
+								  width:'300px',
+								  opacity:'0.5'
+								});
+			});
+		});
+	</script>
+</head>
+<!-- animate_test.html -->
+<body>
+	<h3>jQuery 애니메이션 테스트</h3>
+	<button>클릭</button><br>
+	<div style="background-color: blue;width: 100px;height: 100px;position: absolute;"></div>
+</body>
+</html>

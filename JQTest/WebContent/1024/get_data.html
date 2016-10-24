@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+<script type="text/javascript" src="../js/jquery-1.min.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$('button').click(function(){
+			alert('우에엥');
+			var name = $('input[name=name]').val();
+			var pass = $('input[name=pass]').val();
+			var fruit = '';
+				$('input[name=fruit]:checked').each(function(){
+					fruit+=$(this).val()+' ';
+				});
+			var room = $('input[name=room]:checked').val();
+			var menu = $('[name=menu]').val();
+			var etc = $('[name=etc]').val();
+			alert("이름▶" + name + "\n비번▶" + pass + "\n좋아하는 과일▶" + fruit + "\n강의실▶"
+					+ room + "\n메뉴▶" + menu + "\n비고▶" + etc);
+			
+			//기본적으로 form태그내에 submit버튼이 존재해야 녀ㅠㅡㅑㅅ()gkatnfmf tlfgod!!
+			//$('form').submit();//IE에서 적용X, 크롬 적용O
+			$('form').submit(function(){
+				alert('데이터 검사 끝');
+				
+				//return true; 넘어가기
+				return false;//안넘어가기
+			});
+		});
+	});
+	
+	$(document).ready(function(){
+		$('button[id=bt]').click(function(){
+			//div엘리먼트에게 text주기
+			//$('div').text('안녕,재현');
+			$('div').html(function(idx,oldText){
+				return oldText+',<br>재현재현';
+			})
+		});//click
+		
+		$("#b1").click(function(){
+			alert($('a').attr('href'));
+		});
+		$("#b2").click(function(){
+			$('a').attr('href','http://www.bbsappf.org');
+		});
+	});//ready
+</script>
+</head>
+<!-- get_data.html -->
+<body>
+	<h3>javascript를 통한 데이터 검사</h3>
+	<hr>
+	<form name="frm" action="animate_test.html">
+		이름: <input type="text" name="name" value="기본값"> <br> 비번:
+		<input type="password" name="pass"> <br> 좋아하는과일: <input
+			type="checkbox" name="fruit" value="사과">사과 <input
+			type="checkbox" name="fruit" value="딸기">딸기 <input
+			type="checkbox" name="fruit" value="바나나">바나나 <br> 강의실: <input
+			type="radio" name="room" value="1강의실">1강의실 <input
+			type="radio" name="room" value="2강의실">2강의실 <input
+			type="radio" name="room" value="3강의실">3강의실 <input
+			type="radio" name="room" value="4강의실">4강의실 <input
+			type="radio" name="room" value="5강의실">5강의실 <input
+			type="radio" name="room" value="6강의실">6강의실<br> 메뉴:
+			<select name="menu">
+			<option value="한식">한식</option>
+			<option value="중식">중식</option>
+			<option value="일식">일식</option>
+		</select><br> 비고:<br>
+		<textarea rows="5" cols="20" name="etc"></textarea>
+		<br> <button>우아아</button>
+	</form>
+	<div>안녕</div>
+	<button id="bt">눌러주세유</button>
+	<hr>
+	<a href="http://www.kosta.or.kr">코스타이동</a>
+	<br><input type="button" value="링크값얻기" id="b1">
+	<input type="button" value="링크값설정" id="b2">
+</body>
+</html>

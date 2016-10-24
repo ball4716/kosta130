@@ -24,7 +24,7 @@
 				alert('네임으로접근 name=username\n'+$('[name=username]').val());
 			});
 			$('#b6').click(function(){//이름설정 document.frm.username.value='홍길동';
-				alert($('div').html('<font color=green size=30px>2016년 10월 24일</font>'));
+				$('.u').val('김주원');
 			});
 		});
 	</script>
@@ -39,8 +39,8 @@
 	<br><br>
 	<form name="frm">
 	이름: <input type="text" name="username" id="u" class="u">
-	<button id="b5">아이디 얻어오기</button>
-	<button id="b5">아이디 설정하기</button>
+	<button id="b5">이름 얻어오기</button>
+	<button id="b6">이름 설정하기</button>
 	</form>
 </body>
 </html>

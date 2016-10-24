@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+<script type="text/javascript">
+var childWindow
+	function winOpen() {
+		childWindow = window.open('img_test.html', 'test',
+				'toolbar=yes,location=yes,status=yes,menubar=yes,scrollbars=yes,resizable=0,'
+						+ 'width=600,height=400,top=200,left=300');
+	}
+
+	function winClose() {
+		//window.close();
+		childWindow.close();
+	}
+</script>
+
+</head>
+<body>
+	<!-- win_open_test.html
+	 window객체 ==> 브라우저 창 객체
+	 window.open(); 새창열기
+	 window.close(); 열려진 창 닫기
+-->
+	<h3>윈도우 창 열기</h3>
+	<button onclick="winOpen()">창열기</button>
+	<button onclick="winClose()">창닫기</button>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<javascript>
+- 브라우저에서 실행되는 프로그램
+- 클라이언트 스크립트!!(자바스크립트가 브라우저에서 실행!!)
+참고) Java ---> 서버스크립트!! ---> JVM에서 실행!!
+hello.jsp
+---> HTML(CSS,javascript) + Java코드
+		---> javascript와 Java는 물과 기름
+- 자바스크리브는 HTML문서에 포함되어져서 실행함
+	---> 자바스크립트를 독립적인파일에 저장하는 것이 가능(확장자 .js사용)
+	예) test.js(<script>시작,끝내그 사이에 들어갈 문장들!!)
+		var a=10;
+		document.write(a);
+형식)
+<html>
+	<head>
+		<script src="test.js"></script>
+			전역변수 선언
+			변수초기화
+			★함수정의
+		</script>
+	</head>
+	<body>
+		<script>
+			함수호출
+		</script>
+	</body>
+</html>
+
+- 주석문은 자바와 동일(//, /* */)
+
+- 자료형을 선언하지 않는다
+자바의 경우)
+  String name="홍길동";
+  A obj = new A();
+
+자바스크립트의 경우)
+  String name = "홍길동"; (x)
+  		 name = "홍길동"; (o)
+  	 var name;			 (o)
+  	 	 name;			 (x)
+  	 	 name = "홍길동"; (o)
+  	 var name = "홍길동"; (o)
+  	A obj = new A();	 (x)
+      obj = new A();	 (o)
+  var obj = new A();     (o)
+  
+- 문자열 데이터를 표현할 때 인용부호('',"")를 사용
+	---> 작은,큰 따옴표는 전혀 차이가 없다
+	
+- 서로 다른 문장을 구분할 때 라인(엔터)을 통해 구분할 수 있다
+	---> 경우에 따라 ';'을 생략하는 것이 가능
+	
+	name='홍길동'
+	age=13
+	---> (o)
+	name='홍길동'  age=13 ---> 에러
+	name='홍길동'; age=13 ---> 정상적인 실행!!
+	
+- 나누기연산 : /(몫--> 소수점자리까지 함께 표현가능) , %(나머지)
+  10/5 ---> 2
+  10/3 ---> 3.333333
+  			parseInt(3.333333)   ---> 3
+  			parseFloat(3.333333) ---> 3.333333
+  			
+- 조건문: if문, if~else문, if~else if~else, switch~case
+자바의 경우)
+	if(오직 boolean){
+	}
+자바스크립트의 경우)
+	if(조건식){ 조건식---> boolean, 숫자, 객체
+								  0   null  ---> false
+							    0아닌수 값존재  ---> true
+	}
+
+자바의 경우)
+	switch(기준데이터) ---> byte,short,int,char (JDK6까지)
+											+String(JDK7부터)
+자바스크립트의 경우)
+	switch(기준데이터){ ---> 숫자, 문자열
+		case 비교데이터1: 실행문장1; break;
+		case 비교데이터2: 실행문장2; break;
+		default: 기본문장
+	}
+	
+- 반복문: for문, while문, do~while문
+자바의 경우)
+	for(int i=1; i<6; i++{
+	}
+자바스크립트의 경우)
+	for(var i=1; i<6; i++){
+	}
+
+- javascript 함수 정의
+형식)
+function 함수명()
+{
+	//실행할 문장
+}
+
+function 함수명()
+{
+	//실행할 문장
+	return 데이터;
+}
+
+function 함수명(name,age,job)
+{
+	//실행할 문장
+	return 데이터;
+}
+
+질문) JavaScript에서 메소드 오버로딩을 지원? x
+	---> 동일한 이름의 함수를 여러개 구현하지 못함!!
+	
+	function test(){
+	} --->1번
+	
+	function test(name){//위의 함수는 아래함수로 overwrite됨
+	} --->2번
+	
+호출) test()		---> 2번함수 호출(인자의 갯수와 상관없이 함수명으로 호출
+     test("길동")---> 2번함수 호출
+     
+- html문서외부에 작성된 javascript파일을 참조할때는 src속성을 사용
+
+<script src="참조할 .js문서명"></script>
+
+※주의: src속성이 명시된 script태그내에서 문장을 기술하지 않는다.
+<script src="my.js">//참조 전용 script태그!!
+	function abc(){}//무시
+</script>
+
+- 배열(Array)
+1. 배열 변수선언과 초기화
+자바경우)
+int su[] = {1,2,3,4};
+
+자바스크립트경우)
+var arr = {1,2,3,4}; (x)//--->에러발생 : ':'가 필요합니다
+{} ===> JSON에 예약
+var arr = [1 ,2, 3, 4]; (o)
+//인덱스	  [0][1][2][3]
+접근방법: 두번째 데이터 접근 ===> arr[1]
+
+전체 데이터 접근
+for(var i=0; i<arr.length; i++){
+	arr[i]
+}
+
+※JSON(Javascript Object Notation) : 자바스크립트 객체 표기법
+---> 데이터를 저장하는 방식(이름과 값의 쌍)
+형식)
+var 변수명 = {key1:value1, key2:value2, key3:value3};
+			---> key1,key2,key3 : 변수명
+			---> value1,value2,value3 : 데이터
+예) var person = {name:'홍길동', age:13, job:"학생"};
+	===> 접근
+		 document.write("이름: "+person.name);
+		 document.write("나이: "+person.age);
+		 document.write("직업: "+person.job);
+
+2. 배열객체선언, 데이터입력
+var arr2 = new Array(5);// 5-->사이즈, length
+
+//1~5까지 입력하고싶다
+for(var i=0; i<arr2.length; i++){//5회 반복
+	arr2[i]=i+1;
+}
+
+arr2[5] = 6; //자바스크립트는 가변배열을 지원!!

@@ -1,0 +1,389 @@
+<시퀀스> : 자동번호부여
+- 숫자값이 일정한 규칙에 의해서 연속적으로 자동증가.
+- 테이블에 종속적이지 않다(테이블과 독립적)
+
+형식)
+  CREATE SEQUENCE sequence_name  
+                  [INCREMENT BY] 증가치
+                  [START WITH] 초기값
+                  [MAXVALUE n|NOMAXVALUE]
+                  [MINVALUE|NOMINVALUE]
+                  [CYCLE|NOCYCLE]
+                  [CACHE|NOCACHE];
+  maxvalue: 시퀀스가 가질 수 있는 최대값 지정.   
+            nomaxvalue일 경우 ascending순서일 경우 10의 27승 
+                              descending일 경우 -1           
+  minvalue: 시퀀스가 가질 수 있는 최대값 지정.               
+            nominvalue일 경우 ascending 1
+                              descending 10의 26승으로 설정.
+  cache: 메모리상의 시퀀스 값을 관리하도록 하는 것인데 기본값은 20.
+         nocache는 메모리 상에서 시퀀스를 관리하지 않음.
+
+사용법)
+	시퀀스명.nextval - 새로운 번호 얻어오기
+	시퀀스명.currval - 현재 번호 얻어오기
+
+create sequence test_seq; --기본 1부터 시작해서 1씩 증가 되는 숫자 값
+
+create sequence test_seq
+	start with 1
+	increment by 1
+	nocycle
+	nocache;
+
+SQL> select test_seq.nextval from dual;
+
+   NEXTVAL
+----------
+         1
+
+SQL> select test_seq.nextval from dual;
+
+   NEXTVAL
+----------
+         2
+
+SQL> select test_seq.nextval from dual;
+
+   NEXTVAL
+----------
+         3
+         
+SQL> select test_seq.currval from dual;
+
+   CURRVAL
+----------
+         3
+  
+  
+테이블에 적용한 사례)
+create table dept20
+as select * from dept
+	where 1=0;	
+==>Table created
+==>제약은 복사되지 않음!
+
+<deptno에 primary key설정>
+alter table dept20
+add constraint dept20_deptno_pk primary key (deptno);
+
+insert into dept20 values (10,'영업부','가산');
+insert into dept20 values (20,'자재부','대전');
+insert into dept20 values (30,'개발부','판교');
+
+SQL> select * from dept20;
+
+    DEPTNO DNAME            LOC
+---------- ------ --------------------------
+        10 영업부                       가산
+        20 자재부                       대전
+        30 개발부                       판교
+
+--시간이 흘러~~~~~~~~~~
+
+문제) dept20테이블에 '기획부'부서를 추가하시오.(위치: 강남!!)
+
+insert into dept20 (deptno,dname,loc) values (30,'기획부','강남');
+==>ORA-00001: unique constraint (SCOTT.DEPT20_DEPTNO_PK) violated
+
+insert into dept20 (deptno,dname,loc) values (40,'기획부','강남');
+==>추가 성공!
+
+SQL> select * from dept20;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 영업부                       가산
+        20 자재부                       대전
+        30 개발부                       판교
+        40 기획부                       강남
+
+데이터를 다른식으로 넣어봅시다.
+
+drop table dept20;
+
+create table dept20
+as select * from dept
+where 1=0;
+
+create sequence dept20_seq
+	start with 10
+	increment by 10
+	nocycle
+	nocache;
+	
+※create의 삭제는 drop으로!!
+
+insert into dept20 (deptno,dname,loc) values (dept20_seq.nextval,'영업부','가산');
+insert into dept20 (deptno,dname,loc) values (dept20_seq.nextval,'자재부','대전');
+insert into dept20 (deptno,dname,loc) values (dept20_seq.nextval,'개발부','판교');
+
+SQL> select * from dept20;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 영업부                       가산
+        20 자재부                       대전
+        30 개발부                       판교
+        
+--시간이 흘러~~~~
+
+insert into dept20 (deptno,dname,loc) values (dept20_seq.nextval,'기획부','강남');
+
+SQL> select * from dept20;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 영업부                       가산
+        20 자재부                       대전
+        30 개발부                       판교
+        40 기획부                       강남
+        
+※ Oracle 11g에서 시퀀스 사용시 주의할 점!!
+drop sequence test_seq;
+create sequence test_seq
+		start with 1
+		increment by 1
+		nocycle --유일한 값
+		nocache;
+
+--번호를 한번도 뽑지 않은 상태에서 currval 실행해보기!
+select test_seq.currval from dual;
+===>에러발생 : ORA-08002: sequence TEST_SEQ.CURRVAL is not yet defined in this session
+===>currval속성은 최소 한 번 이상의 nextval사용후 실행을 해야 함!!
+
+select test_seq.nextval from dual;
+select test_seq.nextval from dual;
+select test_seq.nextval from dual;
+select test_seq.currval from dual;
+--->잘 실행된다!
+
+deferred_segment_creation=true (기본값)
+===>어플리케이션에선 1이 아닌 2부터 가져오게 되므로
+===>false로 변경
+===>관리자 권한 필요!!
+alter system set deferred_segment_creation=false;
+===>권한 불충분: ORA-01031: insufficient privileges
+
+관리자 접속) conn system/oracle
+alter system set deferred_segment_creation=false;
+===>System altered
+
+============================================================================
+<PL/SQL>
+- SQL의 장점은 쿼리문 하나로 원하는 데이터를 검색 조작할 수 있다는 점인데,
+  SQL문 자체는 비절차적 언어이기 때문에 몇 개의 쿼리문 사이에 어떠한 연결 및
+  절차성이 있어야 하는 경우는 사용할 수 없다.
+- 이 점을 극복하기 위해 SQL언어에 절차적인 프로그래밍 언어를 가미해 만든 것이 PL/SQL
+
+<PL/SQL구조>
+DECLARE SECTION (선언부)
+- PL/SQL에서 사용하는 모든 변수나 상수를 선언.
+EXECUTABLE SECTION (실행부)
+- 절차적형식으로 SQL을 실행할 수 있도록 절차적 요소인 제어문, 반복문, 함수정의등 로직 기술
+EXCEPTION SECTION (예외처리)
+- 실행 중 발생되는 에러를 해결하기 위한 문장으로 구성
+
+<변수선언>
+변수명 자료형;
+vempno number(4);
+vempno2 emp.empno%type;
+	 -- emp테이블의 empno컬럼이 갖는 자료형을 참조하겠다!!
+	 
+<레퍼런스 변수>
+- %TYPE (한 개의 컬럼)
+- %ROWTYPE (한 행의 모든 컬럼을 참조)
+   emp%rowtype
+vemp emp%rowtype;
+   ---> emp테이블이 갖는 모든 컬럼의 자료형을 참조하겠다!!
+
+문제) 화면콘솔에 '안녕, PL/SQL~!!'을 출력하시오.
+
+declare --선언부
+	--(실행부에서 필요한)변수선언
+begin --실행부
+	--SQL문 작성
+	dbms_output.put_line('안녕, PL/SQL~!!');
+end;
+/
+
+※화면 출력 설정: set SERVEROUT on
+기본값: set SERVEROUT off
+
+안녕, PL/SQL~!!
+
+매번 출력 설정을 해줘야함!!
+glogin.sql을 검색해
+제일마지막에 set serverout on
+---> 바로 실행이 가능하도록 설정!!
+
+문제) 7788사번을 갖는 사원의 사원번호, 사원명, 급여를 출력
+---> emp_info.sql 저장
+===> 실행 방법: @경로/emp_info.sql
+			 @경로/emp_info
+			 
+======================================================= 잠시 GUI
+<PL/SQL>
+
+declare --선언부
+	실행부에서 사용할 변수선언
+begin --{실행부
+	SQL문(DQL,DML)
+	select empno, ename, sal INTO 변수명1, 변수명2, 변수명3
+	from emp;
+	조건문, 반복문
+	함수호출
+end; --}
+/
+
+1. if문
+형식)
+	IF [(]조건식[)]
+		THEN 실행할 문장
+	END IF;
+	
+if_test.sql
+----> 두 수를 비교해서 크다, 작다를 출력
+
+2. if~else문
+형식)
+	IF 조건식
+		THEN 조건식 결과 참일 떄 실행할 문장;
+		ELSE 조건식 결과 거짓일 때 실행할 문장;
+	END IF;
+
+문제) 특정사원이 커미션을 받는지 안받는지 구분해서 출력하시오
+예1: 사번 7788은 SCOTT사원이고 커미션을 받지 않습니다.
+예2: 사번 7654는 MARTIN사원이고 커미션을 1400 받습니다.
+---> if_else_test.sql
+
+3. if~elsif~else문
+형식)
+	IF 조건식1
+		THEN 조건식1이 참일때 실행할 문장;
+	ELSIF 조건식2
+		THEN (조건식1에 거짓)조건식2가 참일때 실행할 문장;
+	ELSE 조건식1,2,3,이 거짓일때 실행할 문장;
+	END IF;
+	
+문제) 특정사원의 사원번호, 사원명, 소속된 부서명을 출력하시오
+---> if_elsif_test.sql
+
+4. loop(반복문)
+형식)
+LOOP
+	반복실행할 문장1;
+	반복실행할 문장2;
+	반복실행할 문장3;
+	EXIT [WHEN 조건식]
+END LOOP;
+
+문제) 1부터 10까지 출력하시오
+---> loop_test.sql
+
+5. for loop문
+형식)
+FOR 변수 IN [reverse] 최솟값..최댓값
+LOOP
+	반복실행할 문장;
+END LOOP;
+
+문제) 화면에 '나는 SQL이 참 좋아요!!' 10번 출력하세요.
+---> for_test.sql
+
+문제) 3단에서 5단까지 출력하시오.
+---> for_dan.sql
+
+<3단>
+3*1=3
+3*2=6
+3*3=9
+3*4=12
+3*5=15
+...
+<5단>
+5*1=5
+5*2=10
+...
+5*7=35
+5*8=40
+5*9=45
+
+6. while loop문
+형식)
+WHILE 조건식
+LOOP 
+반복실행할 문장
+END LOOP;
+
+================================================
+<저장프로시저> ★★ Stored Procedure
+- 자주 사용되는 DML, DQL을 모듈화시켜서 DB에 저장하였다가 필요할때 호출해서 사용
+- JAVA의 메소드와 같음
+
+형식)
+CREATE [OR REPLACE] PROCEDURE 프로시저명(변수명1 [IN|OUT] 자료형, 변수명2 자료형)
+IS
+	지역변수 선언
+BEGIN
+	실행할 문장1;
+	실행할 문장2;
+	실행할 문장3;
+	---> SQL문(DQL,DML), 초기화, 함수호출, 절차적인 요소(조건문,반복문)
+END;
+/
+
+---> 자바 메소드처럼 이름이 호출될 때까지 실행 되지 않는다!!
+
+실행방법) EXECUTE 프로시저명();
+
+참고)
+void hello(String name){
+	System.out.println("안녕,"+name);
+}
+---> Stored Procedure (리턴 없고)
+
+String hi(){
+	return "좋은 하루~!!";
+}
+---> Stored Function (리턴 있고)
+
+문제) 부서테이블(dept03)에서 40번 부서를 삭제하시오
+---- por_test.sql
+
+drop table dept03;
+create table dept03
+as select * from dept;
+
+SQL> select * from dept03;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   NEW YORK
+        20 RESEARCH                     DALLAS
+        30 SALES                        CHICAGO
+        40 OPERATIONS                   BOSTON
+
+SQL> @0825/pro_test
+
+Procedure created.(프로시저를 생성하였습니다!)
+--->바로 삭제가 수행되는것이아님!!
+
+SQL> execute del_deptno(40);
+#40번 부서를 삭제하였습니다!!
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from dept03;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   NEW YORK
+        20 RESEARCH                     DALLAS
+        30 SALES                        CHICAGO
+        
+문제) 사원테이블(emp03)에서 특정사원을 이름을 통해 삭제하는 프로시저를 생성하시오
+---> pro_test2.sql
+---> 프로시저명 : del_ename(delName varchar2)
+
+pro

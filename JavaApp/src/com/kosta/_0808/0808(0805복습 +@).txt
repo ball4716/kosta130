@@ -1,0 +1,136 @@
+<Thread 스레드>
+- 프로세스내에서 순차적으로 동작하는 문장들의 단일 집합
+- 경량(light weight)의 프로세스
+- 하나의 프로세스내에 다수개의 스레드를 정의할 수 있으며
+	다수개의 스레드는 동시에 수행될 수 있다(다중 스레드)
+- 자바에서는 클래스(Thread)와 인터페이스(Runnable) 지원
+
+[스레드 생명주기]
+
+[생성] [생성] [생성] [생성]
+Thread t1 = new Thread();
+Thread t2 = new Thread();
+Thread t3 = new Thread();
+
+▼▼▼▼▼▼▼▼t1.start()▼▼▼▼▼▼▼
+▼▼▼▼▼▼▼▼t2.start()▼▼▼▼▼▼▼
+▼▼▼▼▼▼▼▼t3.start()▼▼▼▼▼▼▼
+
+[실행] [실행] [실행] [실행]                         ▶        
+run()메소드 -> 동시실행할 문장들 포함                                             ▶         
+-실행가능상태 : t1,t2,t3                          stop() [완료]
+▽△▽△▽△▽△▽△▽△▽△▽△▽△▽△▽△ 굉장히 빠르게 (멀티스레드)   ▶        
+-실  행  상  태 : 하나만 들어갈 수 있음                                                  ▶       
+
+
+▲▲▲▲▲▲▲▲▲입출력완료▲▲▲▲▲▲▲▲ notify(),notifyAll(),resume()
+
+▼▼▼▼▼▼▼▼▼입출력발생▼▼▼▼▼▼▼▼ sleep(밀리세컨드), wait(), suspend()
+
+[대기] [대기] [대기] [대기]
+
+
+===================================================================
+<스레드 예제>
+TVContribution.java : main()메소드 포함.
+Customer.java : 성금자, Thread표현
+Account.java : 모금함
+===================================================================
+동기화(synchronized) : 특정 문장들을 한 스레드만 실행 할 수 있도록
+                                               잠금장치를 해주는 것
+     1) 메소드 동기화
+        synchronized 리턴형 메소드명(){}
+        
+     2) 블럭 동기화
+        synchronized(공유객체){
+        	동기화 해야할 코드;
+        }
+
+
+====================================================================
+<스레드>
+- 동시 수행을 목적, 멀티스레드 구현
+
+void a(){
+	1;
+	2;
+	3;
+}
+
+void b(){
+	4;
+	5;
+	6;
+}
+
+void c(){
+	7;
+	8;
+	9;
+}
+
+main()-------------
+//일반메소드
+a();
+b();
+c();
+1-2-3-4-5-6-7-8-9
+
+//스레드 메소드
+1-7-4-2-5-8-9-6-3 
+
+
+<자바 스레드 적용>
+- 클래스: Thread
+- 인터페이스: Runnable (abstract void run())
+class My extends Thread
+{
+	void callTest(){
+		//스레드메소드 호출
+		start();
+	}
+	public void run()
+	{
+		//동시 실행할 문장들
+	}
+}
+또는
+class My implements Runnable
+{
+	void callTest(){
+		//스레드 메소드 호출
+		Thread t = new Thread(this); //여기에 있는 run메소드를 호출하기 위해 this
+		t.start();
+		-----> new Thread(this).start();
+	}
+	public void run() //반드시 구현하여야함!! abstract void run()
+	{
+		//동시 실행할 문장들
+	}
+}
+
+
+----> main()메소드[다른위치] 에서 run()메소드를 스레드로 호출 방법
+1. My m = new My(); //m:스레드객체
+      m.start();
+      ----> 축약: new My().start();
+      
+2. My2 m2 = new My2(); //m2:Runnable객체
+   Thread t = new Thread(m2);  //t:스레드객체, 스레드객체 생성시 run()메소드 위치전달
+          t.start();
+      ----> 축약: new Thread(new My2()).start();
+
+
+------------------------------------------------------------------------
+
+<IO클래스>
+
+기본: Stream - 순자척인 데이터(8bit)들의 흐름!!
+
+InputStream : byte단위를 읽기   대표적: read()
+Reader      : 문자단위로 읽기
+
+OutputStream : byte단위를 쓰기 대표적: write()
+Writer       : 문자단위로 쓰기
+
+주의) 입출력 객체사용후 자원 반환: close()

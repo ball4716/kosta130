@@ -1,0 +1,82 @@
+XML(eXtensible Markup Language)
+--->text, 표준 데이터
+--->데이터를 저장하는 방식
+	- Element   ---> Content	<personname>홍길동</personname>
+	- Attribute ---> Value		<person name = "길라임"/>
+	
+문법)
+1. 최소 한개이상 엘리먼트 출현
+2. 전체를 감싸는 엘리먼트 1개(루트엘리먼트)
+3. 시작태그 - 끝태그
+4. 속성값 --> 반드시 인용부호
+5. 대소문자 구분
+6. 데이터에 제한된 문자 --> '<'  , '&' 
+					  &lt;  $amp;
+					  CDATA섹션 사용
+    ▼공백x					  
+선언)<?xml version="1.0" encoding="UTF-8" ?>
+					   ▼태그사이 공백 반드시!
+공백) <person name="길동" age="13"/>
+		 ▼연속된 '--' 불가
+주석) <!-- -->
+
+
+DOM(Document Object Model) : (메모리 적재)tree 기반
+books.xml
+┌<books>
+│	┌<book>
+│	│	┌<title>XMLBible</title>
+│───│───├<author>홍길동</author>
+│	│	└<price>25000</price>
+│	└</book>
+│	┌<book>
+│	│	┌<title>JavaServerPage</title>
+│───│───├<author>길라임</author>
+│	│	└<price>28000</price>
+│	└</book>
+└</books>
+<DOM Tree>
+▼노드(Node):트리구성요소	    ┌title─#text
+Document─books─book@id+─├author─#text
+		 ▲root엘리먼트   	└price─#text
+
+상하관계 : 부모(Parent)-자식(Child)
+수평관계 : 형제(Sibling)
+
+SAX : event 기반
+
+
+
+
+======================================================
+2. <books a="10" b="20>
+===> 속성출력하기
+
+3. 콘솔출력 ---> 파일출력(books2.xml)
+
+4. books.xml 파싱
+
+책제목과 가격을 출력하시오.
+
+Element root = document.getDocumentElement();
+		===><books>
+
+NodeList list = root.getChildNodes();
+list===>[#text,<book/>,#text,<book/>,
+		#text,<book/>,#text,<book/>,#text]
+		
+Node firstBook = list.item(1);
+	===><book/>
+Node n = firstBook.getFirstChild().getNextSibling();
+	===><title/>
+Node textNode = n.firstChild();
+String str = texNode.getNodeValue();
+		===> "XMLBible"
+	
+	
+	
+	append
+	insert
+	remove
+	replace
+	clone

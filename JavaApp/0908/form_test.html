@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+<script type="text/javascript">
+	function test() {
+		if (document.frm.username.value == '') {
+			alert("사용자이름 입력!!")
+			return false;
+			//만약 버튼의 type=submit 이였을때
+			//return false는 submit동작을 하지마라!!
+		} else {
+			return true; //submit실행해라!!
+		}//document.frm.submit();
+	}
+</script>
+</head>
+<body>
+	<!-- form_test.html -->
+	<h3>폼테스트</h3>
+	<form action="welcome.html" name="frm">
+		이름 : <input type="text" name="username"> <br> <input
+			type="submit" value="전송" onclick="return test()">
+	</form>
+	<a href="javascript:gildong()">길동함수호출</a>
+	<!-- 
+		href="javascript:자바스크립트코드"
+		href="이동할페이지"
+		href="welcome.html"
+		href="#이름"
+		href="#bottom"
+	 -->
+</body>
+</html>

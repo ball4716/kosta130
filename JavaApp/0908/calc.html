@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>너무쉬운계산기</title>
+	<script type="text/javascript">
+		function calc(){
+				var su1 = document.calcForm.su1.value;
+				var su2 = document.calcForm.su2.value;
+				var oper = document.calcForm.oper.value;
+				var resultStr="결과";
+				/*
+				빈값체크? 변수 == "", 변수명.length==0
+				var s1="JavaScript";
+				var s2="JAVASCRIPT";
+				===> 문자열 내용 비교 : s1.equals(s2) (x)
+									s1 == s2	  (o)
+				*/
+				if(su1==""||su2==""){
+					resultStr='<font color=red>데이터입력!!</font>';
+					document.calcForm.su1.value="";
+					document.calcForm.su2.value="";
+				}else if(isNaN(su1) || isNaN(su2)){
+					resultStr='<font color=red>숫자만입력!!</font>';
+					document.calcForm.su1.value="";
+					document.calcForm.su2.value="";
+				}else if(oper=='/' && su2=='0'){
+					resultStr='<font color=red>제수는 0 불가!!</font>';
+					document.calcForm.su1.value="";
+					document.calcForm.su2.value="";
+				} else {
+					su1=parseInt(su1);
+					su2=parseInt(su2);
+					var result;
+					
+					if(oper=="+"){
+						result = su1+su2;
+					}else if(oper=="-"){
+						result = su1-su2;
+					}else if(oper=="*"){
+						result = su1*su2;
+					}else if(oper=="/"){
+						result = su1/su2;
+					}
+					
+					resultStr = "<font color=blue>결과값: "+su1+oper+su2+"="+result+"</font>";
+				}
+				var resultDiv = document.getElementById('resultDiv');
+				//Element resultDiv; 엘리먼트는 innerHTML이라는 속성을 사용하는것이 가능
+				//innerHTML=데이터 : setInnerHTML(데이터)의미
+				//변수=innerHTML  : 변수 = getInnerHTML()의미
+				resultDiv.innerHTML = resultStr;
+		}
+	</script>
+</head>
+<body align="center">
+	<!-- calc.html -->
+	<form name="calcForm">
+	<h3>너무 쉬운 계산기</h3>
+	<hr>
+	<input type="text" name="su1" size="4">
+	<select name="oper">
+		<option value="+">+</option>
+		<option value="-">-</option>
+		<option value="*">*</option>
+		<option value="/">/</option>
+	</select>
+	<input type="text" name="su2" size="4">
+	<input type="button" value="계산하기" onclick="calc()">
+	</form>
+	<div id="resultDiv"></div>
+</body>
+</html>

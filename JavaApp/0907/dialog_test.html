@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+</head>
+<!-- dialog_test.html -->
+<body>
+	<h3>대화상자 테스트</h3>
+	<script type="text/javascript">
+		//메시지 대화상자
+		document.write("대화상자:메시지,입력,확인");//브라우저 출력
+		//alert('대화상자안녕~!!');//대화상자를 통한 출력, 알림창 용도
+		
+		//확인창
+		//var conf = confirm('정말 삭제?');//확인,취소,x : true,false,false
+		//document.write('<br>confirm='+conf);
+		
+		//입력창(잘 사용하지 않음)
+		var favoriteMovie = prompt("당신이 좋아하는 영화는?","",1,2,3);
+		//확인,취소,X : 입력값,null,null
+		alert('당신은 '+favoriteMovie+'을 좋아하는군요!!');
+	</script>
+</body>
+</html>

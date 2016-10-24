@@ -1,0 +1,105 @@
+<Java I/O>
+---> Stream?
+ 순차적인 Data의 흐름 (8bit:1byte)
+ InputStream 단위:1byte read()   Reader
+ OutputStream 단위:1byte write() Writer
+ ------------------------------------
+ 네개 모두 추상 클래스: 자식들의 공통된 특성을 제어
+ 
+ [InputStream - 추상클래스]
+ - FileInputStream - public 클래스
+  read()
+  read(byte b[])
+  read(byte b[],int offset, int length)
+  ex)
+   FileInputStream fis = new FileInputStream("a.txt");
+                                             -------
+                                              ▲경로
+   fis.read(); //fis의 데이터를 읽는다!
+   a.txt
+   hello
+   
+   104=fis.read()         104=='h'
+   101=fis.read()         101=='e'
+   108=fis.read()         108=='l'
+   108=fis.read()         108=='l'
+   111=fis.read()         111=='o'
+   -1 =fis.read()         
+   -1 =fis.read()         
+   
+   --->
+   int i; -> 읽은 글자의 ascii코드 번호
+   while((i=fis.read())!=-1){
+   		System.out.println((char)i);
+   }
+ 
+ - FileOutputStream
+  write()
+  write(byte b[])
+  write(byte b[],int offset, int length) 
+  ex)
+   FileOutputStream fos = new FileOutputStream("b.txt");
+                                               -------
+                                               //파일이 존재하지 않으면 생성해줌 but, 디렉토리 경로는 생성 불가!! File클래스에서 생성가능
+   
+   fos.write(쓰기 데이터); //데이터를 fos에 쓴다!
+   fos.write(97);         a
+   fos.write('u');        u
+   
+   b.txt
+   au
+   
+   --->
+   int i;
+   while((i=fis.read())!=-1){
+   		fos.write(i);
+   }
+   
+--------------------------------------------------------------------------
+a.txt
+helloJava
+---------------------------
+byte b[] = new byte[5];
+b->|0|0|0|0|0|
+    h e l l o
+    J a v a o
+int i; -> 읽은 바이트 수 5 4 -1
+while((i=fis.read(b))!=-1){
+	for.write(b);
+}
+b.txt
+helloJavao
+-----------------------------
+byte b[] = new byte[5];
+b->|0|0|0|0|0|
+    h e l l o
+    J a v a o
+int i; -> 읽은 바이트 수 5 4 -1
+while((i=fis.read(b))!=-1){
+	for.write(b,0,i);
+}
+b.txt
+helloJava
+-----------------------------
+=============================
+-----------------------------
+a.txt
+hel
+-----------------------------
+byte b[] = new byte[5];
+b->|0|0|0|0|0|
+    h e l
+-----------------------------
+int i; -> 읽은 바이트 수 5
+while((i=fis.read(b))!=-1){
+	for.write(b);
+}
+b.txt
+hel공백공백
+-----------------------------
+int i; -> 읽은 바이트 수 5 4 -1
+while((i=fis.read(b))!=-1){
+	for.write(b,0,i);
+}
+b.txt
+hel

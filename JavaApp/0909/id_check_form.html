@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+</head>
+<script type="text/javascript">
+	var idArr = [ "gildong", "lime", "juwon" ];
+	function idCheck() {
+		var id = document.idCheckForm.id.value;
+		var flag = false;
+		for (var i = 0; i < idArr.length; i++) {
+			if (id == idArr[i]) {
+				flag = true;
+				break;
+			}
+		}
+
+		if (flag) {
+			alert("아이디 사용불가");
+		} else {
+			alert("아이디 사용가능");
+			if (confirm("아이디를 사용하시겠습니까?")) {
+				opener.document.joinForm.id.value = id;
+				window.close();
+			}
+		}
+	}
+</script>
+<body>
+	<form name="idCheckForm">
+		ID: <input type="text" name="id"> <input type="button"
+			value="확인" onclick="idCheck()">
+	</form>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='EUC-KR' ?><books a='10' b='20'>
+	<book>
+		<title>XMLBible</title>
+		<author>홍길동</author>
+		<price>25000</price>
+	</book>
+	<book>
+		<title>JSP Programming</title>
+		<author>길라임</author>
+		<price>32000</price>
+	</book>
+	<book>
+		<title>Ajax프로그래밍</title>
+		<author>김주원</author>
+		<price>29000</price>
+	</book>
+	<book>
+		<title>SpringFramework</title>
+		<author>홍길동</author>
+		<price>38000</price>
+	</book>
+	<!-- 나주석 -->
+</books><!-- 0913/books.xml 너주석-->

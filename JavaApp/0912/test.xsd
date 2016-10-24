@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/test"
+	xmlns:tns="http://www.example.org/test" elementFormDefault="qualified">
+
+	<element name="root" type="tns:rootType"></element>
+
+    <element name="a" type="int"></element>
+	<element name="cup" type="tns:cupSize"></element>
+    <complexType name="rootType">
+    	<sequence>
+    		<element ref="tns:a" maxOccurs="5" minOccurs="1"></element>
+    		<element ref="tns:cup" maxOccurs="10"></element>
+    		<element name="jumin" type="tns:juminType"></element>
+    		<element name="b" type="tns:bType"></element>
+    	</sequence>
+    </complexType>
+    
+    <simpleType name="cupSize">
+    	<union memberTypes="tns:cupType1 tns:cupType2">
+    	</union>
+    </simpleType>
+
+    <simpleType name="cupType1">
+    	<restriction base="string">
+    		<enumeration value="small"/>
+    		<enumeration value="medium"/>
+    		<enumeration value="large"/>
+    	</restriction>
+    </simpleType>
+    
+    <simpleType name="cupType2">
+    	<restriction base="integer">
+    	
+    	</restriction>
+    </simpleType>
+</schema>

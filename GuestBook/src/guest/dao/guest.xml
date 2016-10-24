@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd" >
+<!-- guest/dao/guest.xml -->
+<sqlMap namespace="guest">
+<!-- ID,NAME,PASS,EMAIL,TEL,CONTENTS,GDATE -->
+	<insert id="insert" parameterClass="guest.dto.Guest">
+		insert into guest values (guest_seq.nextval,#name#,#pass#,#email#,#tel#,#contents#,sysdate)
+	</insert>
+	
+	<delete id="delete" parameterClass="int">
+		delete from guest
+		where id=#id#
+	</delete>
+	
+	<select id="select" parameterClass="int" resultClass="guest.dto.Guest">
+		select NAME,PASS,EMAIL,TEL,CONTENTS
+		from guest
+		where id=#id#
+	</select>
+	
+	<update id="update" parameterClass="guest.dto.Guest">
+		update guest set name=#name#, pass=#pass#, email=#email#, tel=#tel#, contents=#contents#
+		where id=#id#
+	</update>
+	
+	<select id="selectAll" resultClass="guest.dto.Guest">
+		select ID,NAME,TEL,CONTENTS,GDATE
+		from guest
+		order by id desc
+	</select>
+</sqlMap>

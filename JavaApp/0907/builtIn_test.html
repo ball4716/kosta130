@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+</head>
+<!-- builtIn_test.html (빌트인: 내장,기본 함수) -->
+<body>
+	<script type="text/javascript">
+		var su1="100";
+		var su2=200;
+		var su3="100.567"
+		
+		document.write("su1+su2 = "+su1+su2);
+		document.write("<br>parseInt(su1)+su2 = "+parseInt(su1)+su2);
+		document.write("<br>parseInt(su1)+su2 = "+(parseInt(su1)+su2));
+		document.write("<br>su2+parseInt(su3) = "+(su2+parseInt(su3)));
+		document.write("<br>su2+parseFloat(su3) = "+(su2+parseFloat(su3)));
+		
+		document.write("<br>su2는 숫자? "+ !isNaN(su2));
+		document.write("<br>su3는 숫자? "+ !isNaN(su3));
+		var su4="홍길동";
+		var su5="123길라임";
+		document.write("<br>su4는 숫자? "+ !isNaN(su4));
+		document.write("<br>su5는 숫자? "+ !isNaN(su5));
+	</script>
+</body>
+</html>

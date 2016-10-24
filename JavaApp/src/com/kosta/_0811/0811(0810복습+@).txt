@@ -1,0 +1,56 @@
+Server(소켓서비스)
+1. ServerSocket 객체생성 : port 지정
+2. ss.accept(); 클라이언트 접속 대기 //클라이언트 한개와 서버, 둘만의 전용 회선 생성 
+String host "192.168.0.133"
+자기PC주소를 표현 "localhost" or "127.0.0.1"
+for(소켓길이만큼){
+	out.write(msg+"\n".getBytes());
+}
+
+Client(소켓서비스요청)
+3. 서버접속시도 Socket s = new Socket(서버정보); 서버정보:String ip, int port
+
+
+class  AMain  extends JFrame{
+    int su1=11;
+    int su2=22;
+
+    BSub sub;
+    AMain(){
+        sub = new BSub(this);
+    }    
+    public static void main(String[]s){
+        new AMain();
+    }
+}
+-------------------------------------------
+class BSub extends JFrame{
+    int su3=33;
+    int su4=44;
+
+    AMain main;
+    BSub(AMain main){
+      // main = new AMain(); 
+       this.main = main; //AMain클래스는 한번만 생성하자!!
+                         //이미 생성된 AMain객체를 파라미터를 통해 전달 받자!!
+    }
+    
+    void method(){
+         //su1이 필요!!
+        System.out.println(main.su1);
+     }
+}
+
+==============================================================
+
+<우리들만의 작은 통신규약-protocol>
+100: 대기실입장
+
+200: 대화방입장
+250: 대화방퇴장
+
+300: 대화전달
+
+400: 대화명변경
+
+900: 프로그램종료

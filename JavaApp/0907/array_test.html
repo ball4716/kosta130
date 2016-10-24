@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+<!-- array_test.html -->
+	<script type="text/javascript">
+		var arr =[1,2,3,4];
+		for(var i=0; i<arr.length; i++){
+			document.write("arr["+i+"]="+arr[i]+"<br>");
+		}
+		
+		var arr2 = new Array(5);//크기가 5인 배열객체 생성
+		document.write("<hr>arr2배열의 크기: "+arr2.length+"<br>");
+		//arr2배열에 1~5까지 입력!!
+		for(var i=0; i<arr.length; i++){
+			arr2[i]=i+1;
+		}
+		//자바스크립트 배열은 가변길이 배열
+		arr2[5]=66;
+		arr2[6]=3.14;
+		arr2[7]="윤철";
+		arr2[8]=true;
+		arr2[9]=new Date();
+		
+		//전체 데이터 출력
+		for(var i=0; i<arr2.length; i++){
+			document.write("arr["+i+"]="+arr2[i]+"<br>");
+		}
+		
+		//-----------------------------------------------------
+		var person = {name:'홍길동', age:13, job:"학생"};
+		//	변수명		key  value
+		
+		//데이터 접근법: 변수명.key명
+		document.write("이름:"+person.name+"<br>");
+		document.write("나이:"+person.age+"<br>");
+		document.write("직업:"+person.job+"<br>");
+		
+		var jsonD = {
+						names:["나길동","길라임","나주원"],
+						//key    value
+						person:{name:'오정훈'}
+						//key    value
+						};
+		//jsonD.names ==> 배열
+		var arr3 = jsonD.names;
+		document.write("<hr>");
+		for(var i=0;i<arr3.length; i++){// i<jsonD.names.lenth;)
+			document.write("arr["+i+"]="+arr3[i]+"<br>");
+		}
+		document.write("jsonD의 person이름: "+ jsonD.person.name);
+	</script>
+</body>
+</html>

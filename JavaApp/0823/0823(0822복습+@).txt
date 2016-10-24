@@ -1,0 +1,1150 @@
+<DDL> Data(객체) Definition Language
+- CREATE, DROP, ALTER, RENAME, TRUNCATE
+- auto commit(논리적인 작업(DML)에 대한 물리적인 반영)
+
+<테이블 객체생성>
+create table 테이블명
+(
+	컬럼명1 자료형,
+	컬럼명2 자료형
+);
+
+select 컬럼명
+from 테이블명 emp e(14*8),
+	서브쿼리 (select empno, ename from emp where deptno=30) e2 (6*2)
+where 컬럼명 연산자 서브쿼리
+	  empno  =  7788
+	  			(select empno
+	  			from emp
+	  			where ename='SCOTT')
+
+<테이블 객체생성 : 서브쿼리를 통한 테이블 생성>
+create table 테이블명
+as 서브쿼리
+
+<서브쿼리를 통한 테이블 생성: 테이블의 구조(컬럼,자료형)와 전체 데이터를 복사>
+ create table 테이블명
+ as select * from emp;
+
+<서브쿼리를 통한 테이블 생성: 테이블의 부분구조(컬럼,자료형)와 부분 데이터를 복사>
+ create table 테이블명
+ as select empno, ename,sal from emp where deptno=20;
+ 
+ <서브쿼리를 통한 테이블 생성: 테이블의 구조만 복사, 데이터복사X>
+ create table 테이블명
+ as select * from emp where 1=0;
+ 
+ <(테이블)객체구조를 변경: 컬럼추가, 컬럼삭제, 컬럼이름변경, 컬럼의 자료형 또는 크기변경>
+ - 컬럼추가
+ alter table 테이블명
+ add (컬럼명 자료형);
+ 
+ - 컬럼삭제
+ alter table 테이블명
+ drop column 컬럼명;
+ 
+ - 컬럼수정
+ alter table 테이블명
+ modify (기존컬럼명 자료형(바이트수));
+ 
+ - 컬럼이름변경
+ alter table 테이블명
+ rename column 기존컬럼명 to 새컬럼명;
+ 
+ 
+<테이블 객체삭제>
+형식)
+  DROP TABLE 테이블명;
+  
+
+  
+SQL> select tname,tabtype from tab;
+
+TNAME                                                        TABTYPE
+------------------------------------------------------------ --------------
+DEPT                                                         TABLE
+EMP                                                          TABLE
+EMP01                                                        TABLE
+EMP02                                                        TABLE
+EMP03                                                        TABLE
+EMP04                                                        TABLE
+SALGRADE                                                     TABLE
+
+drop table emp01;
+drop table emp02;
+drop table emp03;
+drop table emp04;
+
+SQL> select tname,tabtype from tab;
+
+TNAME                                                        TABTYPE
+------------------------------------------------------------ --------------
+DEPT                                                         TABLE
+EMP                                                          TABLE
+SALGRADE                                                     TABLE
+
+
+<테이블객체 이름변경>
+RENAME old_객체명 TO new_객체명
+
+create table dept01
+as select * from dept;
+
+SQL> select tname,tabtype from tab;
+
+
+TNAME                                                        TABTYPE
+------------------------------------------------------------ --------------
+DEPT                                                         TABLE
+DEPT01                                                       TABLE
+EMP                                                          TABLE
+SALGRADE                                                     TABLE
+
+rename dept01 to 부서테이블01;
+
+Table renamed.
+
+SQL> select tname,tabtype from tab;
+
+TNAME                                                        TABTYPE
+------------------------------------------------------------ --------------
+DEPT                                                         TABLE
+EMP                                                          TABLE
+SALGRADE                                                     TABLE
+부서테이블01                                                 TABLE
+
+<테이블 전체데이터 지우기(자르기)>
+형식)
+  TRUNCATE TABLE 테이블명;
+  
+  truncate table 부서테이블01;
+  
+  ----> Table truncated. 테이블이 잘렸습니다(테이블 내의 전체데이터가 삭제되었습니다)
+  
+  ※DML의 delete문을 사용해서 (행)데이터를 삭제하는 것보다 빠르게 데이터를 삭제.
+  조건없이 전체 행을 삭제(delete의 경우 삭제하기 원하는 행을 선택)
+  주의: DDL의 명령어이기 때문에 데이터 삭제후 복구가 불가능!!
+  
+  
+<<DML>> Data Manipulation Language(데이터 조작어)
+- INSERT, DELETE, UPDATE
+
+<INSERT> : 테이블에 (행)데이터를 추가 (최초입력)
+형식)
+  INSERT INTO 테이블명 [(컬럼명1,컬럼명2,컬럼명3)]
+  			  VALUES (데이터1,데이터2,데이터3);
+  	----> 만약, 테이블명 뒤에 컬럼명을 생략하는 경우
+  		테이블구조에 있는 순서에 따라 전체 컬럼명이 명시된 것으로 간주!!
+  		
+  	- 명시된 컬럼의 갯수와 데이터의 갯수는 일치!!
+  	- 컬럼의 순서에 맞는 자료형 데이터가 와야함
+  	
+create table dept02
+  2  as select * from dept;
+
+Table created.
+
+SQL> select * from dept02;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   NEW YORK
+        20 RESEARCH                     DALLAS
+        30 SALES                        CHICAGO
+        40 OPERATIONS                   BOSTON
+
+insert into dept02 (deptno, dname, loc)
+			values (50,'개발부','가산');     
+			
+1 row created.
+
+SQL> select * from dept02;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   NEW YORK
+        20 RESEARCH                     DALLAS
+        30 SALES                        CHICAGO
+        40 OPERATIONS                   BOSTON
+        50 개발부                       가산
+        
+      
+<데이터 입력시 에러 예>
+insert into dept02 (deptno, dname)
+			values (60,'자재부','대전');
+---> 값의 수가 너무 많습니다
+수정)
+insert into dept02 (deptno, dname)
+			values (60,'자재부');
+			
+			
+insert into dept02 (deptno, dname)
+			values (70);
+---> 값의 수가 충분하지 않습니다.
+수정)
+insert into dept02 (deptno, dname)
+			values (70,'총무부');
+			
+
+insert into dept02 (deptno, dname, loc)
+			values ('기획부','서울',80);
+---> 숫자데이터가 위치해야 할 곳에 문자데이터가 왔습니다!!
+
+					number varchar2 varchar2
+insert into dept02 (deptno, dname, loc)
+			values (80,'기획부','서울');       
+
+SQL> select * from dept02;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   NEW YORK
+        20 RESEARCH                     DALLAS
+        30 SALES                        CHICAGO
+        40 OPERATIONS                   BOSTON
+        50 개발부                       가산
+        60 자재부
+        70 총무부
+        80 기획부                       서울
+
+8 rows selected.
+
+create table dept03
+as select * from dept;
+
+SQL> desc dept03
+ Name
+     Null?    Type
+ ------- -------- -----
+ DEPTNO
+              NUMBER(2)
+ DNAME
+              VARCHAR2(14)
+ LOC
+              VARCHAR2(13)
+ 
+<NULL값 입력방법>
+1. 컬럼명을 명시하지 않는다
+insert into dept03 (deptno, dname)
+			values (50, '개발부');
+			
+2. 데이터가 들어가는 자리에 직접 null을 명시
+insert into dept03 (deptno, dname, loc)
+			values (60, '총무부', null);
+또는
+insert into dept03
+			values (60, '총무부', null);
+			
+3. 데이터가 들어가는 자리에 ''를 입력
+insert into dept03
+			values (70, '기획부', '');
+			
+문제) dept03부서테이블에서 아직 부서의 위치가 정해지지 않은 부서의 정보를 출력
+
+select *
+from dept03
+where loc is null;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- ----
+        50 개발부
+        60 총무부
+        70 기획부
+        
+<서브쿼리로 행 추가>
+형식)
+  INSERT INTO 테이블명
+  서브쿼리;
+  
+create table dept04
+as select * from dept
+where 3>4; - 구조만복사
+
+
+SQL> select * from dept04;
+
+no rows selected
+
+문제) dept테이블의 30,40 부서를 dept04에 입력(복사)하시오
+
+insert into dept04
+select * from dept where deptno in(30,40);
+
+SQL> select * from dept04;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        30 SALES                        CHICAGO
+        40 OPERATIONS                   BOSTON
+        
+<다중테이블에 다중 로우(행) 입력>
+형식)
+INSERT ALL
+	   INTO 테이블명1 VALUES (COL1,COL2,COL3)
+	   INTO 테이블명2 VALUES (COL4,COL5,COL6)
+	   INTO 테이블명3 VALUES (COL7,COL8,COL9)			
+SELECT COL1,COL2,COL3,COL4,COL5,COL6,COL7,COL8,COL9
+FROM 테이블명;
+       
+샘플테이블구성) EMP_HIR, EMP_MGR
+
+create table emp_hir
+as select empno, ename, hiredate
+from emp
+where 1=0;
+
+create table emp_mgr
+as select empno, ename, mgr
+from emp
+where 1=0;
+
+문제) EMP테이블에서 30번 부서 사원들의 정보를 얻어서
+EMP_HIR테이블과 EMP_MGR테이블에 데이터를 입력!!
+
+insert all
+		into emp_hir values (empno,ename,hiredate)
+		into emp_mgr values (empno,ename,mgr)
+select empno,ename,hiredate,mgr
+from emp
+where deptno=30;
+
+---> 12 rows created(emp_hir 6행 + emp_mgr 6행)
+
+SQL> select * from emp_hir;
+
+     EMPNO ENAME                HIREDATE
+---------- -------------------- --------
+      7499 ALLEN                81/02/20
+      7521 WARD                 81/02/22
+      7654 MARTIN               81/09/28
+      7698 BLAKE                81/05/01
+      7844 TURNER               81/09/08
+      7900 JAMES                81/12/03
+      
+SQL> select * from emp_mgr;
+
+     EMPNO ENAME                       MGR
+---------- -------------------- ----------
+      7499 ALLEN                      7698
+      7521 WARD                       7698
+      7654 MARTIN                     7698
+      7698 BLAKE                      7839
+      7844 TURNER                     7698
+      7900 JAMES                      7698
+
+<조건(when)에 의해 다중테이블에 다중로우 입력하기>
+형식)
+INSERT ALL
+	   WHEN 조건식1 THEN 실행할 문장1
+	   WHEN 조건식2 THEN 실행할 문장2
+서브쿼리;
+
+샘플테이블구성) EMP_HIR, EMP_MGR
+DROP TABLE EMP_HIR;
+create table emp_hir
+as select empno, ename, hiredate
+from emp
+where 1=0;
+
+DROP TABLE EMP_MGR;
+create table emp_mgr
+as select empno, ename, mgr
+from emp
+where 1=0;
+
+create table emp_sal
+as select empno, ename, sal
+from emp
+where 0=1;
+
+문제) 1982년 이후에 입사한 사원의 정보를 EMP_HIR테이블에 입력하고
+    급여가 2000 이상을 받는 사원의 정보를 EMP_SAL에 입력하고
+    직속상사가 KING인 사원의 정보를 EMP_MGR에 입력하시오
+    
+insert all
+	   when hiredate >= to_date('1982/01/01')
+	    	then into emp_hir values(empno,ename,hiredate)
+	   when sal >= 2000
+	   		then into emp_sal values(empno,ename,sal)
+	   when mgr = (select empno from emp where ename = 'KING')
+	   		then into emp_mgr values(empno,ename,mgr)
+select empno,ename,hiredate,sal,mgr from emp;
+
+SQL> select * from emp_hir;
+
+     EMPNO ENAME                HIREDATE
+---------- -------------------- --------
+      7788 SCOTT                87/04/19
+      7876 ADAMS                87/05/23
+      7934 MILLER               82/01/23
+
+SQL> select * from emp_sal;
+
+     EMPNO ENAME                       SAL
+---------- -------------------- ----------
+      7566 JONES                      2975
+      7698 BLAKE                      2850
+      7782 CLARK                      2450
+      7788 SCOTT                      3000
+      7839 KING                       5000
+      7902 FORD                       3000
+
+6 rows selected.
+
+SQL> select * from emp_mgr;
+
+     EMPNO ENAME                       MGR
+---------- -------------------- ----------
+      7566 JONES                      7839
+      7698 BLAKE                      7839
+      7782 CLARK                      7839
+      
+<UPDATE> : 기준 데이터에 대해 수정, 갱신, 재입력
+형식)
+UPDATE 테이블명
+SET 컬럼명1=(변경할)데이터1, 컬럼명2=(변경할)데이터2
+[WHERE 조건식];
+
+※주의: UPDATE문과 DELETE문을 실행시에는 반드시 WHERE절 사용을 고려하자!!
+이? WHERE절을 사용하지 않는다면 전체행에 대한 수정 또는 삭제가 실행되기 때문!!
+
+create table dept05
+as select * from dept;
+
+Table created.
+
+SQL> select * from dept05;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   NEW YORK
+        20 RESEARCH                     DALLAS
+        30 SALES                        CHICAGO
+        40 OPERATIONS                   BOSTON
+        
+문제) 10번 부서의 위치를 서울로 변경하시오
+
+update dept05
+set loc='서울';
+
+SQL> select * from dept05;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   서울
+        20 RESEARCH                     서울
+        30 SALES                        서울
+        40 OPERATIONS                   서울
+        
+---> where절을 명시하지 않아서 모두 변함!!
+---> rollback;
+
+update dept05
+set loc='서울'
+where deptno=10;
+
+SQL> select * from dept05;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   서울
+        20 RESEARCH                     DALLAS
+        30 SALES                        CHICAGO
+        40 OPERATIONS                   BOSTON
+
+문제) 30번부서의 부서명을 SALES---> 영업부, 위치를 CHICACO ---> 가산으로 변경하시오
+
+update dept05
+set dname='영업부', loc='가산'
+where deptno=30;
+
+1 row updated.
+
+SQL> select * from dept05;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   서울
+        20 RESEARCH                     DALLAS
+        30 영업부                       가산
+        40 OPERATIONS                   BOSTON
+
+
+create table emp02
+as select empno, ename, sal, deptno
+from emp;
+        
+문제) 30번 부서의 급여를 10% 인상해라!!
+
+update emp02
+set sal = sal*1.1
+where deptno=30;
+
+SQL> select * from emp02;
+
+     EMPNO ENAME                       SAL     DEPTNO
+---------- -------------------- ---------- ----------
+      7369 SMITH                       800         20
+      7499 ALLEN                      1760         30
+      7521 WARD                       1375         30
+      7566 JONES                      2975         20
+      7654 MARTIN                     1375         30
+      7698 BLAKE                      3135         30
+      7782 CLARK                      2450         10
+      7788 SCOTT                      3000         20
+      7839 KING                       5000         10
+      7844 TURNER                     1650         30
+      7876 ADAMS                      1100         20
+
+     EMPNO ENAME                       SAL     DEPTNO
+---------- -------------------- ---------- ----------
+      7900 JAMES                      1045         30
+      7902 FORD                       3000         20
+      7934 MILLER                     1300         10
+
+14 rows selected.
+
+<서브쿼리를 이용한 데이터 수정하기>
+drop table dept03;
+create table dept03
+as select * from dept;
+
+문제) 부서번호 20번인 부서의 이름과 지역을 40번 부서와 동일하게 변경하시오!!
+40번부서 ----> 20번 부서
+
+결과)    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   NEW YORK
+        20 RESEARCH                     DALLAS
+        30 SALES                        CHICAGO
+        40 OPERATIONS                   BOSTON
+
+SQL> update dept03
+  2  set dname = (select dname from dept03 where deptno=40)
+  3  loc = (select loc from dept03 where deptno=40)
+  4  where deptno=20;
+loc = (select loc from dept03 where deptno=40)
+*
+ERROR at line 3:
+ORA-00933: SQL command not properly ended
+---> ','를 찍지 않아 에러
+
+update dept03
+set dname = (select dname from dept03 where deptno=40),
+	loc = (select loc from dept03 where deptno=40)
+where deptno=20;
+
+SQL> update dept03
+  2  set dname = (select dname from dept03 where deptno=40),
+  3  loc = (select loc from dept03 where deptno=40)
+  4  where deptno=20;
+
+1 row updated.
+
+SQL> select * from dept03;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   NEW YORK
+        20 OPERATIONS                   BOSTON
+        30 SALES                        CHICAGO
+        40 OPERATIONS                   BOSTON
+        
+        
+문제) 부서번호 30번인 부서의 이름과 지역을 10번 부서와 동일하게 변경하시오!!
+10번부서 -----> 30번부서
+
+update dept03
+set (dname,loc) = (select dname,loc from dept03 where deptno=10)
+where deptno=30;
+
+SQL> select * from dept03;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   NEW YORK
+        20 OPERATIONS                   BOSTON
+        30 ACCOUNTING                   NEW YORK
+        40 OPERATIONS                   BOSTON
+        
+<DELETE> : (행)데이터 삭제 명령어
+형식)
+	DELETE [FROM] 테이블명
+	[WHERE 조건식];
+
+drop table dept03;
+
+create table dept03
+as select * from dept;
+
+select * from dept03;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   NEW YORK
+        20 RESEARCH                     DALLAS
+        30 SALES                        CHICAGO
+        40 OPERATIONS                   BOSTON
+
+문제) 전체부서를 삭제하시오.
+
+delete from dept03;
+
+SQL> select * from dept03;
+
+no rows selected
+
+
+rollback;
+문제) 20번 부서를 삭제하시오
+
+delete from dept03
+where deptno = 20;
+
+SQL> select * from dept03;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   NEW YORK
+        30 SALES                        CHICAGO
+        40 OPERATIONS                   BOSTON
+        
+rollback;
+문제) 10,40번 부서를 삭제하시오.
+
+delete from dept03
+where deptno IN (10,40);
+
+SQL> select * from dept03;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        20 RESEARCH                     DALLAS
+        30 SALES                        CHICAGO
+
+rollback;
+문제) 10,30,50,70,90번 부서를 삭제하시오
+	A를 B로 나누기 : A/B  floor(A/B)  mod(A,B)
+	
+	delete from dept03
+	where mod(deptno/10, 2) <> 0;
+	
+SQL> select * from dept03;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        20 RESEARCH                     DALLAS
+        40 OPERATIONS                   BOSTON
+
+        
+rollback;
+
+drop table emp03;
+create table emp03
+as select * from emp;
+
+문제) SALES부서에 속한 사원들을 사원테이블(EMP03)에서 삭제하시오
+SQL> select count(*)from emp03;
+
+  COUNT(*)
+----------
+        14  ---> 8이 되어야함!!
+        
+delete from emp03
+where deptno=(select deptno
+			from dept
+			where dname = 'SALES');
+			
+6 rows deleted.
+
+SQL> select count(*)from emp03;
+
+  COUNT(*)
+----------
+         8
+
+====================================================================
+<MERGE>
+합병(병합) : 구조가 같은 두 개의 테이블을 하나의 테이블로 합치는 기능
+- 기존에 존재하는 행이 있다면 새로운 값으로 갱신(update) 되고
+  존재하지 않는 행이 있다면 새로운 행으로 추가(insert)해라!!
+  
+형식)
+  MERGE INTO 기준테이블 별명
+  		USING 참조테이블 별명
+  		ON(조건식)
+  WHEN MATCHED
+  		THEN 업데이트문
+  WHEN NOT MATCHED
+  		THEN 추가문;
+  		
+샘플테이블 구성) EMP11, EMP12
+drop table emp11;
+drop table emp12;
+create table emp11 -- 기준테이블(변경 또는 추가작업 실행) ---> 결과테이블
+as select * from emp;
+---> 14행 8열
+
+create table emp12 -- 참조테이블
+as select * from emp
+where job = 'MANAGER';
+---> 3행 8열
+update emp12 set job='사원';
+
+insert into emp12 (empno, ename, job, mgr, hiredate, sal, comm, deptno)
+		values (8000, '홍길동','사원',7788,sysdate,2000,null,40);
+--->4행 8열
+7566 JONES    MANAGER
+7698 BLAKE    MANAGER
+7782 CLARK    MANAGER
+
+merge into emp11 e1 --기준테이블(변경할테이블)
+		using emp12 e2 --참조테이블
+		on(e1.empno = e2.empno) --기준과 참조에 일치
+when matched --하는 사번이 있다면 (7566,7698,7782)
+	then update set --기준테이블에 대한 갱신
+		e1.job=e2.job,
+		e1.mgr=e2.mgr,
+		e1.sal=e2.sal,
+		e1.comm=e2.comm,
+		e1.deptno=e2.deptno 
+when not matched -- 하는 사번이 없다면(8000)
+	then insert values (e2.empno,e2.ename,e2.job,e2.mgr,
+						e2.hiredate,e2.sal,e2.comm,e2.deptno);
+
+
+SQL> select empno,ename,job,hiredate from emp11;
+
+     EMPNO ENAME                JOB                HIREDATE
+---------- -------------------- ------------------ --------
+      7369 SMITH                CLERK              80/12/17
+      7499 ALLEN                SALESMAN           81/02/20
+      7521 WARD                 SALESMAN           81/02/22
+      7566 JONES                MANAGER            81/04/02
+      7654 MARTIN               SALESMAN           81/09/28
+      7698 BLAKE                MANAGER            81/05/01
+      7782 CLARK                MANAGER            81/06/09
+      7788 SCOTT                ANALYST            87/04/19
+      7839 KING                 PRESIDENT          81/11/17
+      7844 TURNER               SALESMAN           81/09/08
+      7876 ADAMS                CLERK              87/05/23
+
+     EMPNO ENAME                JOB                HIREDATE
+---------- -------------------- ------------------ --------
+      7900 JAMES                CLERK              81/12/03
+      7902 FORD                 ANALYST            81/12/03
+      7934 MILLER               CLERK              82/01/23
+      8000 홍길동               사원               16/08/23
+
+15 rows selected.
+
+==============================================================
+<트랜잭션>Transaction
+ - 데이터 처리의 한 단위
+ - 오라클에서 발생하는 여러개의 SQL 명령문(DML)들을 하나의 논리적인 
+   작업단위로 처리하는데 이를 트랜잭션이라 함.
+ - 하나의 트랜잭션은 All-or-Nothing방식으로 처리.
+ - 목적 : 데이터의 일관성을 유지하면서  안정적으로 데이터를 복구시키기 
+         위해서.
+ - 트랜잭션 제어 명령어 : commit, rollback, savepoint 
+ 
+ 
+ 1. COMMIT
+   - 저장되지 않은 모든 데이터를 데이터베이스에 저장하고 
+     현재의 트랜잭션을 종료하라는 명령어.
+   - 커밋하면 트랜잭션의 처리과정이 모두 반영되며 하나의 트랜잭션 과정이 끝남.
+   - 트랜잭션이 발생하는 경우 새롭게 생성되거나 갱신된 데이터들이 
+     물리적으로 영구히 저장됨.
+   - DDL(create,drop,alter,rename,truncate)은 AutoCommit!!
+   - 정상적인 종료시에도 commit작업을 수행
+     예) exit종료    
+     
+     
+     
+ 2. ROLLBACK [TO SAVEPOINT명]
+   - 저장되지 않은 모든 데이터 변경사항(DML)을 취소하고 현재의 트랜잭션을 
+     끝내라는 명령.
+   - 트랜잭션으로 인한 하나의 묶음처리가 시작되기 이전의 상태로 되돌려지는 것.
+   - 이전상태로 되돌아가 지금까지 수행했던 데이터베이스의 변경을 
+     모두 무효화.
+   - 비정상적인 종료시 rollback작업을 수행.
+     예) 우측 상단 X버튼 클릭시
+     
+c:\> sqlplus scott/tiger  -- 접속 : 트랜잭션 시작
+
+drop table dept03; -- DDL은 commit 실행하므로 ---> 트랜잭션 종료, 트랜잭션 시작
+
+create table dept03 ---> 트랜잭션 종료, 트랜잭션 시작
+as select * from dept;
+
+SQL> select * from dept03;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   NEW YORK
+        20 RESEARCH                     DALLAS
+        30 SALES                        CHICAGO
+        40 OPERATIONS                   BOSTON
+        
+문제) 20번, 40번 부서를 삭제하시오
+
+delete from dept03
+where deptno in (20,40);
+
+2 rows deleted.
+
+문제) 30번 부서의 이름을 '영업부'로 변경하시오
+
+update dept03
+set dname='영업부'
+where deptno=30;
+
+SQL> select * from dept03;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   NEW YORK
+        30 영업부                       CHICAGO
+        
+--commit; -- 트랜잭션 내의 모든 DML에 대한 물리적인 반영!!
+rollback; -- 트랜잭션 내의 모든 DML에 대한 전체 작업취소!!
+
+SQL> select * from dept03;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   NEW YORK
+        20 RESEARCH                     DALLAS
+        30 SALES                        CHICAGO
+        40 OPERATIONS                   BOSTON
+        
+<SAVEPOINT>저장점
+형식) SAVEPOINT 저장점명;
+
+샘플테이블)
+drop table dept03;
+create table dept03
+as select * from dept;
+
+SQL> select * from dept03;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   NEW YORK
+        20 RESEARCH                     DALLAS
+        30 SALES                        CHICAGO
+        40 OPERATIONS                   BOSTON
+
+-- 30번 부서 삭제
+delete from dept03 where deptno=30;
+
+---SP1-------
+savepoint sp1;
+
+---20번 부서 삭제
+delete from dept03 where deptno=20;
+
+SQL> select * from dept03;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   NEW YORK
+        40 OPERATIONS                   BOSTON
+        
+---SP2------
+savepoint sp2;
+
+--10번 부서 삭제
+delete from dept03 where deptno=10;
+
+SQL> select * from dept03;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        40 OPERATIONS                   BOSTON
+        
+만약 rollback; 한다면 전체 작업 취소
+
+rollback to sp2; --sp2부터 시작해서 현시점까지의 DML 취소
+rollback to sp2;
+select * from dept03;
+
+SQL> select * from dept03;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   NEW YORK
+        40 OPERATIONS                   BOSTON
+
+rollback to sp1;
+--sp1부터 시작해서 현 시점까지의 DML취소
+
+SQL> select * from dept03;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   NEW YORK
+        20 RESEARCH                     DALLAS
+        40 OPERATIONS                   BOSTON
+        
+rollback;
+--트랜잭션내의 모든 작업 취소
+
+SQL> select * from dept03;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   NEW YORK
+        20 RESEARCH                     DALLAS
+        30 SALES                        CHICAGO
+        40 OPERATIONS                   BOSTON
+        
+====================================================================
+<무결성 제약조건> Data Integrity Constraint Rule
+- 테이블에 부적절한 자료가 입력(insert, update)되는 것을 방지하기 위해서
+테이블을 생성할 때 각 컬럼에 대해서 정의하는 여러가지 규칙
+
+1.NOT NULL
+ - 해당 컬럼값으로 NULL을 허용하지 않겠음
+ - 입력시 데이터를 무조건 받겠다!!
+ 
+2.UNIQUE
+ - 테이블내에서 해당 컬럼값은 항상 유일무이한 값을 가질 것
+ - 중복허용을 하지 않겠다!!
+ 
+3.PRIMARY KEY(기본키) : NOT NULL + UNIQUE 동시에 만족
+ - 해당 컬럼값은 반드시 존재해야 하고 유일해야 한다는 조건
+ - 테이블내에서 서로 다른 행을 구분하기 위해서 사용!!
+
+4.FOREIGN KEY(외래키,참조키)
+ - (새로입력 또는 수정)해당컬럼의 값이
+ 	(이미 존재하는)타컬럼의 값을 참조해야만 함
+ 	즉, 참조되는 컬럼에 없는 값은 입력 불가
+  예) 홍길동이 입사했어요. 그리고 부서를 50번 부서에 배치하였습니다.
+  	홍길동이 회사에 첫 출근을 했어요. ====> 당황 T.T
+  	
+ - 참조하고자 하는 테이블(EMP)에서 설정(예: 사원테이블의 deptno에 참조키 설정)
+ ※주의: 참조되는 쪽(DEPT)의 컬럼은 반드시 unique하거나 또는 primary key여야함!!
+ 
+5.CHECK
+ - 해당 컬럼에 저장 가능한 데이터 값의 범위나 사용자 조건을 지정
+ 예) age컬럼: (1~100)
+ 	gender컬럼: (남성,여성)
+ 	
+drop table dept02;
+
+create table dept02
+(
+	deptno number(2),
+	dname varchar2(15),
+	loc   varchar2(15)
+);
+   
+insert into dept02 values (10,'영업부','서울');
+insert into dept02 values (10,'자재부','서울');
+insert into dept02 values (null,'총무부','서울');
+
+SQL> select * from dept02;
+
+    DEPTNO DNAME                          LOC
+---------- ------------------------------ ------------------------------
+        10 영업부                         서울
+        10 자재부                         서울
+                    총무부                         서울
+
+----> 중복되는 부서번호 X
+		부서번호에 null입력X
+		
+<컬럼레벨 정의방법으로 제약조건 지정하기>
+- 테이블 생성시 선언되어지는 컬럼 옆에 제약 설정!!
+형식) 컬럼명 자료형 CONSTRAINT_TYPE
+
+drop table dept02;
+
+create table dept02
+(
+	deptno number(2) primary key,
+	--부서번호는 유일한 값을 가져야 하고 반드시 입력되어야함
+	dname varchar2(15),
+	loc   varchar2(15)
+);
+
+insert into dept02 values (10,'영업부','서울');
+---> 입력성공
+
+insert into dept02 values (10,'자재부','서울');
+insert into dept02 values (10,'자재부','서울')
+*
+ERROR at line 1:
+--->에러발생: ORA-00001: unique constraint (SCOTT.SYS_C007013) violated
+--->유일한 조건에 위배
+
+insert into dept02 values (20,'자재부','서울');
+---> 입력성공
+
+insert into dept02 values (null,'총무부','서울');
+insert into dept02 values (null,'총무부','서울')
+                           *
+ERROR at line 1:
+---> 에러발생: ORA-01400: cannot insert NULL into ("SCOTT"."DEPT02"."DEPTNO")
+---> 데이터를 반드시 입력해야하는 것을 위배
+
+insert into dept02 values (30,'총무부','서울');
+
+SQL> select * from dept02;
+
+    DEPTNO DNAME                          LOC
+---------- ------------------------------ ------------------------------
+        10 영업부                         서울
+        20 자재부                         서울
+        30 총무부                         서울
+        
+<컬럼레벨(컬럼선언시) 제약설정과 함께 이름 지정>
+형식)
+create table 테이블명(
+	컬럼명 자료형 [CONSTRAINT 제약명] 제약타입
+);
+
+참고)
+	제약명: 테이블명_컬럼명_제약
+	
+drop table dept02;
+
+create table dept02
+(
+  deptno number(2)  CONSTRAINT  dept02_deptno_pk primary key,  
+  dname varchar2(15),
+  loc   varchar2(15)
+);
+
+insert into dept02 values (10,'영업부','서울');
+--->성공
+insert into dept02 values (10,'자재부','서울');
+insert into dept02 values (10,'자재부','서울')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SCOTT.DEPT02_DEPTNO_PK) violated
+--->에러발생
+
+insert into dept02 values (null,'총무부','서울');
+
+<데이터 딕셔너리> DD 시스템테이블
+- 데이터베이스 자원을 효율적으로 관리하기 위한 다양한 정보를 저장하는 시스템테이블
+- 사용자가 테이블을 생성하거나 사용자를 변경하는 등의 작업을 할때
+	데이터베이스 서버에 의해 자동으로 갱신되는 테이블
+
+<제약조건 확인하기>
+- user_constraints : 제약을 따로 저장, 관리하는 시스템 테이블명
+- desc user_constraints
+OWNER            : 제약조건을 소유한 사용자명
+CONSTRAINT_NAME  : 제약조건명
+CONSTRAINT_TYPE  : 제약조건타입
+TABLE_NAME       : 제약이 속한 테이블명
+SEARCH_CONDITION : check제약일 경우 조건
+R_OWNER
+R_CONSTRAINT_NAME: foreign key경우 어떤 primary key를 참조했는지 정보
+.
+.
+.
+
+<CONSTRAINT_TYPE>
+P: primary key
+R: foreign key
+U: unique
+C: check, not null
+
+-- 현재 계정의 제약정보 알아보기
+select table_name, constraint_type, constraint_name from user_constraints;
+
+TABLE_NAME                                                   CO
+------------------------------------------------------------ --
+CONSTRAINT_NAME
+------------------------------------------------------------
+DEPT                                                         P
+PK_DEPT
+
+EMP                                                          P
+PK_EMP
+
+EMP                                                          R
+FK_DEPTNO
+
+
+TABLE_NAME                                                   CO
+------------------------------------------------------------ --
+CONSTRAINT_NAME
+------------------------------------------------------------
+DEPT02                                                       P
+DEPT02_DEPTNO_PK
+
+
+<테이블레벨 제약 설정>
+- 테이블 생성시 컬럼정의를 마친 후에 제약 설정
+형식)
+create table 테이블명
+(
+	컬럼명1 자료형,
+	컬럼명2 자료형,
+	컬럼명3 자료형,
+	[CONSTRAINT 제약명] 제약타입 (제약을 설정할 컬럼명)
+);
+
+drop table dept02;
+create table dept02
+(
+	deptno number(2),
+	dname  varchar2(15),
+	loc    varchar2(15),
+	constraint dept02_deptno_pk2 primary key (deptno)
+);
+
+SQL> insert into dept02 values (10,'영업부','서울');
+
+1 row created.
+
+SQL> insert into dept02 values (10,'자재부','서울');
+insert into dept02 values (10,'자재부','서울')
+*
+ERROR at line 1:
+---> ORA-00001: unique constraint (SCOTT.DEPT02_DEPTNO_PK2) violated
+
+
+<테이블 제약 변경하기>
+형식)
+ALTER TABLE 테이블명
+ADD CONSTRAINT 제약명 제약타입(컬럼명);
+
+drop table dept02;
+create table dept02
+(
+	deptno number(2),
+	dname  varchar2(15),
+	loc    varchar2(15)
+);
+
+ALTER TABLE dept02
+ADD CONSTRAINT dept02_deptno_pk3 primary key(deptno);
+
+SQL> insert into dept02 values (10,'자재부','서울');
+insert into dept02 values (10,'자재부','서울')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SCOTT.DEPT02_DEPTNO_PK3) violated
+
+
+--제약삭제
+alter table dept02
+drop constraint dept02_deptno_pk3;
+
+Table altered.
+
+SQL> insert into dept02 values (10,'자재부','서울');
+
+1 row created.
+
+SQL> select * from dept02;
+
+    DEPTNO DNAME                          LOC
+---------- ------------------------------ ------------------------------
+        10 영업부                         서울
+        10 자재부                         서울

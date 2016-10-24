@@ -1,0 +1,482 @@
+복습
+<NULL입력이 되는 경우>
+1. ''입력
+	(a,b,c) values ('','안녕,'SQL');
+2. null명시
+	(a,b,c) values (null,'안녕','SQL');
+3. a컬럼생략
+	(b,c) values ('안녕','SQL');
+	
+<부객체>
+- 사용이유? 보안, 긴 쿼리문을 간단하게 사용
+  create [or replace] view 뷰이름 ((서브쿼리 컬럼에 대한)alias)
+  as 서브쿼리;
+  
+<제약>
+- 사용이유? 무결성을 유지===> 입력,수정되는 데이터에 대해 체크!!
+1. not null
+- 컬럼에 null입력 방지
+2. unique
+- 중복된 데이터 입력 방지
+3. primary key
+- 기본키 설정(서로 다른 행을 구분할 수 있는 키로 사용)
+- 한 테이블에 반드시 한개의 기본키 설정만 할 수 있음
+- not null + unique
+4. foreign key
+- 참조하는 테이블 특정컬럼에 속한 데이터와 일치하는 데이터만 입력받겠다!
+  (사원테이블에 사원정보를 입력, 수정할 시에 부서번호는 10,20,30,40!!)
+5. check
+- 특정 범위내의 데이터(1~100), 또는 정해진 데이터값(ex:'남자','여자')들을 입력
+
+
+<제약 형식>
+
+create table 테이블명
+(
+	컬럼명 자료형 1.[constraint 제약명] 제약타입,
+								  references 참조테이블(컬럼) -->외래키 지정시(1)
+	2.[constraint 제약명] 제약타입 (컬럼명)
+						foreign key (현컬럼) references 참조테이블(참조컬럼) --->외래키 지정시(2)
+);
+
+3.
+alter table 테이블명
+[constraint 제약명] 제약타입 (컬럼명)
+-------------------------------------
+
+<stored procedure>
+객체생성형식)
+
+create [or replace] procedure 프로시저명()
+is
+	변수선언
+	변수선언과 초기화
+begin
+	변수초기화
+		DQL, DML
+		
+	조건문
+		if(조건식)
+			then 참일때 실행문장
+		end if;
+		
+		if(조건식)
+			then 참일때 실행문장
+		else 거짓일때 실행문장
+		end if;
+		
+		if(조건식)
+			then
+		elsif(조건식)
+			then
+		elsif(조건식)
+			then
+		else
+		end if;
+	
+	반복문
+		loop --(무한)반복
+			반복 실행할 문장
+			탈출할 조건!!
+				- exit when 조건식;
+				- if(조건식) then exit;
+		end loop;
+		
+		for 변수 in [reverse] 최소값..최대값
+		loop --반복
+			반복 실행할 문장
+		end loop;
+		
+		while 조건식
+		loop --반복
+			반복 실행할 문장
+		end loop;
+	
+	함수호출
+end;
+/
+
+<저장함수> Stroed Function
+- 실행(함수호출)후 결과를 되돌려 받을 수 있는
+  reutrun 데이터;를 반드시 명시해야함!!
+  
+ 형식)
+ CREATE [OR REPLACE] FUNCTION 함수명(매개변수 선언_
+ RETURN 자료형
+ IS
+ 	지역변수 선언;
+ BEGIN
+ 	실행할 SQL문;
+ 	RETURN 데이터;
+ END;
+ /
+ 
+사용법)
+VARIABLE 바인드변수 자료형;
+EXECUTE : 바인드변수 := 함수명();
+
+문제) 특정사원(사원명으로 구분)에게 보너스를 지급하려고 하는데
+	급여에 200%에 해당하는 비용을 지급하려 한다
+	이 보너스 금액을 FUNCTION을 통해 구하시오
+	
+---> fun_test.sql
+---> 함수명:call_bonus
+	
+execute call_bonus('SMITH');
+===>에러발생: PLS-00221: 'CALL_BONUS' is not a procedure or is undefined
+
+variable result number;
+		--바인드 변수(전달변수)
+execute :result := call_bonus('SMITH');
+===>PL/SQL procedure successfully completed.
+
+--변수에 저장된 값을 출력
+print result
+    RESULT
+----------
+      1600
+      
+문제변경) function : call_bonus2
+	결과값: SMITH사원의 보너스 금액은 1600입니다.
+	
+문제) PL/SQL을 사용하여 부서테이블에 정보를 모두 출력(모든 행)하시오.
+declare
+	vdeptno dept.deptno%type;
+	vdname  dept.dname%type;
+	vloc    dept.loc%type;
+begin
+	select deptno, dname, loc into vdeptno, vdname, vloc
+	from dept;
+	
+	dbms_output.put_line('부서번호/부서명/부서위치');
+	dbms_output.put_line(vdeptno||'/'||vdname||'/'||vloc);
+end;
+/
+===>에러발생:ORA-01422: exact fetch returns more than requested number of rows
+---> 실제 인출(4개행)은 요구된 것보다 많은 수의 행을 추출합니다.
+---> 2개 이상의 행을 조회할 때 에러발생
+---> 해결: Cursor사용!! 또는 loop사용
+
+
+<커서> Cursor
+- select의 결과가 2개행 이상일 때 명시적으로 사용
+형식)
+is
+	--변수선언, 커서정의
+	CURSOR 커서명 IS select문장;
+begin
+	OPEN 커서명;
+	FETCH 커서명 INTO 변수명; --데이터 행을 인출
+	CLOSE 커서명;
+end;
+/
+
+- 부서정보를 출력하는 프로시저 정의
+---> pro_test.sql
+---> 프로시저명: dept_info
+
+문제)특정부서에 있는 사원의 사원번호, 사원명, 급여, 입사일을 출력하는 프로시저를 작성
+---> 프로시저명: dept_member
+---> 작성 Cursor cur
+---> for문 사용
+	 for vemp in cur
+	 ---> 자동 open,fetch,close
+	 ---> vemp는 결과 한 행을 받는 변수!!
+---> 맨 마지막에 사원수출력:	'사원수: 6명'
+
+문제) 급여그래프를 출력하는 프로시저를 작성
+---> 프로시저명: sal_graph
+
+출력결과)
+    **************************************************
+    KING(5000)
+    ******************************
+    FORD(3000)
+    ******************************
+    SCOTT(3000)
+    *****************************
+    JONES(2975)
+    ***************************
+    BLAKE(2875)
+    ************************
+    CLARK(2450)
+    ****************
+    ALLEN(1600)
+    ***************
+    TURNER(1500)
+
+====================================================================
+<패키지>
+- 동일한 프로시저명 또는 함수명을 구분 (NameSpace개념)
+
+------------------패키지 선언-----------------
+create or replace package 패키지명
+is
+	정의될 저장프로시저와 저장함수
+end;
+/
+------------------패키지 실행-----------------
+create or replace package body 패키지명
+is
+	저장프로시저와 저장함수 정의
+end;
+/
+
+실행) EXE[CUTE] 패키지명.저장프로시저명
+
+------------------패키지 선언-----------------
+create or replace package kosta
+is
+	function call_bonus(vename emp.ename%type)
+	return number;
+-------------------------------------------
+	procedure sal_graph;
+end;
+/
+------------------패키지 실행-----------------
+create or replace package body kosta
+is
+	function call_bonus(vename emp.ename%type)
+return number
+is
+	--vsal number; --vsal emp.sal%type;
+	vsal number := 0;
+	bonus number;
+begin
+	--dbms_output.put_line('안녕~!!');
+	
+	select sal into vsal
+	from emp
+	where ename=vename;
+	
+	--dbms_output.put_line(sal); --컬럼인식X
+	--dbms_output.put_line(vsal); --변수인식O
+	bonus := vsal*2;
+	
+	return bonus;
+end;
+---------------------------------------------
+	procedure sal_graph
+is
+	cursor cur is select ename, sal from emp order by sal desc;
+	vemp emp%rowtype;
+	cnt number := 0;
+	graph varchar2(100) := '';
+begin
+	dbms_output.put_line('*************급여그래프**************');
+	
+	for vemp in cur
+	loop
+		cnt := floor(vemp.sal/100);
+		for vemp in 1..cnt
+		loop
+			graph := graph||'*';
+		end loop;
+		dbms_output.put_line(vemp.ename||'('||vemp.sal||')');
+		dbms_output.put_line(graph);
+		graph := '';
+	end loop;
+end;
+end;
+/
+show error
+
+SQL> variable su number;
+SQL> execute :su := call_bonus('SMITH');
+
+PL/SQL procedure successfully completed.
+
+SQL> print su
+
+        SU
+----------
+      1600
+
+SQL> execute sal_graph;
+
+====
+==================================================
+<트리거> Trigger
+- 이벤트처리 (~했을때 수반되는 처리)
+- 특정테이블에 이벤트(insert, delete, update)가 발생했을 시
+다른테이블에 연관된 내용을 변경하도록 하는 일
+
+형식)
+CREATE [OR REPLACE] TRIGGER
+(BEFORE|AFTER) (INSERT|UPDATE|DELETE)
+		AFTER   INSERT
+ON 테이블명 -- 이벤트가 발생되는 테이블
+[FOR EACH ROW] -- 실행될 문장행에 각각 적용
+[WHEN 조건식]
+BEGIN
+	이벤트 발생시 실행할 문장(주로 DML문장);
+END;
+
+문제) 사원테이블에 사원정보가 새로 입력될 때마다 입사 환영 메시지를 출력하시오!!
+
+drop table emp03;
+create table emp03
+as select empno, ename, sal
+from emp
+where 1=0;
+
+create or replace trigger welcome
+after insert --행 입력 후에
+on emp03 --emp03 사원테이블에서
+for each row
+begin
+	dbms_output.put_line(:new.ename||'님의 KOSTA주식회사 입사를 환영합니다');
+end;
+/
+
+<바인드변수> 전달변수
+:new - 새로입력(insert,update)된 데이터
+:old - 기존데이터
+
+===> begin~end에서 사용법)	:new.empno
+
+문제) 사원테이블(emp03)에 사원정보(empno,ename,sal,hiredate,deptno)가 입력되었을때
+급여테이블(salary-no,empno,sal)에 그 사원의 급여정보를 자동으로 입력하도록 트리거를 생성하시오.
+
+drop table emp03;
+create table emp03
+as select empno,ename,sal,hiredate,deptno
+from emp
+where 1=0;
+
+create table salary
+(
+	no     number constraint salary_no_pk primary key,   --일련번호
+	empno  number(4),
+	sal    number(7,2)
+);
+
+create sequence salary_seq
+		start with 1
+		increment by 1
+		nocycle
+		nocache;
+
+--트리거 생성
+create or replace trigger sal_info
+after insert on emp03 --emp03테이블에 행입력이 발생한다면
+for each row
+begin
+	insert into salary (no, empno, sal)
+	values (salary_seq.nextval, :new.empno, :new.sal);
+end;
+/
+
+select * from salary;
+===> 결과행 없음
+
+--emp03 테이블에 데이터 입력(empno,ename,sal,hiredate,deptno) 테스트
+insert into emp03 values (7000,'홍길동',2000,sysdate,10);
+insert into emp03 values (7002,'라임킬',2500,sysdate,20);
+insert into emp03 values (7004,'주원이',2800,sysdate,30);
+
+select * from salary;
+
+        NO      EMPNO        SAL
+---------- ---------- ----------
+         1       7000       2000
+         2       7002       2500
+         3       7004       2800
+
+================================================================
+<테이블 만들기>
+1. 상품테이블
+drop table 상품;
+create table 상품
+(
+	상품코드    char(4) constraint 상품_pk primary key,
+	상품명       varchar2(15) not null,
+	제조사       varchar2(15),
+	소비자가격  number,
+	재고수량     number default 0 --컬럼명이 명시되지 않았을때 기본값
+);
+
+2. 입고테이블
+drop table 입고;
+create table 입고
+(
+	입고번호 number constraint 입고_pk primary key, --일련번호
+	상품코드 char(4) constraint 입고_fk references 상품(상품코드),
+			--상품테이블에 저장된 상품코드를 참조
+	입고일자 date,
+	입고수량 number,
+	입고단가 number,
+	입고금액 number
+);
+
+<상품테이블에 정보입력>
+-상품코드 상품명 제조사 소비자가격 재고수량
+
+insert into 상품 (상품코드,상품명,제조사,소비자가격)
+	values ('a001','마우스','삼송',1000);
+insert into 상품 (상품코드,상품명,제조사,소비자가격)
+	values ('a001','키보드','엘씨',2000);
+insert into 상품 (상품코드,상품명,제조사,소비자가격)
+	values ('a001','스피커','사우미',3000);
+	
+1. 입력트리거(입고테이블에 상품이 입력되었을때 재고수량 증가)
+예) 입고테이블에 키보드가 10개 입고되었을때
+자동으로 상품테이블 'a002'상품의 재고가 0 ----> 10으로 변경!!
+
+create or replace trigger product_insert
+after insert on 입고 --입고테이블에서 입력이 발생한 후
+for each row
+begin
+	update 상품 set 재고수량 = 재고수량 + :new.입고수량
+	where 상품코드 = :new.상품코드;
+end;
+/
+
+--입고번호,상품코드,입고일자,입고수량,입고단가,입고금액
+insert into 입고 values (입고_seq.nextval, 'a002',sysdate,10,1000,10000);
+insert into 입고 values (입고_seq.nextval, 'a002',sysdate,10,1000,10000);
+insert into 입고 values (입고_seq.nextval, 'a002',sysdate,20,1000,10000);
+
+----> 상품 (재고수량) : 10 + 10 + 20 = 40
+							  30 = 50
+
+2. 수정트리거( 입고테이블에 상품의 재고정보가 변경되었을때 재고수량 변경)
+예) 종업원이 3번째 입고된 키보드 중 10개를 누락시켰다!!
+---> 사장님: 고치세요~!!
+create or replace trigger product_update
+after update on 입고 --입고테이블에서 수정이 발생한 후
+for each row
+begin
+	update 상품 set 재고수량 = 재고수량 - :old.입고수량 + :new.입고수량
+	where 상품코드 = :new.상품코드;
+end;
+/
+
+update 입고 set 입고수량=40
+where 입고번호 =3;
+
+3. 삭제트리거(입고 테이블에 입력되었던 행이 삭제되었을때 그 수만큼 재고수량 감소)
+예) 2번째 입고된 키보드가 원래 구디대리점으로 갔어야 했던 것이 잘못 배송되었음
+----> 2번째 행을 삭제
+
+create or replace trigger product_delete
+after delete on 입고 --입고테이블에서 삭제가 발생한 후
+for each row
+begin            --  60  =  60   -      10       =50
+	update 상품 set 재고수량 = 재고수량 - :old.입고수량
+	where 상품코드 = :old.상품코드;
+end;
+/
+
+delete from 입고
+where 입고번호=4;
+
+
+
+
+
+
+
+
+
+

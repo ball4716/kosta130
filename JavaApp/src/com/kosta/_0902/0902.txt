@@ -1,0 +1,54 @@
+
+
+<기능추가>
+
+1. LoginForm 
+   - initForm()메소드추가 : tf_id,tf_pass: 초기화, 포커스 tf_id (o)
+   
+2. JoinForm    
+   - bt_checkid(중복확인): 기능정의      
+     ----> UserInfoDAO : boolean findById(String id)메소드추가
+     ----> '중복확인'버튼 클릭
+              ---> 사용자정보입력폼에서  입력된 아이디를 얻기
+                    findById(입력된 아이디)
+
+3. JoinForm, UpdateForm
+   - 폼에 입력되는 데이터에 대한 유효성 검사(뷰,컨트롤러)!!
+     ----> JoinForm, UpdateForm에 validCheck() 메소드추가
+                     -----> 빈값체크
+                     -----> tf_pass, tf_pass2의 값을 비교
+                     -----> 숫자검사(주민번호,전화번호)
+                     -----> 자릿수검사(주민번호 앞자리6, 뒷자리7)
+                     
+                     
+4. DB입력
+  insert into userinfo (id,pass,name) 
+             values ('admin','1234','관리자');
+                     
+  case1) 로그인폼 
+           - id: gildong
+           - pass: 1234
+             로그인성공!! 
+           
+             서비스창 
+           ----> 메뉴아이템 '관리자-인증'클릭
+                    ----> 관리자로그인이 필요합니다!!MSG
+                    ----> 로그인페이지로 이동하겠습니까!!Confirm
+             서비스창  
+           ====> 삭제 : 로그인한 사용자에 대한 삭제
+                        ----> 로그인폼 이동
+                        
+                         수정 : 로그인한 사용자에 대한 회원정보가 수정폼에 출력 
+           
+                    
+  case2) 로그인폼 
+           - id: admin
+           - pass: 1234
+             로그인성공!! 
+           
+             서비스창 
+           ----> 메뉴아이템 '관리자-인증'클릭
+                    ----> 인증성공!!MSG
+                    
+         ====> 삭제 : 삭제할 아이디입력!!
+                      수정 : 수정할 행을 선택!!         

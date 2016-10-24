@@ -1,0 +1,120 @@
+JTab
+
+<Java I/O>
+
+Stream?
+순차적인 Data(8bit-1byte)의 흐름
+
+<객체직렬화> Serialization
+- 객체를 연속적인 데이터로 변환하는 것
+(반대과정은 역직렬화라고 함)
+- 객체의 인스턴스변수들의 값을 일렬로 나열하는 것
+----> 객체를 파일이나 네트워크에 전송하기 위해 바이트형
+class Person implements Serializable{
+                         ▲마커 인터페이스(객체 직렬화를 위한 인터페이스)
+	String name;
+	int age;
+	String job;
+}
+
+---->
+class Person [String name int age String job]: 객체 쓰기와 읽기가 가능해진다
+
+관련 클래스:
+ObjectOutputStream: 객체 쓰기
+형식)
+ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(파일명경로));
+
+ObjectInputStream: 객체 읽기
+
+Serializable(마커 인터페이스)
+
+
+
+item.txt
+---------------------------
+환타|1000|17
+콜라|1200|15
+---------------------------
+====> readLine()
+
+item.ser 
+====> readObject()
+
+==============================================================
+java.net.*;
+
+<InetAddress>
+- IP주소를 다루기 위한 클래스
+  XX.XX.XX.XX
+  XX: 0~255
+
+ 주요메소드)
+    byte[] getAddress()
+    static InetAddress[] getAllByName(String host)
+    static InetAddress getByName(String host)
+    String getHostAddress()
+    String getHostName()
+    
+<URL> Uniform Resource Location
+
+http://www.gildong.co.kr:80/test/hello.jsp?name=gildong&age=13&job=student#index1
+
+프로토콜: 자원에 접근하기 위해 서버와 통신하는데 사용되는 통신규약(http)
+호스트명: 자원을 제공하는 서버의 이름   www.gildong.co.kr
+포트번호: 통신에 사용되는 서버의 포트번호    80
+경로명: 접근하려는 자원이 저장된 서버상의 위치    /test/
+파일명: 접근하려는 자원의 이름         hello.jsp
+쿼리(query): URL에서 '?'이후의 부분   name=gildong&age=13&job=student
+참조(anchor): URL에서 #이후의 부분
+
+<URLConnection>
+- 어플리케이션과 URL간의 통신연결을 나타내는 클래스의 최상위 클래스
+- URLConnection을 사용해서 연결하고자 하는 자원에 접근하고 읽고 쓰기를 할 수 있다.
+ 
+
+<TCP전송방식>
+1. 연결방식
+    - 연결기반(connection-oriented)
+    - 연결 후 통신(전화기)
+    - 1:1 통신방식
+2. 특징
+    - 데이터의 경계를 구분 안 함.(byte-stream)
+    - 신뢰성 있는 데이터 전송
+    - 데이터의 전송순서가 보장.
+    - 데이터의 수신여부를 확인함(데이터가 손실되면 재전송)
+    - 패킷을 관리할 필요가 없음
+    - UDP보다 전송속도가 느림
+3. 관련 클래스
+    - Socket, ServerSocket
+    
+<TCP소켓프로그래밍>
+1. 서버 프로그램: 서버소켓을 사용, 서버 컴퓨터의 특정포트에서 
+                   클라이언트의 연결요청을 처리할 준비
+2. 클라이언트 프로그램: 접속할 서버의 IP주소와 포트 정보를 가지고 소켓을 생성해서
+                              서버에 연결을 요청.
+                              
+3. 서버소켓은 클라이언트의 연결요청을 받으면 서버에 새로운 소켓을 생성해서
+    클라이언트의 소켓과 연결되도록 한다.
+    
+4. 클라이언트의 소켓과 서버의 소켓이 일대일 통신.
+
+
+ <Socket프로그램>
+ - Socket은 전화기!!              
+              
+ - Server와 Client사이에 통신하려면 Socket을 통해 연결
+ - Server
+     ServerSocket객체를 가져야 함.
+     ServerSocket ss = new ServerSocket(서비스할 포트넘버);
+           Socket  s  =  ss.accept(); //클라이언트 접속 대기  
+           
+          OutputStream   os =  s.getOutputStream();// 클라이언트에게 메시지 전송
+                  os.write("msg");
+          
+          InputStream    is =    s.getInputStream();//클라이언트가 전달한 메시지 읽어오기
+                  is.read();
+ - Client
+      Socket객체를 생성
+      예)  Socket s = new Socket("HOST정보", port번호);
+         s를 read,write객체를 얻어서 서버와 통신

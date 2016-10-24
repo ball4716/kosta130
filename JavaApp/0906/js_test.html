@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+<script type="text/javascript">
+	//선언적인 요소들
+	//---> 변수선언, 초기화, 함수정의
+</script>
+</head>
+<!-- js_test.html -->
+<body>
+	<h3>JavaScript</h3>
+	<script type="text/javascript">
+		<!--
+		document.write("<font color=red>안녕, 자바스크립트~^^*</font>");//브라우저출력
+		//document.write("브라우저에 출력될 텍스트!!");
+		//-> 함수호출
+		-->
+	</script>
+	<script type="text/javascript">
+		name='나길동'
+		document.write("<br>이름: "+name);
+		name=13;
+		document.write("<br>name: "+name);
+		name= new Date();
+		document.write("<br>name: "+name);
+		
+		var age; //함수내에서 사용한다면 함수의 지역변수 : var
+		
+		//문제) 브라우저화면에 [안녕 "자바"스크립트]를 출력하시오
+		
+		name = '"자바"'
+		document.write("<br><br>안녕" +name+"스크립트");
+		document.write('<br><br>안녕"자바"스크립트');
+		document.write("<br><br>안녕\"자바\"스크립트");
+		
+		
+		var su1=10;
+		var su2=5;
+		var su3=3;
+		
+		document.write('<br>su1/su2='+(su1/su2));
+		document.write('<br>su1%su2='+(su1%su2));
+		document.write('<br>su1/su3='+(su1/su3));
+		//소수점이하를 자르기(내장함수: parseInt())
+		document.write('<br>parseInt(su1/su3)='+parseInt(su1/su3));
+		
+		document.write('<br>su1>su2 ='+ (su1>su2));
+		
+		ssn="920308-1333333";
+		//   01234567
+		//남여 출력!!
+		ch = ssn.charAt(7);
+		//삼항연산자 ===> (조건식) ? A : B; ===> 조건식 결과 참일때 A데이터 리턴
+											//거짓일 때 B데이터 리턴
+		var gender = (ch%2==0) ? "여자":'남자';
+		
+		document.write('ssn 성별: '+gender);
+		
+		for(i=0; i<5; i++){
+			document.write('<br><font color=blue>안녕</font>');
+		}
+		
+		var su4=22;
+		var su5=33;
+		if(su4<su5){
+			document.write('<br>'+su4+'가 '+su5+'보다 작습니다.');
+		}else{
+			document.write('<br>'+su4+'가 '+su5+'보다 크거나 같습니다.');
+		}
+		
+		if(true){
+			document.write('<br>참!!');
+		}else{
+			document.write('<br>거짓!!');
+		}
+		
+		if(true){//true:1대입, false:0대입
+			document.write('<br>참2!!');
+		}else{
+			document.write('<br>거짓2!!');
+		}
+		
+		if(-340){//true:1,130-340, false:0대입
+			document.write('<br>참3!!');
+		}else{
+			document.write('<br>거짓3!!');
+		}
+		
+		var str=null//"스크립트안녕"
+		if(str){//true:1대입, false:0대입
+			document.write('<br>참4!!');
+		}else{
+			document.write('<br>거짓4!!');
+		}
+		
+		if(window.ActiveXObject){//판단: 브라우저가 IE? 비IE인가?
+			document.write('<br>현브라우저는 ActiveXObject를 지원!');
+		}else{
+			document.write('<br>현브라우저는 ActiveXObject를 지원안함!');
+		}
+	</script>
+	<gildong> <br><br>안녕!! </gildong>
+</body>
+</html>

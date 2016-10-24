@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+<!-- string_test.html -->
+  <script type="text/javascript">
+     var str='JavaScript';
+           // 0123456789
+     document.write('str='+str+'<br>');
+     document.write('str길이='+str.length+'<br>');
+     document.write('str.charAt(4)='+str.charAt(4)+'<br>');
+     document.write('str.indexOf("a")='+str.indexOf("a")+'<br>');
+     document.write('str.lastIndexOf("a")='+str.lastIndexOf("a")+'<br>');
+     document.write('str.indexOf("Script")='+str.indexOf("Script")+'<br>');
+     document.write('str.substring(str.indexOf("S"))='+str.substring(str.indexOf("S"))+'<br>');
+     
+     var tel='010-123-4567';//String tel
+     //"010", '123', '4567'을 따로 출력
+     var tels = tel.split('-');//String []tels
+     for(var i=0; i<tels.length; i++){
+    	 document.write('tels['+i+']='+tels[i]+'<br>');
+     }
+  </script>
+</body>
+</html>

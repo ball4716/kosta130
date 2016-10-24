@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>회원 가입</title>
+<script type="text/javascript">
+	function validCheck(){//폼안의 데이터에 대한 유효성 검사
+		//검사 합   격 ---> 환영페이지로이동
+		//검사 불합격 ---> 원인의 메시지 alert창을 통해 출력
+		//--->빈값,숫자,자릿수,직업선택,비번일치
+		//참고) 페이지이동 코드: document.폼이름.submit();
+		//		---> <form>태그 내의 action 속성이 지정하는 URL이동
+		var f = document.joinForm;
+		var id = f.id.value;
+		var pass = f.pass.value;
+		var pass2 = f.pass2.value;
+		var name = f.name.value;
+		var ssn1 = f.ssn1.value;
+		var ssn2 = f.ssn2.value;
+		var phone1 = f.phone1.value;
+		var phone2 = f.phone2.value;
+		var phone3 = f.phone3.value;
+		var addr = f.addr.value;
+		var job = f.job.value;
+		
+		var ssn1Exp = /^[0-9]{6}$/;
+		var ssn2Exp = new RegExp("^[\\d]{7}$");
+		
+		if(id==""){
+			alert("id를 입력해주세요!!");
+			f.id.focus();
+		}else if(pass==""){
+			alert("password를 입력해주세요!!");
+			f.pass.focus();
+		}else if(pass2==""){
+			alert("password확인을 입력해주세요!!");
+			f.pass2.focus();
+		}else if(pass!=pass2){
+			alert("password확인이 일치하지 않습니다!");
+			document.joinForm.pass2.value="";
+			f.pass2.focus();
+		}else if(name==""){
+			alert("이름을 입력해주세요!!");
+			f.name.focus();
+		}else /* if(ssn1<6 || ssn2<7){
+			alert("올바른 주민번호를 입력해주세요!!");
+			f.ssn1.focus();
+		}else if(isNaN(ssn1) || isNaN(ssn2)){ */
+			if(!(ssn1Exp.test(ssn1) && ssn2Exp.test(ssn2))){
+			alert("올바른 주민번호를 입력해주세요!!");
+			document.joinForm.ssn1.value="";
+			document.joinForm.ssn2.value="";
+			f.ssn1.focus();
+		}else if(phone1==""||phone2==""||phone3==""){
+			alert("전화번호를 입력해주세요");
+			f.phone1.focus();
+		}else if(isNaN(phone1) || isNaN(phone2) || isNaN(phone3)){
+			alert("전화번호는 숫자만 입력 가능합니다.")
+			document.joinForm.phone1.value="";
+			document.joinForm.phone2.value="";
+			document.joinForm.phone3.value="";
+			f.phone1.focus();
+		}else if(phone1.length>3||(phone2.length<3||phone2.length>4)||phone3.length!=4){
+			alert("전화번호 자릿수를 올바르게 입력해주세요");
+			document.joinForm.phone1.value="";
+			document.joinForm.phone2.value="";
+			document.joinForm.phone3.value="";
+			f.phone1.focus();
+		}else if(job=="==선택=="){
+			alert("직업을 선택해주세요");
+			f.job.focus();
+		}else{
+			document.joinForm.submit();
+		}
+	}//validCheck
+	
+	function moveJumin(){
+		var ssn1 = document.joinForm.ssn1.value;
+		//String ssn1
+		//alert(ssn1.length);
+		if(ssn1.length==6)
+			document.joinForm.ssn2.focus();
+	}
+	var idCk;
+	function idCheck(){
+		idCk = window.open('id_check_form.html','child','width=300,height=250,top=200,left=300')
+	}
+</script>
+</head>
+<!-- join_form.html -->
+<body>
+	<center>
+		<h3 align="center">회원가입</h3>
+		<form name="joinForm" action="welcome.html">
+			<!-- form태그: 영역내의 데이터를 action속성에 지정한 url로 전송 -->
+			<table celpadding="5" bgcolor="cccccc">
+				<tr>
+					<td>ID:</td>
+					<td>
+					<input type="text" name="id" size="6" readonly>
+					<input type="button" value="중복확인" onclick="idCheck()">
+					<!-- 
+					input name=id 는 편집 불가
+					중복확인버튼클릭 ==> 새창 띄우기
+									기존아이디: "gildong","lime","juwon"사용중인 아이디
+									===> 아이디: <input type='text'>
+												'확인'버튼 클릭
+												===> 아이디 사용가능
+													===> 아이디를 사용하시겠습니까?
+														===> 예
+												창닫기, 가입폼에 선택된 아이디를 입력
+												
+												===> 아이디 사용 불가능
+					 -->
+					</td>
+				</tr>
+				<tr>
+					<td>비 번:</td>
+					<td><input type="password" name="pass" size="6"></td>
+				</tr>
+				<tr>
+					<td>비번확인:</td>
+					<td><input type="password" name="pass2" size="6"></td>
+				</tr>
+				<tr>
+					<td>이 름:</td>
+					<td><input type="text" name="name" size="6"></td>
+				</tr>
+				<tr>
+					<td>주민번호</td>
+					<td><input type="text" name="ssn1" size="4" maxlength="6" onkeyup="moveJumin()">-<input
+						type="text" name="ssn2" size="4" maxlength="7"></td>
+				</tr>
+				<tr>
+					<td>전화번호</td>
+					<td><input type="text" name="phone1" size="2">-<input
+						type="text" name="phone2" size="3">-<input type="text"
+						name="phone3" size="3"></td>
+				</tr>
+				<tr>
+					<td>주 소:</td>
+					<td><input type="text" name="addr" size="12"></td>
+				</tr>
+				<tr>
+					<td>직 업:</td>
+					<td><select name="job">
+							<option value="==선택==">==선택==</option>
+							<option value="학생">학생</option>
+							<option value="프로그래머">프로그래머</option>
+							<option value="군인">군인</option>
+							<option value="경찰관">경찰관</option>
+							<option value="소방관">소방관</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+					<input type="button" value="등록" onclick="validCheck()">
+					<input type="reset" value="취소"></td>
+				</tr>
+			</table>
+		</form>
+	</center>
+</body>
+</html>

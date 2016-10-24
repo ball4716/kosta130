@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="person2.xsl" ?>
+<persons>
+	<person>
+		<name>나길동</name>
+		<age>13</age>
+		<job>학생</job>
+	</person>
+	<person>
+		<name>나라임</name>
+		<age>15</age>
+		<job>학생</job>
+	</person>
+	<person>
+		&lt; &gt; &amp; &#169;
+		<name><![CDATA[김유신< &이순신 
+		&lt; &gt; &amp; &#169; <gildong> ]]></name>
+		<age>13</age>
+		<job>학생</job>
+	</person>
+</persons>

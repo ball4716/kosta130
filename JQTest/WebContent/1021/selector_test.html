@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+  <script type="text/javascript" src="../js/jquery-1.min.js"></script>
+  <script type="text/javascript">
+    //$(document).ready(function(){});
+    $(function(){//현재 HTML문서가 브라우저에 전체 로딩 되었다면
+      /* $('input').click(function(){//모든 <input>엘리먼트
+    	  alert('첫번째 버튼클릭!!');
+      }); */
+      $('input[type=button]').click(function(){//모든 <input type="button">엘리먼트
+    	  alert('첫번째 버튼클릭!!');
+      });
+      $('button').click(function(){//모든 <button>엘리먼트
+    	  alert('두번째 버튼클릭!!');
+      });
+      
+      $(':button').click(function(){//모든 <input type="button">, <button>엘리먼트
+    	  alert('버튼 클릭했니?');
+      });
+      
+      $('tr:even').css('background-color','yellow');
+      $('tr:odd').css('background-color','pink');
+    
+      $('p').css('background-color','blue');
+      
+      //마우스 이벤트 적용
+      /* $('p').mouseenter(function(){
+    	  alert('p영역에 진입하셨어요!!');
+      });
+      $('p').mouseleave(function(){
+    	  alert('Good-bye!!');
+      }); */
+      jQuery('p').hover(function(){
+    	  //마우스를 들어왔을때
+    	  alert('hover진입');
+      },function(){
+    	  //마우스가 떠났을때
+    	  alert('hover나감')
+      });
+      
+      $('p').mousedown(function(){
+    	  alert('애국가:'+$('p').text());
+      });
+      $('p').mouseup(function(){
+    	  alert('마우스업~!!')
+      });
+    
+    });//ready액션
+  </script>
+
+</head>
+<!-- selector_test.html : 선택자 테스트 -->
+<body>
+    이름: <input type="text" name="username"> <br>
+   <input type="button" value="나버튼">
+   <br>
+   <button>나도버튼</button>
+   <hr>
+   <h3>Person목록</h3>
+   <table border="1" cellpadding="5">
+      <tr>
+         <th>이름</th>
+         <th>나이</th>
+         <th>직업</th>
+      </tr>
+      <tr>
+         <td>나길동</td>
+         <td>13</td>
+         <td>학생</td>
+      </tr>
+      <tr>
+         <td>길라임</td>
+         <td>15</td>
+         <td>학생</td>
+      </tr>
+      <tr>
+         <td>김주원</td>
+         <td>17</td>
+         <td>학생</td>
+      </tr>
+      <tr>
+         <td>이순신</td>
+         <td>20</td>
+         <td>장군</td>
+      </tr>
+   </table>
+   <hr>
+   <p>
+      동해물과<br>
+      백두산이<br>
+      말라요
+   </p>
+   
+</body>
+</html>
+
+
+
+

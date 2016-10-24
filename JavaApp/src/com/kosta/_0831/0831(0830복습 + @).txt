@@ -1,0 +1,128 @@
+class A{
+	기본자료형 변수명;	//----> 속성변수
+		int su = 0;
+	
+	클래스자료형 변수명; //----> 참조(레퍼런스)변수
+		B obj = new B();
+		
+
+}
+
+============================================
+void method(){
+	A a = new A();
+	a.su = 10;
+}
+
+<JDBC>
+
+- Java DataBase Connectivity
+--> 자바와 DB를 연동해주는 API
+
+- Connection
+    연결객체
+    자바와 DB사이의 연결통로(파이프) 구성
+    
+- Statement
+    연결객체를 통해 sql문을 전달(실행)
+		int t = executeUpdate(조작sql문:DML)
+		t ===> 삭제, 수정된 행의 갯수 리턴
+
+- ResultSet rs
+
+	rs = executeQuery(질의sql문:DQL)
+	rs ===> 조회된 결과 행열 데이터가 저장
+	
+	1. 한 행을 얻기 
+		boolean b = rs.next();
+		b ===> 결과행이 있다면 true 리턴
+		
+		rs.next()메소드는 독립적으로 사용가능하나
+		주로 if문 또는 while문과 함께 많이 사용됨!!
+		
+		if(rs.next()) ---> where 기본키 검사!!
+							예) where empno = 7788;
+							
+		while(rs.next()) ---> where : 행을 제어 ---> 결과가 2개이상의 행이 예상
+							예) where deptno = 30;
+		
+	2. 행안의 컬럼데이터를 얻기
+		rs.get자료형(검색된 순서인덱스(1부터시작) or 검색된 컬럼명);
+
+========================================================================
+
+interface Connection {
+   public Statement createStatement();
+}
+
+class Child implements Connection {
+   public Statement createStatement() {
+      return Statement;
+   }
+}
+
+<JDBC프로그래밍 순서>
+1. 드라이버 로딩(제품군 선택)
+   Class.forName("oracle.jdbc.driver.OracleDriver");
+   									 ----> ojdbc14.jar, ojdbc5.jar, ojdbc6.jar
+2. Connection 객체생성
+   Connection c = new Connection(); (X) ---> 인터페이스인데 객체생성이 말이 안되쥬ㅋㅋ
+   			  c = DriverManager.getConnection("url", "user", "password");
+   			  c.createStatement();
+3. Statement 객체생성 (왜? ★sql문을 실행하기 위하여!!)
+   Statement stmt = c.createStatement();
+   			 stmt.execute("실행하고자 하는(DB에 전달하고자 하는) sql문");//실행시점!
+   			
+4. ResultSet 객체 생성 (왜? sql문을 실행한 결과(데이터)를 자바에서 얻고자 했을때!!)
+
+   Result rs = stmt.executeQuery("select문~");
+   		  rs.next(); //한행 한행 각각의 행을 얻어오기
+   		  rs.get자료형(); //행안의 열데이터 얻어오기
+
+=========================================================================
+
+Vector<Object> v = new Vector();
+	Integer su1 = new Integer(13);
+		v.add(su1);				----> v.get(0)
+		v.add(new Integer(15)	----> v.get(1)
+		
+	   v.add(1);		// new Integer(1)
+	   v.add(2);		// new Integer(2)
+	   v.add("홍길동");	// new String("홍길동")
+	   v.add(true);		// new Boolean(true)
+
+ArrayList<Integer> list = new ArrayList();
+ArrayList();
+
+ArrayList<PersonDTO> list = new ArrayList();
+
+Vector, ArrayList -----> 바구니클래스, 객체에 대한 참조★를 갖는클래스
+
+ArrayList<Person> list = new ArrayList<>();
+	Person p = new Person(1,"홍길동",13,"학생");
+				└───┘
+				 ▲메모리 할당
+	
+	list.add(p);			----> list.get(0) == p
+	list.add("안녕!"); (X)
+	
+	Person p2 = new Person();
+		p2.setName("길라임");
+		p2.setAge(15);
+		p2.setJob("학생");
+	list.add(new Person()); ----> list.get(1) : 변수의 역할!!
+	
+	String name = tf1.getText();
+	int age = Integer.parseInt(tf2.getText());
+	String job = tf3.getText();
+	
+	list.add(new Person(3,name,age,joab));
+	
+	list.add(new Person(3,tf1.getText(),age,job));
+	
+	for(int i=0; i<list.size(); i++){
+		Person p = list.get(i);
+		String name = p.getName();
+		
+		int age = list.get(i).getAge();
+	}

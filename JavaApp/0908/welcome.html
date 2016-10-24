@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+</head>
+<script type="text/javascript">
+	function datePrint() {
+		var now = new Date();
+		var year = now.getFullYear();
+		var month = now.getMonth();//0월~12월
+		var date = now.getDate();
+		var h = now.getHours();
+		var m = now.getMinutes();
+		var s = now.getSeconds();
+		var day = now.getDay();//0~6
+		var dayStr = [ '일', '월', '화', '수', '목', '금', '토' ];
+
+		var printDate = year + '년 ' + month + '월 ' + date + '일 ' + h + '시 ' + m
+				+ '분 ' + s + '초 (' + dayStr[day] + '요일)';
+		//alert(printDate);
+		var d1 = document.getElementById("d1");
+		//d1이 Element타입을 가졌다면 innerHTML속성을 사용할 수 있음
+		d1.innerHTML = '<font color=red>' + printDate + '</font>'
+	}
+</script>
+<body align="center" onload="datePrint()">
+	<div id="d1"></div>
+	<br>
+	<font color="blue" size="6">회원가입을 축하합니다^^</font>
+</body>
+</html>

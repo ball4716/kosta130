@@ -1,0 +1,31 @@
+<JDBC> Java Database Connectivity (java.sql패키지)
+
+1. DriverManger
+- JVM에서 JDBC전체를 관리하는 class
+  (기능: Driver등록, Connection 연결작업...)
+2. Driver
+- DB를 만드는 Vendor(Oracle, MS-SQL, MySQL,....)를 implements하여 자신들의 DB를 연결할 수 있는 class를 만드는 인터페이스
+3. Connection
+- DB와 연결성을 가지고 있는 interface
+4. Statement
+- 실제 SQL문을 사용하기 위하여 Connection으로부터 받아내는 interface
+5. ResultSet
+- Statement를 통하여 select을 실행하였을때 그 결과 Data를 가지고 있는 interface
+
+_________________________				ojdbc14.jar/ojdbc5.jar->10버전/ojdbc6.jar->11버전
+---------Oracle----------|		순차적으로 할 일	
+						 |--------人		|1. 제품군 선택 (드라이버 로딩)
+	□		□		□	 |		자바개발자 | -> Class.forName("oracle.jdbc.driver.OracleDriver");
+x.168.0.133 140    150	 |				|2. 연결 객체 생성(Connection)							▼DB연결정보
+----------MySQL----------|				| -> Connection conn = DriverManager.getConnection(url,user,pwd);
+						 |				|	url="jdbc:oracle:thin:@ip주소:portNum:XE";
+	□		□		□	 |				|				192.168.0.133▲   ▲1521	 ▲SID
+x.x.x.x  x.x.x.x  x.x.x.x|				|3. Statement 객체 생성(sql문을 실행)
+---------MS-SQL----------|				| -> Statement stmt = conn.createStatement();
+						 |				|				stmt.executeUpdate("DML문");
+	□		□		□	 |				|				stmt.executeQuery("DQL문");			┐
+x.x.x.x  x.x.x.x  x.x.x.x|				|4. ResultSet 객체 생성(조회된 결과를 저장)					| 같은 문장
+										| -> ResultSet rs = stmt.executeQuery("select문");	┘
+										|			번호, 이름, 급여				▲문자열 형태로만 써주면 결과집합 행열형식으로 출력
+										|				rs.next(); -> 한 행씩 얻어오기
+										|						열 데이터 rs.getInt(1); rs.getString(2); rs.getInt(3);

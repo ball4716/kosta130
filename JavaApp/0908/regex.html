@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<!-- regex_test.html
+	regex : RegularExpression(정규식,정규표현식)
+	형식)
+	변수명=/pattern/[flags];
+	
+	변수명=new RegExp('pattern',['flags']);
+-->
+	<script type="text/javascript">
+		var regexp = new RegExp('^[0-9]+$'); 
+		var regexp2 = /^[0-9]+$/g
+		
+		var hanReg = new RegExp('^[ㄱ-힣]+$');
+		var engReg = new RegExp('^[a-zA-Z]+$');
+		var engNumReg = new RegExp('^[a-zA-Z0-9]+$');
+		
+		//아이디: 7~12자리, 영문자와 숫자 조합, 첫글자 영문자
+		var idReg = new RegExp('^[a-zA-Z]{1}[a-zA-Z0-9_]{6,11}$');
+		
+		var data1="123456";
+		document.write('regexp.test(data1)='+regexp.test(data1)+'<br>');
+		document.write('regexp2.test(data1)='+regexp2.test(data1)+'<br>');
+		
+		var data2="한글입니다1"
+		document.write('hanReg.test(data2)='+hanReg.test(data2)+'<br>');
+		
+		//아이디 유효성 검사
+		var id="gildong123";
+		document.write(idReg.test("gildon")+"<br>");//6자리
+		document.write(idReg.test("gildong")+"<br>");//7자리
+		//document.write(idReg.test(id)+"<br>");
+		document.write(idReg.test("gildong123")+"<br>");//10자리
+		document.write(idReg.test("gildong123422")+"<br>");//13자리
+		document.write(idReg.test("1004gildong")+"<br>");//11자리
+		
+		//브라우저 사이즈
+		document.write("브라우저 가로길이: "+screen.width+"<br>");
+		document.write("브라우저 세로길이: "+screen.height+"<br>");
+		document.write("브라우저 (화면)가로길이: "+screen.availWidth+"<br>");
+		document.write("브라우저 (화면)세로길이: "+screen.availHeight+"<br>");
+	</script>
+</body>
+</html>

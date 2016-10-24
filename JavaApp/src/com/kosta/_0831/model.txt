@@ -1,0 +1,41 @@
+<Model>
+- 개념: 데이터
+- 데이터 저장
+  Person(name,age,job)
+  DAO(insert,update,delete,select)
+
+- 데이터 조작(가장)
+  Calculator
+  
+  int plus(int su1, int su2)
+  return su1 + su2
+  
+- 대부분의 메소드는 데이터를 리턴!!
+
+[[DAO]]
+
+insert(String name, int age, String job){
+	insert into person values(1,name,age,job)
+}
+
+update()
+
+List<Person> select(){
+	select no,name,age,job from person;
+}
+
+boolean delete(int delNo){
+	String sql = "delete from person where no = "+delNo;
+	
+	int t = stmt.execute(sql);
+	if(t==1) return true;
+	return false;
+}
+
+
+
+		||
+		||
+		||
+		
+	데이터베이스 (저장소)

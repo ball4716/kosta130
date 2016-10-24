@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC
+          "-//Apache Software Foundation//DTD Struts Configuration 1.3//EN"
+          "http://struts.apache.org/dtds/struts-config_1_3.dtd">
+<!-- struts-config.xml -->
+<struts-config>
+	
+	<action-mappings>
+	
+		<!-- 입력폼 보이기 -->
+		<action path="/form"
+				forward="/guest/inputForm.jsp"/>
+		
+		<!-- DB입력요청 -->
+		<action path="/crud"
+				type="guest.actions.GuestAction">
+			<forward name="list" path="/list.do" redirect="true"/>
+			<forward name="upform" path="/guest/editForm.jsp" />		
+		</action>
+		
+		<!-- 게시물 목록 요청 -->
+		<action path="/list"
+				type="guest.actions.ListAction">
+			<forward name="success" path="/guest/list.jsp"/>		
+		</action>
+	
+	</action-mappings>
+
+</struts-config>

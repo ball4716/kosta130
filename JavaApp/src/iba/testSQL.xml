@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd" >
+<sqlMap namespace="emp">
+	<!-- 7788사번의 사원명을 조회 -->
+	<select id="select" resultClass="String">
+		select ename from emp where empno=7788
+	</select>
+	
+	<select id="selectEmpno" parameterClass="String" resultClass="int">
+		select empno from emp where ename=#value#
+	</select>
+	
+	<select id="selectEnameAll" resultClass="String">
+		select ename from emp
+	</select>
+	
+	<delete id="delete">
+		delete from emp_copy
+			   where ename='SMITH'
+	</delete>
+	<delete id="deleteEname" parameterClass="java.lang.String">
+		delete from emp_copy
+				where ename=#ename#
+	</delete>
+</sqlMap>

@@ -1,0 +1,62 @@
+<오라클 계정>
+1. SYS : 오라클 Super사용자계정이며
+       데이터베이스에서 발생하는 모든문제들을 처리할 수 있는 권한을 가짐.
+   sqlplus /nolog
+   conn /as sysdba      
+       
+2. SYSTEM : 오라클 데이터베이스를 유지보수 및 관리할 때 사용하는 계정.
+ 
+3. SCOTT,HR : 처음 오라클을 사용하는 사용자를 위해 만들어 놓은 사용자계정.
+
+======================================================================
+
+<데이터베이스 접속 툴>
+- 명령어 : sqlplus 
+  접속연결: 계정명/패스워드
+  	sqlplus scott/tiger
+  접속끊기: exit
+  
+- 데이터베이스 접속 상태 : SQL>_
+  
+<사용자 계정 만들기:관리자접속>
+CREATE USER [user_name] 
+IDENTIFIED BY [password];
+
+create user scott identified by tiger;
+
+User created. 메시지발생(생성완료)
+
+테스트) show user 엔터 ===> 현재 접속된 유저
+	USER is "SYSTEM"
+
+SQL> conn scott/tiger   ===> 접속 사용자 변경하기 (SYSTEM--->SCOTT)
+ERROR:
+ORA-01045: user SCOTT lacks CREATE SESSION privilege; logon denied
+
+'접속'을 표현하는 두가지 용어:
+connect, session
+
+- 생성된 계정에 연결 권한 설정하기
+  grant connect, create table to scott;
+  ---> db관리자가 scott사용자에게 연결과 테이블 생성기능을 부여
+     ※connect를 사용해 session이 부여된다!!
+     //scott 계정에게 연결 권한과 자원 생성 권한을 설정하겠습니다.
+  grant dba to scott;
+  	//scott 계정에게 디비 권한 주기
+
+<예제테이블정보 가져오기>
+- 운영체제 cmd창에서 실행
+imp scott/tiger file=g:\jaelee\scottTable.dmp fromuser=scott touser=scott constraints=y commit=y ignore=y tables=dept,emp,salgrade
+======================================================================
+
+
+<수업>
+Java - SQL - JDBC - iBatis(MyBatis)
+
+ SQL*PLUS 명령어,
+ 연산자, 주요함수, 그룹함수, DQL, 
+ 조인, 서브쿼리,
+ DDL, DML
+ 트랜잭션, 무결성 제약 조건
+ 뷰, 시퀀스 
+ PL/SQL, 저장함수, 저장프로시저, 트리거

@@ -1,0 +1,49 @@
+						java.util.List
+						
+						
+			Vector			ArrayList			LinkedList
+			
+			
+		List list1 = new Vector();
+			 list2 = new ArrayList();
+			 list3 = new LinkedList();
+			 
+<JDBC> Java <=====> DataBase 를 연결(연동)해주는 기술(인터페이스)
+- 프로그래밍 순서
+
+1. 드라이버 로딩 (제품군 선택)
+   Class.forName("드라이버 클래스명");
+   
+2. Connection객체 생성(연결 시도)
+   Connection conn = DriverManager.getConnection("연결DB URL","user","pass");
+
+3. ★자바코드내에서 sql문(DQL,DML) 실행!! 
+   Statement객체 생성 : 왜? sql문 실행하기 위해서
+   Statement stmt = conn.createStatement();
+   		int t = stmt.executeUpdate("sql문(insert, delete, update)");
+   			t ===> 수정된 행의 갯수, 삭제된 행의 갯수를 리턴!!
+   			
+   		stmt.executeQuery("sql문(select)");
+
+4. ResultSet rs = stmt.executeQuery("sql문(select)");
+		rs ===> 조회된 결과의 행열집합(덩어리 집합)!!
+		
+		사용법)
+			- rs.next();	한 행(데이터) 얻어오기
+			
+			- rs.get자료형("검색컬럼명");
+				rs.getInt("empno");
+				rs.getString("ename");
+				rs.getDate("hiredate");
+			  rs.get자료형(검색순서1,2,3);
+			  	rs.getInt(1);
+			  	rs.getString(2);
+			  	rs.getDate(3);
+		
+		String sql="select empno,ename,hiredate from emp where deptno=10";
+		
+     EMPNO ENAME                HIREDATE
+---------- -------------------- --------
+      7782 CLARK                81/06/09
+      7839 KING                 81/11/17
+      7934 MILLER               82/01/23

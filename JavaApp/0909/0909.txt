@@ -1,0 +1,20 @@
+[1] 	document	::=	prolog element Misc*
+		    ½É¹ú					Ç¥Çö½Ä
+		
+		document	::= prolog element
+
+[22] 	prolog	::=	XMLDecl? Misc* (doctypedecl Misc*)?
+
+[23] 	XMLDecl	::=	'<?xml' VersionInfo EncodingDecl? SDDecl? S? '?>'
+
+[24] 	VersionInfo	::=	S 'version' Eq (' VersionNum ' | " VersionNum ")
+
+<?xml version='1.0' encoding="UTF-8" ?>
+
+[39] 	element	::=	EmptyElemTag | STag content ETag [WFC: ¿¤·¹¸àÆ® Å¸ÀÔÀÏÄ¡ ] [VC: ¿¤·¹¸àÆ® À¯È¿ ]
+
+[43] 	content	::=	(element | CharData | Reference | CDSect | PI | Comment)*
+
+[14] 	CharData	::=	[^<&]* - ([^<&]* ']]>' [^<&]*)
+
+[15] 	Comment	::=	'<!--' ((Char - '-') | ('-' (Char - '-')))* '-->'

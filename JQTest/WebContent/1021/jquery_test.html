@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+  <!-- <script type="text/javascript" src="../js/jquery-1.min.js"></script> -->
+  <script type="text/javascript" 
+      src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script type="text/javascript">
+    /*
+      <jQuery형식>
+    
+     jQuery(선택자).함수명();   ===> jQuery == $
+     $(선택자).함수명();
+     ===>$(선택자).함수명(function(){할일});    
+    */
+    //$(document).ready(function(){});    //===> $안에 객체정의 시 인용부호 사용X 
+ 
+    
+     
+    
+     $(document).ready(function(){//브라우저에 현재문서가 전체 로딩되었다면
+    	
+     //버튼 클릭 이벤트!!
+    /*  $('button').click(function(){ //  $('button') ===> 모든 button엘리먼트
+    	alert('클릭');
+        //p태그 지우기!!
+        //$('p') : 모든 p태그
+        $('p').hide();        
+     }); */
+     
+     function gildong(){
+    	 alert('동에 번쩍')
+     }
+     
+     
+     $('#b1').click(function(){//id=b1을 포함한 엘리먼트를 클릭했다면
+    	  $('p').show(1000,function(){
+    		  				alert('서에 번쩍');
+    	 					});
+     });
+    
+     $("#b2").click(function(){
+    	  $("p").hide(1000,gildong);    	 
+     });
+     
+     
+    /*  $("#h3").click(function(){
+    	  $("#h3").hide();    	 
+     }); */
+    /*  $("#gong").click(function(){
+    	  $("#gong").hide();    	 
+     });
+     $("#park").click(function(){
+    	  $("#park").hide();    	 
+     });
+     $("#jq").click(function(){
+    	  $(this).hide();    	 
+     }); */
+    /*  $("p").click(function(){
+   	     $(this).hide();    	 
+     }); */
+     $(".common").click(function(){
+   	     $(this).hide();    	 
+     });
+     
+     
+   });  
+  </script>
+</head>
+  <!-- jquery_test.html -->
+<body>
+   <h3 id="h3" class="common">jQuery(JavaScript library)테스트</h3>
+   <p id="gong" class="common">공유</p>
+   <p id="park" class="common">박보검</p>
+   <p id="jq" class="common">jQuery</p>
+   <button id="b1">보여라</button>
+   <button id="b2">감춰라</button>
+</body>
+</html>
+
+

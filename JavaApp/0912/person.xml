@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE persons [
+	<!ELEMENT persons (person)+>
+	<!ELEMENT person (name,age,job)>
+	<!ELEMENT name (#PCDATA)>
+	<!ELEMENT age (#PCDATA)>
+	<!ELEMENT job (#PCDATA)>
+	
+	<!ATTLIST persons
+			  a CDATA #REQUIRED
+			  b ID	  #IMPLIED
+			  c CDATA #FIXED "30">
+	<!ATTLIST person
+			  성별 (남자|여자) "여자">
+]>
+
+<persons a="10" b="b20" c="30">
+	<person 성별="남자">
+		<name>홍길동</name>
+		<age>13</age>
+		<job>학생</job>
+	</person>
+	<person>
+		<name>길라임</name>
+		<age>13</age>
+		<job>학생</job>
+	</person>
+</persons>
+
+
+<!-- person.xml -->

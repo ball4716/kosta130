@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+<script type="text/javascript">
+	function dataCheck() {
+		//HTML데이터 얻어오기 : document.폼이름.name이름.value
+		//setName(데이터)	  : name,value = 데이터
+		//데이터=getName() : 변수=name.value
+		var name = document.frm.name.value;
+		var pass = document.frm.pass.value;
+		var fruitArr = document.frm.fruit;
+		var fruit = "";
+		/* 
+		<input type="checkbox" name="apple" value="사과">
+		<input type="checkbox" name="straw" value="딸기">
+		<input type="checkbox" name="banana" value="바나나">
+			document.frm.apple ---> <input>객체
+			document.frm.apple.value ---> "사과"
+		----------------------------------------------
+		<input type="checkbox" name="fruit" value="사과">
+		<input type="checkbox" name="fruit" value="딸기">
+		<input type="checkbox" name="fruit" value="바나나">
+			document.frm.fruit ---> 배열객체<input>
+			document.frm.fruit.value --->(x) 배열명.value
+			document.frm.fruit[0].value ---> "사과"
+		*/
+		for (var i = 0; i<fruitArr.length;i++){
+			if(fruitArr[i].checked)
+				fruit += fruitArr[i].value + " ";
+		}
+		var roomArr = document.frm.room;
+		//alert('1강의실? '+roomArr[0].checked);
+		//alert('6강의실? '+roomArr[5].checked);
+		var room;
+		for (var i = 0; i < roomArr.length; i++) {
+			if (roomArr[i].checked) {
+				room = roomArr[i].value;
+				break;
+			}
+		}
+		var menu = document.frm.menu.value;
+		var etc = document.frm.etc.value;
+		alert("이름▶" + name + "\n비번▶" + pass + "\n좋아하는 과일▶" + fruit + "\n강의실▶"
+				+ room + "\n메뉴▶" + menu + "\n비고▶" + etc)
+	}
+</script>
+</head>
+<!-- get_data.html -->
+<body>
+	<h3>javascript를 통한 데이터 검사</h3>
+	<hr>
+	<form name="frm">
+		이름: <input type="text" name="name" value="기본값"> <br> 비번:
+		<input type="password" name="pass"> <br> 좋아하는과일: <input
+			type="checkbox" name="fruit" value="사과">사과 <input
+			type="checkbox" name="fruit" value="딸기">딸기 <input
+			type="checkbox" name="fruit" value="바나나">바나나 <br> 강의실: <input
+			type="radio" name="room" value="1강의실">1강의실 <input
+			type="radio" name="room" value="2강의실">2강의실 <input
+			type="radio" name="room" value="3강의실">3강의실 <input
+			type="radio" name="room" value="4강의실">4강의실 <input
+			type="radio" name="room" value="5강의실">5강의실 <input
+			type="radio" name="room" value="6강의실">6강의실<br> 메뉴:
+			<select name="menu">
+			<option>한식</option>
+			<option>중식</option>
+			<option>일식</option>
+		</select><br> 비고:<br>
+		<textarea rows="5" cols="20" name="etc"></textarea>
+		<br> <input type="button" value="데이터검사" onclick="dataCheck()">
+	</form>
+</body>
+</html>

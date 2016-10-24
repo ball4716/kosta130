@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+<script type="text/javascript">
+	/* function smallSize() {
+		document.img1.width = "150";
+		document.img1.height = "200";
+	}
+	function middleSize() {
+		document.img1.width = "300";
+		document.img1.height = "400";
+	}
+	function bigSize() {
+		document.img1.width = "600";
+		document.img1.height = "800";
+	} */
+
+	/* var w=300;
+	var h=400;
+	
+	function sizeChange(size) {
+		if(size=='s'){
+			document.img1.width = w/2;
+			document.img1.height = h/2;
+		}else if(size=='m'){
+			document.img1.width = w;
+			document.img1.height = h;
+		}else if(size=='l'){
+			document.img1.width = w*2;
+			document.img1.height = h*2;
+		} 
+	} */
+
+	function sizeChange(w, h) {
+		document.img1.width = w;
+		document.img1.height = h;
+	}
+
+	/* function imgChange(){
+		var src=document.img1.src;
+		if(src=="file:///C:/ball4716/workspace/JavaApp/image/hochang.jpg")
+			document.img1.src="../image/heon.jpg";
+		else if(src=="file:///C:/ball4716/workspace/JavaApp/image/heon.jpg")
+			document.img1.src="../image/gongu.jpg";
+		else if(src=="file:///C:/ball4716/workspace/JavaApp/image/gongu.jpg")
+			document.img1.src="../image/bogum.jpg";
+		else if(src=="file:///C:/ball4716/workspace/JavaApp/image/bogum.jpg")
+			document.img1.src="../image/hochang.jpg";
+	} */
+	function imgChange2() {
+		var src = document.img2.src;
+		var idx = src.lastIndexOf('/');
+		src = src.substring(idx+1);//hochang.jpg
+		src = src.split('.')[0]; //hochang
+		var path = '../image/'
+		if (src == "hochang")
+			document.img2.src = path+"heon.jpg";
+		else if (src == "heon")
+			document.img2.src = path+"gongu.jpg";
+		else if (src == "gongu")
+			document.img2.src = path+"bogum.jpg";
+		else if (src == "bogum")
+			document.img2.src = path+"hochang.jpg";
+	}
+	var cnt = 0;
+	function imgChange() {
+		var src = document.img1.src;
+		if (cnt == 0) {
+			document.img1.src = "../image/heon.jpg";
+			document.img1.title = "이병헌";
+			cnt = 1;
+		} else if (cnt == 1) {
+			document.img1.src = "../image/gongu.jpg";
+			document.img1.title = "공유";
+			cnt = 2;
+		} else if (cnt == 2) {
+			document.img1.src = "../image/bogum.jpg";
+			document.img1.title = "보검";
+			cnt = 3;
+		} else if (cnt == 3) {
+			document.img1.src = "../image/hochang.jpg";
+			document.img1.title = "호창";
+			cnt = 0;
+		}
+	}
+	
+	function imgChange3(fileName){
+		path="../image/";
+		document.img3.src = path + fileName;
+	}
+</script>
+</head>
+<!-- img_test.html -->
+<body>
+	<h3>이미지 이벤트 테스트</h3>
+	<img src="../image/hochang.jpg" title="호창" width="300" height="400"
+		alt="이미지 없음" name="img1" onclick="imgChange()">
+	<br>
+	<input type="button" value="작게" onclick="sizeChange(150,200)">
+	<input type="button" value="보통" onclick="sizeChange(300,400)">
+	<input type="button" value="크게" onclick="sizeChange(600,800)"><br><br>
+	<img src="../image/hochang.jpg" title="호창이형" width="300" height="400"
+		alt="이미지 없음" name="img2" onclick="imgChange2()">
+	<br>
+	
+	<img src="../image/hochang.jpg" width="300" height="400" name="img3"
+		onmouseover="imgChange3('hochang.jpg')"
+		onmousedown="imgChange3('heon.jpg')"
+		onmouseout="imgChange3('gongu.jpg')">
+	<!-- img3에 마우스가 진입했다면 호창이미지
+		마우스 클릭했다면 병헌이미지
+		마우스 나갔을때 공유이미지 변환-->
+	<a href="http://naver.com">네이버이동</a>
+</body>
+</html>

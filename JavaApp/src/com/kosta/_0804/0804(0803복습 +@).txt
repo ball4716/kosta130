@@ -1,0 +1,33 @@
+
+
+DefaultTableModel 이 Interface TableModel을 상속한다.
+
+
+com.kosta.person.view
+   - MainView.java(JTable)
+       public void displayTable(Vector<Person> v){
+       
+       }
+   - InputForm.java(입력폼, 수정폼)
+   
+com.kosta.person.model
+   - Person.java (JavaBeans)
+   - Model.java(필드: Vector<Person> ====> 데이터 저장소
+           메소드: 추가,삭제,수정,검색)
+                   ===> insert,delete,update,select
+                    
+com.kosta.person.control
+   - Controller(전체 프로그램 제어)
+
+--------------------------------------------------------------------   
+   메인화면의 수정버튼 클릭시
+      - JTable의 선택된 행에 대해 수정폼에 Vector의 일치하는 데이터를 뿌려주기
+      
+   메인화면의 삭제버튼 클릭시
+      - JOptionPane의 inputDialog를 통해 삭제할 번호의 입력받기
+   
+   추가,삭제,수정,검색은 JTable이 아닌 Vector<Person>을 대상으로 실행
+      - JTable은 단지 현 Vector에 있는 값만 출력.
+   
+   Person클래스에 번호를 저장할 수 있는 no필드 추가.
+--------------------------------------------------------------------   

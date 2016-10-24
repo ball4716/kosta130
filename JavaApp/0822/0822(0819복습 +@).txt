@@ -1,0 +1,1309 @@
+<프로그램 실행중 발생하는 데이터를 저장>
+1. 클래스의 멤버
+class A{
+	int su=0;
+}
+
+A obj = new A();
+	su++;
+----> 메모리에 데이터를 저장(휘발성 높은 데이터)
+
+2. File System
+   ----> 적은 양의 데이터를 저장
+
+3. DataBase 테이블
+   ----> 논리적으로 행과 열의 형태로 데이터를 저장
+   ----> 데이터를 프로그램종류와 상관없이 공유
+   
+<SQL>
+1. DQL(Data Query Language)
+	- select
+	<select 형식>
+	
+	- 기본형식
+	select 컬럼명
+	from 테이블명;
+	
+	- 전체 절(6개절)의 형식
+	select (조회, 출력) 컬럼명 - 열을 제어!!
+			avg(sal), deptno
+	from 테이블명
+	where (전체행에 대한)조건식  - 행을 제어!!
+			avg(sal)>2000 ====>에러
+			===> (select avg(sal) from emp) > 2000
+	group by (그룹묶여질수 있는)컬럼명 deptno
+	having (그룹에 대한)조건식
+			avg(sal)>2000 ====>실행 잘됨!!
+			===> 그룹 평균이 2000초과인 부서!!
+	
+	order by 컬럼명 [ASC|DESC], (2차정렬)컬럼명;
+	
+	실행순서)
+		1. from 2. where 3. group by 4. having 5. select 6. order by
+	
+2. DML(Data Manipulation Language)
+	- insert, delete, update
+
+3. DDL(Data Definition Language)
+	- DDL에서의 Data란 객체를 의미!!
+	- create, drop, alter(구조변경), rename, truncate
+	
+4. DCL(Data Control Language)
+	- 데이터베이스관리자가 권한을 부여, 회수
+	- grant, revoke
+	
+5. TCL(Transaction Language)
+	- 트랜젝션: 여러개의 DML에 대한 논리적인 작업의 단위
+	- All or Nothing (모두 처리하거나 또는 모두 취소)
+	- commit, rollback,
+	  savepoint(저장점-rollback과 함께 사용되며 특정위치까지 작업취소)
+	  
+<조인>
+1. cross조인(where절 없이 두개 이상의 테이블을 참조)
+   from emp, dept
+   
+2. equi조인(where절에 두테이블의 공통컬럼을 동등비교)
+   from emp, dept ===> 14행 * 4행 = 56행
+   where emp.deptno = dept.deptno; ===> 14행
+   
+3. non-equi조인(where절에 두 테이블의 관련 속성 컬럼을 비교)
+   from emp e, salgrade s
+   where e.sal between s.losal and s.hisal
+         --sal >= local and <= hisal
+
+4. self조인(from뒤에 동일한 테이블명을 두번이상 참조할때)
+   select e1.ename, e2.ename
+   from emp e1, emp e2
+   where e1.mgr = e2.empno
+   		----> 첫번째테이블에서 직속상사의 사원번호 정보를 얻고
+   		----> 두번째테이블에서 그 사원번호에 대한 사원명을 얻는다!!   
+
+5. outer조인(비교대상테이블에서 데이터가 존재하지 않아서 조회에 배제된 행을 추가)
+   select e1.ename, e2.ename
+   from emp e1, emp e2
+   where e1.mgr = e2.empno
+   ----> 사원수는 14명인데 결과행은 13행!!
+   ----> KING사원의 mgr이 null이고 두번째 테이블에서 null을 empno로 하는 행이 없음!!
+   
+   select e1.ename, e2.ename
+   from emp e1,     emp e2
+   where e1.mgr = e2.empno(+);
+   
+=======================================================================
+
+<ANSI Cross Join> 표준조인(9i버전부터)
+from 테이블명1, 테이블명2
+----> 콤마제거
+
+select empno, ename, dname
+from emp, dept;
+====> 56 rows selected.(56행 출력)
+
+select empno, ename, dname
+from emp cross join dept;
+====> 56 rows selected.(56행 출력)
+
+
+<ANSI Inner Join>
+- 테이블 사이에 Inner Join 사용
+    동등조건식은 ON(조건절)뒤에 사용.
+- where절을 추가하는 것이 가능
+- on절은 반드시 추가
+- on절에 동등비교와 추가적인 조건식을 기술하는 것이 가능
+
+문제) 전체사원에 대한 사원번호, 사원명, 부서명을 출력
+
+select empno, ename, dname
+from emp inner join dept;
+
+from emp inner join dept
+                       *
+ERROR at line 2:
+===>ORA-00905: missing keyword
+===> inner join시에는 on조건절을 반드시 명시!!
+
+select empno, ename, dname
+from emp inner join dept
+on emp.deptno = dept.deptno;
+===> 정상적인 출력!!
+
+     EMPNO ENAME                DNAME
+---------- -------------------- ----------------------------
+      7782 CLARK                ACCOUNTING
+      7839 KING                 ACCOUNTING
+      7934 MILLER               ACCOUNTING
+      7566 JONES                RESEARCH
+      7902 FORD                 RESEARCH
+      7876 ADAMS                RESEARCH
+      7369 SMITH                RESEARCH
+      7788 SCOTT                RESEARCH
+      7521 WARD                 SALES
+      7844 TURNER               SALES
+      7499 ALLEN                SALES
+
+     EMPNO ENAME                DNAME
+---------- -------------------- ----------------------------
+      7900 JAMES                SALES
+      7698 BLAKE                SALES
+      7654 MARTIN               SALES
+      
+문제) JAMES사원의 사원정보(사원번호, 사원명, 부서명)를 출력하시오
+
+select empno, ename, dname
+from emp inner join dept
+on emp.deptno = dept.deptno
+where ename='JAMES';
+----> where절을 추가!!
+
+     EMPNO ENAME                DNAME
+---------- -------------------- ----------------------------
+      7900 JAMES                SALES
+
+select empno, ename, dname
+from emp inner join dept
+on emp.deptno = dept.deptno
+   and ename='JAMES';
+---> on절에 동등비교와 추가적인 비교!!
+
+     EMPNO ENAME                DNAME
+---------- -------------------- ----------------------------
+      7900 JAMES                SALES
+      
+
+<Inner Join에 USING절 사용하기>
+
+형식) USING (공통컬럼명)
+
+select empno, ename, dname
+from emp inner join dept
+using (deptno)
+where ename='JAMES';
+
+     EMPNO ENAME                DNAME
+---------- -------------------- ----------------------------
+      7900 JAMES                SALES
+
+select empno, ename, dname
+from emp inner join dept
+using (emp.deptno)
+where ename='JAMES';
+
+using (emp.deptno)
+          *
+ERROR at line 3:
+===> 에러발생: ORA-01748: only simple column names allowed here
+===> USING절을 사용할 시 특정 테이블을 명시하지 않는다!!
+
+
+<Natural Join>
+- 공통컬럼을 알아서 묶어줌(동등비교)
+
+문제) ADAMS사원의 사원번호, 사원명, 부서명을 출력하시오
+
+select empno, ename, dname
+from emp natural join dept
+where ename='ADAMS';
+
+     EMPNO ENAME                DNAME
+---------- -------------------- ----------------------------
+      7876 ADAMS                RESEARCH
+
+<ANSI Outer Join>
+
+형식)
+select * from 테이블명1 (LEFT|RIGHT|FULL) [OUTER] JOIN 테이블명2
+
+문제) 각 사원의 이름과 그 사원의 직속상사명을 출력하시오(KING사원의 정보출력)
+select e1.ename 사원명, e2.ename 직속상사명
+from emp e1 inner join emp e2
+on e1.mgr = e2.empno;
+----> 13 rows selected(13행 출력)
+
+select e1.ename 사원명, e2.ename 직속상사명
+from emp e1 left outer join emp e2
+on e1.mgr = e2.empno;
+.
+.
+.
+MILLER               CLARK
+ADAMS                SCOTT
+CLARK                KING
+BLAKE                KING
+
+사원명               직속상사명
+-------------------- --------------------
+JONES                KING
+SMITH                FORD
+KING
+
+문제) 각 사원의 이름과 부서번호, 부서명, 부서위치를 출력하시오(40번 부서 정보 출력)
+
+select ename, deptno, dname, loc
+from emp e right join dept d
+   --10,20,30    10,20,30,40
+using (deptno);
+.
+.
+.
+JAMES                        30 SALES
+CHICAGO
+
+
+ENAME                    DEPTNO DNAME
+-------------------- ---------- ----------------------------
+LOC
+--------------------------
+BLAKE                        30 SALES
+CHICAGO
+
+MARTIN                       30 SALES
+CHICAGO
+
+                             40 OPERATIONS
+BOSTON
+
+======================= JOIN 문제 ===================================
+<문제1> 사원들의 이름, 부서번호, 부서이름을 출력.
+
+select ename, dept.deptno, dname
+from emp, dept
+where emp.deptno(+) = dept.deptno;
+
+--ANSI NATURAL JOIN
+select ename, deptno, dname
+from emp natural join dept;
+
+ENAME                    DEPTNO DNAME
+-------------------- ---------- ----------------------------
+CLARK                        10 ACCOUNTING
+KING                         10 ACCOUNTING
+MILLER                       10 ACCOUNTING
+JONES                        20 RESEARCH
+FORD                         20 RESEARCH
+ADAMS                        20 RESEARCH
+SMITH                        20 RESEARCH
+SCOTT                        20 RESEARCH
+WARD                         30 SALES
+TURNER                       30 SALES
+ALLEN                        30 SALES
+
+ENAME                    DEPTNO DNAME
+-------------------- ---------- ----------------------------
+JAMES                        30 SALES
+BLAKE                        30 SALES
+MARTIN                       30 SALES
+
+14 rows selected.
+
+<문제2> 부서번호가 30번인 사원들의 이름, 직급, 부서번호, 부서위치출력.
+
+select ename, job, emp.deptno, loc
+from emp, dept
+where emp.deptno = 30
+	and emp.deptno = dept.deptno;
+	
+--ANSI NATURAL JOIN
+select ename, job, deptno, loc
+from emp natural join dept
+where deptno = 30;
+   
+ENAME                JOB                    DEPTNO LOC
+-------------------- ------------------ ---------- --------------------------
+ALLEN                SALESMAN                   30 CHICAGO
+WARD                 SALESMAN                   30 CHICAGO
+MARTIN               SALESMAN                   30 CHICAGO
+BLAKE                MANAGER                    30 CHICAGO
+TURNER               SALESMAN                   30 CHICAGO
+JAMES                CLERK                      30 CHICAGO
+
+<문제3> 커미션을 받는 사원의 이름, 커미션, 부서이름, 부서위치출력
+        (커미션 0 은 제외)
+        
+select ename, comm, dname, loc
+from emp, dept
+where comm !=0 --3행
+	and comm is not null -- 4행
+	and emp.deptno = dept.deptno -- 14행;
+	
+--ANSI NATURAL JOIN
+select ename, comm, dname, loc
+from emp natural join dept
+where loc='
+	
+--ANSI INNER JOIN
+select ename, comm, dname, loc
+from emp inner join dept
+on comm != 0
+	and comm is not null
+	and emp.deptno = dept.deptno;
+	
+ENAME                      COMM DNAME
+-------------------- ---------- ----------------------------
+LOC
+--------------------------
+ALLEN                       300 SALES
+CHICAGO
+
+WARD                        500 SALES
+CHICAGO
+
+MARTIN                     1400 SALES
+CHICAGO
+
+<문제4> DALLAS에서 근무하는 사원들의 이름, 직급, 부서번호, 부서이름출력.
+
+select ename, job, emp.deptno, dname
+from emp, dept
+where loc = 'DALLAS'
+	and emp.deptno = dept.deptno;
+
+--ANSI NATURAL JOIN
+select ename, job, deptno, dname
+from emp natural join dept
+where loc = 'DALLAS';
+
+--ANSI JOIN
+select ename, job, emp.deptno, dname
+from emp inner join dept
+on loc = 'DALLAS'
+	and emp.deptno = dept.deptno;
+	
+ENAME                JOB                    DEPTNO DNAME
+-------------------- ------------------ ---------- ----------------------------
+JONES                MANAGER                    20 RESEARCH
+FORD                 ANALYST                    20 RESEARCH
+ADAMS                CLERK                      20 RESEARCH
+SMITH                CLERK                      20 RESEARCH
+SCOTT                ANALYST                    20 RESEARCH
+
+<문제5> 사원이름에 'A'가 들어가는 사원들의 이름과 부서이름을 출력.
+
+select ename, dname
+from emp, dept
+where ename like '%A%'
+	and emp.deptno = dept.deptno;
+	
+select ename, dname
+from emp inner join dept
+using (deptno)
+where ename like '%A%';
+
+ENAME                DNAME
+-------------------- ----------------------------
+ALLEN                SALES
+WARD                 SALES
+MARTIN               SALES
+BLAKE                SALES
+CLARK                ACCOUNTING
+ADAMS                RESEARCH
+JAMES                SALES
+
+7 rows selected.
+
+<문제6> 사원이름과 직급, 급여, 급여등급을 출력.    
+
+select ename, job, sal, grade
+from emp, salgrade
+where sal between losal and hisal;
+
+select ename, job, sal,grade
+from emp inner join salgrade
+on sal between losal and hisal;
+
+ENAME                JOB                       SAL      GRADE
+-------------------- ------------------ ---------- ----------
+SMITH                CLERK                     800          1
+JAMES                CLERK                     950          1
+ADAMS                CLERK                    1100          1
+WARD                 SALESMAN                 1250          2
+MARTIN               SALESMAN                 1250          2
+MILLER               CLERK                    1300          2
+TURNER               SALESMAN                 1500          3
+ALLEN                SALESMAN                 1600          3
+CLARK                MANAGER                  2450          4
+BLAKE                MANAGER                  2850          4
+JONES                MANAGER                  2975          4
+
+ENAME                JOB                       SAL      GRADE
+-------------------- ------------------ ---------- ----------
+SCOTT                ANALYST                  3000          4
+FORD                 ANALYST                  3000          4
+KING                 PRESIDENT                5000          5
+
+14 rows selected.
+
+<문제7> 사원들의 이름(14명사원)과 그 사원과 같은 부서에 근무하는 사원의
+       사원명,부서번호를 출력.
+       
+select e1.ename 자신, e2.ename 동료, e2.deptno
+from emp e1, emp e2 --14*14 = 196
+where e2.empno != e1.empno -- 70-14 = 56
+	and e1.deptno = e2.deptno -- 3*3=9 5*5=25 6*6=36 (9+25+36) = 70
+order by e1.ename;
+
+select e1.ename 자신, e2.ename 동료, deptno
+from emp e1 inner join emp e2
+using(deptno)
+where e1.empno != e2.empno
+order by e1.ename;
+.
+.
+.
+TURNER               ALLEN                        30
+WARD                 ALLEN                        30
+WARD                 BLAKE                        30
+WARD                 MARTIN                       30
+WARD                 TURNER                       30
+
+자신                 동료                     DEPTNO
+-------------------- -------------------- ----------
+WARD                 JAMES                        30
+
+56 rows selected.
+
+=========================================================================
+<서브쿼리>★★ Sub Query
+
+- 특정 테이블에서 검색한 결과를 다른 테이블에 전달하여 새로운 결과를 검색할 때 사용
+
+문제) JAMES사원이 근무하는 부서이름을 출력
+
+1) JAMES사원이 근무하는 부서정보 (EMP테이블에서 부서번호)
+select deptno
+from emp
+where ename='JAMES';
+
+    DEPTNO
+----------
+        30
+        
+2) 30부서의 부서명
+select dname
+from dept
+where deptno=30;
+
+DNAME
+----------------------------
+SALES
+
+select dname				-----> 메인쿼리(주쿼리)
+from dept
+where deptno=(select deptno -----> 서브쿼리
+			  from emp
+			  where ename='JAMES');
+
+DNAME
+----------------------------
+SALES
+
+문제) FORD사원과 동일한 직책을 가진 사원에 대해 사원번호, 사원명, 급여, 직책을 출력
+
+select empno, ename, sal, job
+from emp
+where job=(select job
+			from emp
+			where ename='FORD');
+			
+     EMPNO ENAME                       SAL JOB
+---------- -------------------- ---------- ------------------
+      7788 SCOTT                      3000 ANALYST
+      7902 FORD                       3000 ANALYST
+      
+문제) MARTIN사원의 급여와 동일하거나 더 많이 받는 사원의 사원명, 급여를 출력하시오
+
+select ename, sal
+from emp
+where sal>=(select sal
+			from emp
+			where ename='MARTIN')
+	and ename != 'MARTIN';
+	
+ENAME                       SAL
+-------------------- ----------
+ALLEN                      1600
+WARD                       1250
+JONES                      2975
+BLAKE                      2850
+CLARK                      2450
+SCOTT                      3000
+KING                       5000
+TURNER                     1500
+FORD                       3000
+MILLER                     1300
+
+10 rows selected.
+
+
+문제) DALLAS에서 근무하는 사원의 이름, 부서번호를 출력
+
+select ename, deptno
+from emp
+where deptno = (select deptno
+				from dept
+				where loc ='DALLAS');
+
+ENAME                    DEPTNO
+-------------------- ----------
+SMITH                        20
+JONES                        20
+SCOTT                        20
+ADAMS                        20
+FORD                         20
+
+문제) SALES부서에서 근무하는 모든 사원의 이름과 급여, 부서번호를 출력
+
+select ename, sal, deptno
+from emp
+where deptno = (select deptno
+				from dept
+				where dname = 'SALES');
+				
+ENAME                       SAL     DEPTNO
+-------------------- ---------- ----------
+ALLEN                      1600         30
+WARD                       1250         30
+MARTIN                     1250         30
+BLAKE                      2850         30
+TURNER                     1500         30
+JAMES                       950         30
+
+문제) 자신의 직속상사가 KING인 사원의 이름과 급여, 직속상사의 사원 번호를 출력
+
+select ename, sal, mgr
+from emp
+where mgr = (select empno
+			from emp
+			where ename = 'KING');
+			
+ENAME                       SAL        MGR
+-------------------- ---------- ----------
+JONES                      2975       7839
+BLAKE                      2850       7839
+CLARK                      2450       7839
+
+문제) 평균급여보다 많은 급여를 받는 사원들의 사번, 사원명, 급여를 출력(급여 내림차순)
+
+select empno, ename, sal
+from emp
+where sal > (select avg(sal) from emp)
+order by sal desc;
+
+문제) 10번 부서의 사원중 전체 최대급여를 받은 사원과 동일한 급여를 받는 사원의 사원번호와 사원명을 출력
+
+select empno, ename
+from emp
+where deptno = 10
+	and sal = (select max(sal) from emp);
+	
+     EMPNO ENAME
+---------- --------------------
+      7839 KING
+
+      
+<단일 행 서브쿼리>
+
+- 하나의 행만 검색하여 그 결과를 메인쿼리에게 보내는 것
+- 그룹함수
+
+<다중 행 서브쿼리>
+
+- 서브쿼리에서 반환되는 결과가 두개 이상의 행일 때 사용하는 서브쿼리
+- 반드시 다중 행 연산자(Multiple Row Operator)와 함께 사용
+
+※다중행 연산자
+IN : 메인쿼리의 비교조건이 서브쿼리의 결과중에서 하나라도 일치하면 참
+ANY,SOME : 메인쿼리의 비교조건이 서브쿼리의 결과와 하나이상 일치하면 참
+ALL : 메인쿼리의 비교조건이 서브쿼리의 결과와 모든값이 일치하면 참
+EXISTS : 메인쿼리의 비교조건이 서브쿼리의 결과중에서 만족하는 값이 하나라도 존재하면 참
+
+문제) BLAKE와 같은 부서에 있는 사람들의 이름과 입사일자를 출력하시오
+
+select ename, hiredate
+from emp
+where deptno = (select deptno
+				from emp
+				where ename = 'BLAKE');
+
+ENAME                HIREDATE
+-------------------- --------
+ALLEN                81/02/20
+WARD                 81/02/22
+MARTIN               81/09/28
+BLAKE                81/05/01
+TURNER               81/09/08
+JAMES                81/12/03
+
+샘플추가)
+insert into emp (empno, ename, hiredate, deptno)
+		values (8000, 'BLAKE', sysdate, 10);
+
+select deptno
+from emp
+where ename = 'BLAKE';
+
+    DEPTNO
+----------
+        30
+        10
+        
+select ename, hiredate
+from emp
+where deptno = (select deptno
+				from emp
+				where ename = 'BLAKE');
+
+where deptno = (select deptno
+                *
+ERROR at line 3:
+---> ORA-01427: single-row subquery returns more than one row
+---> 서브쿼리의 결과행이 2행 이상일 때 다중행 연산자와 함께 사용!! 에러!!
+
+select ename, hiredate
+from emp
+where deptno in (select deptno
+				from emp
+				where ename = 'BLAKE');
+
+ENAME                HIREDATE
+-------------------- --------
+JAMES                81/12/03
+TURNER               81/09/08
+BLAKE                81/05/01
+MARTIN               81/09/28
+WARD                 81/02/22
+ALLEN                81/02/20
+BLAKE                16/08/22
+MILLER               82/01/23
+KING                 81/11/17
+CLARK                81/06/09
+
+10 rows selected.
+
+rollback; 실행
+
+
+
+문제) 급여를 3000 이상 받는 사원이 소속된 부서와 동일한 부서에서 근무하는 
+     사원들의 정보 출력(사원명, 급여, 부서번호)
+
+select ename, sal, deptno --메인쿼리
+from emp
+where deptno = (select deptno --서브쿼리, 조건, (20,10,20)
+				from emp
+				where sal >= 3000);
+				
+where deptno = (select deptno --서브쿼리, 조건, (20,10,20)
+                    *
+ERROR at line 3:
+ORA-01427: single-row subquery returns more than one row
+---> 두개이상의 행이 서브쿼리에 들어가서 에러
+
+select ename, sal, deptno --메인쿼리
+from emp
+where deptno in (select deptno --서브쿼리, 조건, (20,10,20)
+				from emp
+				where sal >= 3000);
+     
+문제) 부서번호가 30번인 사원들 중 급여를 가장 많이 받는 사원보다 
+     더 많은 급여를 받는 사원명, 급여를 출력 (ALL) - 모두 만족
+
+30번부서 SAL
+----------
+1600 보다 크다
+1250 보다 크다
+1250 보다 크다
+2850 보다 크다
+1500 보다 크다
+ 950 보다 크다
+ 
+select ename, sal
+from emp
+where sal > ALL (select sal --(1600,1250,1250,2850,1500,950)
+				from emp
+				where deptno=30);
+
+select ename, sal
+from emp
+where sal > (select max(sal)
+			from emp
+			where deptno=30);
+			
+ENAME                       SAL
+-------------------- ----------
+JONES                      2975
+SCOTT                      3000
+FORD                       3000
+KING                       5000
+    
+문제) 부서번호가 30번인 사원들 중 급여를 가장 적게 받는 사원보다 
+     더 많은 급여를 받는 사원명, 급여를 출력 (ANY) - 하나라도 만족
+
+30번부서 SAL
+----------
+1600 보다 크다
+1250 보다 크다
+1250 보다 크다
+2850 보다 크다
+1500 보다 크다
+ 950 보다 크다
+ 
+select ename, sal
+from emp
+where sal > ANY (select sal --(1600,1250,1250,2850,1500,950)
+			from emp
+			where deptno=30); 
+
+ENAME                       SAL
+-------------------- ----------
+KING                       5000
+FORD                       3000
+SCOTT                      3000
+JONES                      2975
+BLAKE                      2850
+CLARK                      2450
+ALLEN                      1600
+TURNER                     1500
+MILLER                     1300
+WARD                       1250
+MARTIN                     1250
+
+ENAME                       SAL
+-------------------- ----------
+ADAMS                      1100
+
+12 rows selected.
+
+======================= 서브쿼리 문제 ==============================
+문제1) SCOTT와 급여가 동일하거나 더 많이 받는 사원의 이름과 급여출력
+
+select ename, sal
+from emp
+where ename ^= 'SCOTT'
+		and sal >= (select sal
+				from emp
+				where ename = 'SCOTT');
+
+ENAME                       SAL
+-------------------- ----------
+KING                       5000
+FORD                       3000
+			
+문제2) 직급(job)이 사원(CLERK)인 사람이 속한 부서의
+        부서번호와 부서명,부서위치를 출력
+
+select deptno, dname, loc
+from dept
+where deptno in (select deptno
+				from emp
+				where job = 'CLERK');
+				
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   NEW YORK
+        20 RESEARCH                     DALLAS
+        30 SALES                        CHICAGO
+
+문제3) 사원명에 'T'를 포함하고 있는 사원들과 같은 부서에서 근무하고 있는
+       사원의 사원번호와 이름을 출력
+       
+select empno, ename
+from emp
+where ename ^= '%T%'
+	and deptno in (select deptno
+				from emp
+				where ename like '%T%');
+	 
+				
+     EMPNO ENAME
+---------- --------------------
+      7902 FORD
+      7876 ADAMS
+      7788 SCOTT
+      7566 JONES
+      7369 SMITH
+      7900 JAMES
+      7844 TURNER
+      7698 BLAKE
+      7654 MARTIN
+      7521 WARD
+      7499 ALLEN
+      
+문제3-2) 사원명에 'T'를 포함하고30번 부서에 근무하는 사원들의 사원의 사원번호와 이름을 출력
+
+select empno, ename, deptno
+from emp
+where ename like '%T%'
+	and deptno = (select deptno
+				from )
+
+문제4) 부서위치가 DALLAS인 모든 사원의 이름, 부서번호를 출력
+
+select ename, deptno
+from emp
+where deptno = (select deptno
+				from dept
+				where loc = 'DALLAS');
+				
+ENAME                    DEPTNO
+-------------------- ----------
+SMITH                        20
+JONES                        20
+SCOTT                        20
+ADAMS                        20
+FORD                         20
+
+문제5) SALES부서의 모든 사원의 이름과 급여출력
+
+select ename, sal
+from emp
+where deptno = (select deptno
+				from dept
+				where dname = 'SALES');
+				
+ENAME                       SAL
+-------------------- ----------
+ALLEN                      1600
+WARD                       1250
+MARTIN                     1250
+BLAKE                      2850
+TURNER                     1500
+JAMES                       950
+
+문제6) KING에게 보고하는 모든 사원의 이름과 급여를 출력.
+
+select ename, sal
+from emp
+where mgr = (select empno
+			from emp
+			where ename = 'KING');
+			
+ENAME                       SAL
+-------------------- ----------
+JONES                      2975
+BLAKE                      2850
+CLARK                      2450
+
+문제6-1) 다른부서포함 KING에게 보고하는 모든 사원의 이름과 급여를 출력
+
+select ename, sal
+from emp
+where mgr in (select empno from emp where ename='KING')
+	or deptno in (select deptno from emp where ename = 'KING')
+	and ename <> 'KING';
+	
+ENAME                       SAL
+-------------------- ----------
+JONES                      2975
+BLAKE                      2850
+CLARK                      2450
+MILLER                     1300
+
+문제7) 자신의 급여가 평균급여보다 많고 이름에 S가 들어가는 사원과
+               (1번째조건)                    (2번째조건)
+          ---> 1,2번을 동시에 만족하는 사원의 부서
+       동일한 부서에서 근무하는 모든 사원의 사원번호, 사원명, 급여 출력
+       
+select empno, ename, sal
+from emp
+where deptno = ALL (select deptno
+				from emp
+				where ename like '%S%'
+					and sal>(select avg(sal) from emp));
+ 
+     EMPNO ENAME                       SAL
+---------- -------------------- ----------
+      7369 SMITH                       800
+      7566 JONES                      2975
+      7788 SCOTT                      3000
+      7876 ADAMS                      1100
+      7902 FORD                       3000
+ 
+
+ ================================================================
+ <테이블 생성> : 테이블 객체 생성
+ 형식)
+   CREATE TABLE 테이블명
+   (
+		컬럼명1 자료형,
+		컬럼명2 자료형,
+		컬럼명3 자료형
+	);
+	
+<자료형> 데이터: 문자, 숫자, 날짜, 이미지등
+CHAR : 주어진 크기만큼 고정길이의 문자저장 1바이트~2000바이트
+VARCHAR2 : 주어진 크기만큼 가변길이의 문자저장 1바이트~4000바이트
+NUMBER(p,s) : 정밀도와 스케일로 표현되는 숫자
+DATE : 날짜형식저장
+TIMESTAMP : DATE형의 확장된 형태
+BLOB : 대용량의 바이너리 데이터를 저장, 최대 4GB
+CLOB : 대용량의 텍스트 데이터를 저장, 최대 4GB
+BFILE : 대용량의 바이너리 데이터를 파일 형태로 저장, 최대 4GB
+ 
+create table emp
+();
+
+()
+ *
+ERROR at line 2:
+===> 에러발생 : ORA-00904: : invalid identifier
+===> 테이블객체 생성시 최소 한개 이상의 컬럼 정의 필요!!
+
+create table emp
+(
+	empno number(4)
+);
+
+create table emp
+             *
+ERROR at line 1:
+===> 에러발생 : ORA-00955: name is already used by an existing object
+===> 이미 사용중인 객체이름을 정의(생성)할 수 없음!!
+
+create table 2emp
+(
+  empno number(4)
+);            
+==> 에러발생: ORA-00903: invalid table name
+            ----> 테이블명, 컬럼명에 첫글자에 숫자는 불가능!!
+                  (특수문자X, 예약어X)
+
+create table emp01
+(
+  empno number(4)
+);
+==> 테이블 객체생성 성공!!
+
+create table emp02(
+  empno number(4) -- 사원번호
+  ename varchar2(15) -- 사원명
+  sal   number(7,2) -- 급여  
+);
+
+  ename varchar2(15) -- 사원명
+      *
+ERROR at line 3:
+===> 에러발생 : ORA-00907: missing right parenthesis
+===> 두개 이상의 컬럼을 정의할 시에는 각 컬럼을 구분하는 ',' 구분자 사용!!
+
+create table emp02(
+	empno number(4) --사원번호
+	,
+	ename varchar2(15) --사원명
+	,
+	sal number(7,2) --급여
+);
+
+===> 테이블 객체 생성 성공!!
+
+현재 연결된 계정이 생성한 테이블들을 보기!!
+select * from tab;
+
+TNAME                                                        TABTYPE         CLUSTERID
+------------------------------------------------------------ -------------- ----------
+DEPT                                                         TABLE
+EMP                                                          TABLE
+EMP01                                                        TABLE
+EMP02                                                        TABLE
+SALGRADE                                                     TABLE
+ 
+<객체 삭제하기>
+drop table my;
+drop table emp01;
+drop table emp02;
+===> Table dropped 
+ 
+select * from tab;
+
+<서브쿼리를 이용한 테이블 생성>
+
+- 기존테이블의 구조(컬럼, 자료형)와 데이터를 복사
+- 제약(constraints)은 복사되지 않음!!
+      -----> 5가지(unique, not null, primary key, foreign key, check)
+      
+형식)
+	CREATE TABLE 테이블명
+	AS 서브쿼리;
+
+create table emp01
+as select * from emp;
+==> 테이블 생성 성공!!
+ 
+<테이블 구조(컬럼,자료형)알아보기>
+
+desc emp01
+ 
+ Name
+     Null?    Type
+ --------------------------
+ EMPNO
+              NUMBER(4)
+ ENAME
+              VARCHAR2(10)
+ JOB
+              VARCHAR2(9)
+ MGR
+              NUMBER(4)
+ HIREDATE
+              DATE
+ SAL
+              NUMBER(7,2)
+ COMM
+              NUMBER(7,2)
+ DEPTNO
+              NUMBER(2)
+ 
+<emp01테이블의 데이터 확인>
+select empno, ename, sal from emp01;
+
+     EMPNO ENAME                       SAL
+---------- -------------------- ----------
+      7369 SMITH                       800
+      7499 ALLEN                      1600
+      7521 WARD                       1250
+      7566 JONES                      2975
+      7654 MARTIN                     1250
+      7698 BLAKE                      2850
+      7782 CLARK                      2450
+      7788 SCOTT                      3000
+      7839 KING                       5000
+      7844 TURNER                     1500
+      7876 ADAMS                      1100
+
+     EMPNO ENAME                       SAL
+---------- -------------------- ----------
+      7900 JAMES                       950
+      7902 FORD                       3000
+      7934 MILLER                     1300
+
+<서브쿼리를 통한 테이블 생성 : 원하는 컬럼과 행만 복사>
+- 테이블 emp02를 생성(30번 부서 사원들의 사원번호, 사원명, 급여만)
+
+create table emp02
+as select empno, ename, sal --제약된 컬럼
+   from emp
+   where deptno=30
+   
+Table created.
+
+sele
+
+
+<서브쿼리를 통한 테이블 생성: 구조(컬럼명,자료형)만 복사, 데이터 복사X>
+create table emp03
+as select * from emp
+   where '현영' = '효원' -- 만족하는 행 없음!!;
+===> 테이블 생성(구조만 복사)
+
+desc emp03
+
+ Name
+     Null?    Type
+ ----------------------------------------------------------------------------------- -------- --------------------------------------------------------
+ EMPNO
+              NUMBER(4)
+ ENAME
+              VARCHAR2(10)
+ JOB
+              VARCHAR2(9)
+ MGR
+              NUMBER(4)
+ HIREDATE
+              DATE
+ SAL
+              NUMBER(7,2)
+ COMM
+              NUMBER(7,2)
+ DEPTNO
+              NUMBER(2)
+
+select * from emp03;
+==> no rows selected (결과 행 없음)
+
+<테이블의 구조 변경하기> : ALTER
+- 컬럼추가, 컬럼삭제, 컬럼의 자료형 또는 바이트 수를 변경
+
+1. 컬럼추가하기(이메일컬럼 추가)
+create table emp04
+as select * from emp;
+
+desc emp04
+ Name
+     Null?    Type
+ ----------------------------------------------------------------------------------- -------- --------------------------------------------------------
+ EMPNO
+              NUMBER(4)
+ ENAME
+              VARCHAR2(10)
+ JOB
+              VARCHAR2(9)
+ MGR
+              NUMBER(4)
+ HIREDATE
+              DATE
+ SAL
+              NUMBER(7,2)
+ COMM
+              NUMBER(7,2)
+ DEPTNO
+              NUMBER(2)
+
+
+select count(*) from emp04;
+
+  COUNT(*)
+----------
+        14
+        
+※ 8개의 컬럼 ----> 9개의 컬럼 변경!!
+ALTER table emp04
+add (email varchar2(20));
+
+===> Table altered.(테이블이 변경되었음!!)
+
+<insert 문법>
+INSERT INTO 테이블명 (컬럼명1, 컬럼명2) VALUES (데이터1, 데이터2);
+
+insert into emp04 (empno, ename, email)
+	values (8000, '홍길동', 'gildong@naver.com');
+
+===>1 row created.(행 추가 성공!!)
+
+insert into emp04 (empno, ename, email)
+			values (8002, '홍길동', 'gildongyayayayayaya@naver.com');
+			
+ERROR at line 2:
+ORA-12899: value too large for column "SCOTT"."EMP04"."EMAIL" (actual: 29, maximum: 20)
+===> 이메일 컬럼 길이 초과
+
+2. 컬럼변경하기
+※ 이메일 컬럼(20byte)----> 이메일 컬럼(30byte) 변경!!
+alter table emp04
+modify (email varchar2(30));
+
+Table altered. 
+
+desc emp04
+
+ Name
+     Null?    Type
+ ----------------------------------------------------------------------------------- -------- --------------------------------------------------------
+ EMPNO
+              NUMBER(4)
+ ENAME
+              VARCHAR2(10)
+ JOB
+              VARCHAR2(9)
+ MGR
+              NUMBER(4)
+ HIREDATE
+              DATE
+ SAL
+              NUMBER(7,2)
+ COMM
+              NUMBER(7,2)
+ DEPTNO
+              NUMBER(2)
+ EMAIL
+              VARCHAR2(30)
+              
+insert into emp04 (empno, ename, email) 
+             values (8002, '홍길동', 'gildongyayaya@naver.com');
+ ===> 1 row created.
+ 
+   alter table emp04
+   modify (email varchar2(22));
+ORA-01441: cannot decrease column length because some value is too big
+
+3. 컬럼 삭제하기(이메일 컬럼 삭제)
+
+alter table emp04
+drop column email;
+===> 테이블 변경되었음
+
+desc emp04
+ Name
+     Null?    Type
+ ----------------------------------------------------------------------------------- -------- --------------------------------------------------------
+ EMPNO
+              NUMBER(4)
+ ENAME
+              VARCHAR2(10)
+ JOB
+              VARCHAR2(9)
+ MGR
+              NUMBER(4)
+ HIREDATE
+              DATE
+ SAL
+              NUMBER(7,2)
+ COMM
+              NUMBER(7,2)
+ DEPTNO
+              NUMBER(2)
+
+4. SET UNUSED 옵션 적용하기
+---> 보통 컬럼의 삭제는 사람들이 잘 사용하지 않는 새벽시간대에 삭제!!
+alter table emp04
+set unused(comm);
+
+alter table emp04
+set unused(mgr);
+
+===> unused된 컬럼들을 한번에 삭제
+alter table emp04
+drop unused column;
+
+desc emp04
+ Name
+     Null?    Type
+ ----------------------------------------------------------------------------------- -------- --------------------------------------------------------
+ EMPNO
+              NUMBER(4)
+ ENAME
+              VARCHAR2(10)
+ JOB
+              VARCHAR2(9)
+ HIREDATE
+              DATE
+ SAL
+              NUMBER(7,2)
+ DEPTNO
+              NUMBER(2)
+              
+5. 컬럼명 변경하기
+형식)
+	ALTER TABLE 테이블명
+	RENAME COLUMN old_컬럼명 to new_컬럼명;
+	
+	alter table emp04
+	rename column sal to 급여;
+
+desc emp04
+	
+	 Name
+     Null?    Type
+ ----------------------------------------------------------------------------------- -------- --------------------------------------------------------
+ EMPNO
+              NUMBER(4)
+ ENAME
+              VARCHAR2(10)
+ JOB
+              VARCHAR2(9)
+ HIREDATE
+              DATE
+ 급여
+              NUMBER(7,2)
+ DEPTNO
+              NUMBER(2)
+              
+※ ALTER정리
+
+ALTER TABLE 테이블명
+-------------------
+컬럼추가 : ADD (컬럼명 자료형)
+컬럼수정 : MODIFY (컬럼명 자료형) -- 자료형 변경이나 byte수 변경
+                               (데이터 손실 없을 경우)
+컬럼삭제 : DROP COLUMN 컬럼명
+컬럼이름변경 : RENAME COLUMN 기존컬럼명 TO 새컬럼명
+컬럼사용안함 : SET UNUSED (컬럼명)
+UNUSED설정된 컬럼들 삭제 : DROP UNUSED COLUMN;

@@ -1,0 +1,871 @@
+<DBMS> - Oracle(Express Edition)
+ - DataBase Management System
+ 
+ <DB접속>
+  - 접속툴: 토드, SQL Developer(오라클 제공), 이클립스, SQL*PLUS
+  - SQL*PLUS 통한 접속
+    1. sqlplus 계정명/패스워드
+    
+<접속계정에서의 생성된 테이블 종류 보기>
+SQL> select * from tab; -- 모든 테이블 종류 보기
+	※ '*'은 와일드 카드!! 모든것!
+	---> EMP(사원테이블), DEPT(부서테이블), SALGRADE(급여등급테이블)
+	
+<각 테이블의 속성(컬럼) 검색>
+- DESC[RIBE] 테이블명
+	※ '[]'대괄호는 생략 가능하다는 의미!
+- 테이블을 구성하는 컬럼과 자료형을 표현
+
+SQL> describe emp (사원테이블)
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMPNO    (사원번호)                         NOT NULL NUMBER(4)
+ ENAME    (사원명)                                   VARCHAR2(10)
+ JOB      (직책)                                     VARCHAR2(9)
+ MGR      (매니저, 직속상사)                           NUMBER(4)
+ HIREDATE (고용일, 입사일)                             DATE
+ SAL      (급여)                                     NUMBER(7,2)
+ COMM     (커미션, 특별수당)                           NUMBER(7,2)
+ DEPTNO   (사원이 속한 부서번호)                         NUMBER(2)
+
+
+SQL> desc dept
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DEPTNO                                    NOT NULL NUMBER(2)
+ DNAME                                              VARCHAR2(14)
+ LOC                                                VARCHAR2(13)
+ 
+SQL> desc salgrade
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ GRADE                                              NUMBER
+ LOSAL                                              NUMBER
+ HISAL                                              NUMBER
+ 
+<샘플테이블 구성>
+1. EMP테이블(사원테이블)
+	EMPNO : 사원번호
+	ENAME : 사원명
+	JOB : 직책
+	MGR : 매니저, 직속상사
+	HIREDATE : 고용일, 입사일
+	SAL : 급여
+	COMM : 커미션(특별수당,성과금)
+	DEPTNO : (사원이 속한)부서번호
+	
+2. DEPT테이블(부서테이블)
+	DEPTNO : 부서번호
+	DNAME  : 부서명
+	LOC    : 부서위치
+	
+3. SALGRADE테이블(급여등급테이블)
+	GRADE : 등급
+	LOSAL : 최소급여
+	HISAL : 최대급여
+	
+<테이블내의 데이터를 검색> ★
+형식)
+	SELECT 컬럼명
+	FROM (검색하고자 하는 컬럼명이 속한)테이블명;
+
+문제) 급여등급, 최소급여, 최대급여를 검색하시오
+	select grade,losal,hisal --SQL명령어와 컬럼명은 대소문자 구분 없이 사용!!
+	from salgrade;
+
+		 GRADE      LOSAL      HISAL
+	---------- ---------- ----------
+	         1        700       1200
+	         2       1201       1400
+	         3       1401       2000
+	         4       2001       3000
+	         5       3001       9999
+	      
+※ '--' SQL명령어 사용시 주석의 역할!!
+	         
+문제) 부서명과 부서위치를 출력하시오
+	select dname,loc
+	from dept;
+
+	DNAME                        LOC
+	---------------------------- --------------------------
+	ACCOUNTING                   NEW YORK
+	RESEARCH                     DALLAS
+	SALES                        CHICAGO
+	OPERATIONS                   BOSTON
+	
+※ 테이블에 없는 칼럼명을 사용할 경우!!
+	select dname, loc
+	from emp;
+	select dname, loc
+	              *
+	ERROR at line 1:
+	ORA-00904: "LOC": invalid identifier
+	
+문제) 사원번호, 사원명, 입사일, 급여를 출력하시오
+	select empno,ename,hiredate,sal
+	from emp;
+
+	     EMPNO ENAME                HIREDATE        SAL
+	---------- -------------------- -------- ----------
+	      7369 SMITH                80/12/17        800
+	      7499 ALLEN                81/02/20       1600
+	      7521 WARD                 81/02/22       1250
+	      7566 JONES                81/04/02       2975
+	      7654 MARTIN               81/09/28       1250
+	      7698 BLAKE                81/05/01       2850
+	      7782 CLARK                81/06/09       2450
+	      7788 SCOTT                87/04/19       3000
+	      7839 KING                 81/11/17       5000
+	      7844 TURNER               81/09/08       1500
+	      7876 ADAMS                87/05/23       1100
+	
+	     EMPNO ENAME                HIREDATE        SAL
+	---------- -------------------- -------- ----------
+	      7900 JAMES                81/12/03        950
+	      7902 FORD                 81/12/03       3000
+	      7934 MILLER               82/01/23       1300
+	
+	14 rows selected.
+	
+============================================================
+<데이터형>
+1. NUMBER(precision, scale)			: 정수, 실수표현
+		전체자리수, 소수점이하자리수
+		
+   12345  -----> number, number(5) --바이트 수를 생략하고 사용가능
+   12345.78 -----> number(8,2)
+   
+2. DATE
+	YY/MM/DD
+	
+3. VARCHAR2
+	- 가변길이 문자열
+	varchar2(10)	-----> 최대 10byte문자데이터를 저장
+	'gildong'입력       -----> 7byte로 저장. |g|i|l|d|o|n|g| | | |
+	                                                 -------
+	                                                 --▲3byte는 반환
+	                                                 --length:7(공백미포함)
+
+4. CHAR
+	- 고정길이 문자열
+	char(10)        -----> 최대 10byte문자데이터를 저장
+	'gildong'입력	-----> 10byte로 저장. |g|i|l|d|o|n|g| | | |
+													  -------
+													  --▲3byte 반환x
+													  --length:10(공백포함)
+
+==============================================================
+<SQL> Structured Query Language(구조적인 질의어)
+종류) 암기사항
+1. 데이터 정의어 (DDL): Data Definition Language
+   - 객체(예:table, view, sequence, trigger)에 대한 정의
+   - 데이터베이스 관리자나 응용프로그래머가
+	  데이터베이스의 논리적인 구조를 정의하기 위한 언어
+   - 명령어: CREATE, DROP, ALTER, RENAME, TRUNCATE
+   
+2. 데이터 조작어 (DML): Data Manipulation Language
+   - 명령어: INSERT, DELETE, UPDATE
+   
+3. 데이터 제어어 (DCL): Data Control Language
+   - 데이터베이스에 대한 접근 권한 부여등의 데이터베이스 시스템의 관리를 위한 목적으로 사용되는 언어
+   - 명령어: GRANT(권한부여), REVOKE(권한회수)
+   
+4. 데이터 질의어 (DQL): Data Query Language
+   - 검색, 조회 명령어
+   - 명령어: SELECT
+5. TCL: Transaction Control Language
+   - 명령어: COMMIT(변경 반영), ROLLBACK(전체 취소), SAVEPOINT
+   
+=============================================================
+문제) "안녕,SQL~!!"을 화면에 출력하시오.
+	
+	컬럼조회와 출력에 사용하는 SQL명령어 -----> SELECT
+	<SELECT문법>
+	 SELECT 컬럼명 또는 출력할 데이터
+	 FROM (컬럼들이 속한)테이블명;
+	
+	참고) 테이블내의 모든 컬럼들을 조회
+	 ----> select *
+	       from 테이블명;
+	       
+	화면에 13출력>
+	select 13
+	        *
+	ERROR at line 1:
+	ORA-00923: FROM keyword not found where expected
+	----> from키워드 없는 select는 사용 불가!!
+	
+	select 13
+	from dept;
+	
+	        13
+	----------
+	        13
+	        13
+	        13
+	        13
+	
+	---->4번 출력!!
+	
+	select 13
+	from salgrade;
+	---->5번 출력!!
+	
+	select 13
+	from emp;
+	----> 14번 출력!!
+	
+※오라클에서는 테이블에 상관없는 데이터를 출력하기 위해 시스템 테이블을 지원!!
+  ===> dual테이블(dummy테이블, 가상테이블)
+  
+	select 13
+	from dual;
+	
+	        13
+	----------
+	        13
+	        
+	select 안녕,SQL~!!
+	from dual;
+	select 안녕,SQL~!!
+	                 *
+	ERROR at line 1:
+	ORA-00911: invalid character
+	
+	~, ! 등은 사용 불가!
+	
+	select 안녕,SQL
+	from dual;
+	select "안녕,SQL"
+	       *
+	ERROR at line 1:
+	ORA-00904: "안녕,SQL~!!": invalid identifier
+	
+	두개의 컬럼으로 인식!!
+	
+	select '안녕,SQL~!!'
+	from dual;
+	
+	'안녕,SQL~!!'
+	--------------------
+	안녕,SQL~!!
+	
+	----> 오라클에서는 모든 문자,문자열 데이터를 표현할 때 작은따옴표('')를 사용
+	
+<별칭(alias)사용하기>
+형식)
+	select 컬럼명 [AS] 별명
+	from 테이블명
+	
+	select '안녕,SQL~!!' as MSG
+	from dual;
+
+	MSG
+	--------------------------
+	안녕,SQL~!!
+	
+문제) 각 사원들의 사원번호, 사원명, 급여, 연봉을 출력하시오
+	
+	select empno,ename,sal,sal*12
+	from emp;
+	
+	     EMPNO ENAME                       SAL     SAL*12
+	---------- -------------------- ---------- ----------
+	      7369 SMITH                       800       9600
+	      7499 ALLEN                      1600      19200
+	      7521 WARD                       1250      15000
+	      7566 JONES                      2975      35700
+	      7654 MARTIN                     1250      15000
+	      7698 BLAKE                      2850      34200
+	      7782 CLARK                      2450      29400
+	      7788 SCOTT                      3000      36000
+	      7839 KING                       5000      60000
+	      7844 TURNER                     1500      18000
+	      7876 ADAMS                      1100      13200
+	
+	     EMPNO ENAME                       SAL     SAL*12
+	---------- -------------------- ---------- ----------
+	      7900 JAMES                       950      11400
+	      7902 FORD                       3000      36000
+	      7934 MILLER                     1300      15600
+	
+	
+	select empno 사원번호,ename 사원명,sal 급여,sal*12 연봉
+	from emp;
+
+		사원번호 사원명                     			     급여	           연봉
+	---------- -------------------- ---------- ----------
+	      7369 SMITH                       800       9600
+	      7499 ALLEN                      1600      19200
+	      7521 WARD                       1250      15000
+	      7566 JONES                      2975      35700
+	      7654 MARTIN                     1250      15000
+	      7698 BLAKE                      2850      34200
+	      7782 CLARK                      2450      29400
+	      7788 SCOTT                      3000      36000
+	      7839 KING                       5000      60000
+	      7844 TURNER                     1500      18000
+	      7876 ADAMS                      1100      13200
+	      7900 JAMES                       950      11400
+	      7902 FORD                       3000      36000
+	      7934 MILLER                     1300      15600	
+	
+문제) 각 사원들의 사원번호,사원명,급여,연봉을 출력하시오
+ 	이때 연봉은 '연 봉'으로 출력하시오!!
+ 	select empno,ename,sal,sal*12 연 봉
+ 	from emp;
+ 	
+ 	select empno,ename,sal,sal*12 연 봉
+                                   *
+	ERROR at line 1:
+	ORA-00923: FROM keyword not found where expected
+	
+	
+	select empno,ename,sal,sal*12 "연 봉"
+	from emp;
+
+	     EMPNO ENAME                       SAL      연 봉
+	---------- -------------------- ---------- ----------
+	      7369 SMITH                       800       9600
+	      7499 ALLEN                      1600      19200
+	      7521 WARD                       1250      15000
+	      7566 JONES                      2975      35700
+	      7654 MARTIN                     1250      15000
+	      7698 BLAKE                      2850      34200
+	      7782 CLARK                      2450      29400
+	      7788 SCOTT                      3000      36000
+	      7839 KING                       5000      60000
+	      7844 TURNER                     1500      18000
+	      7876 ADAMS                      1100      13200
+	
+	     EMPNO ENAME                       SAL      연 봉
+	---------- -------------------- ---------- ----------
+	      7900 JAMES                       950      11400
+	      7902 FORD                       3000      36000
+	      7934 MILLER                     1300      15600
+	      
+<Concatenation연산자> 접합연산자: ||
+			예)'문자열1'||'문자열2'
+			
+문제) 사원들의 이름과 직책을 출력하시오.
+	select ename,job
+	from emp;
+	
+	ENAME                JOB
+	-------------------- ------------------
+	SMITH                CLERK
+	ALLEN                SALESMAN
+	WARD                 SALESMAN
+	JONES                MANAGER
+	MARTIN               SALESMAN
+	BLAKE                MANAGER
+	CLARK                MANAGER
+	SCOTT                ANALYST
+	KING                 PRESIDENT
+	TURNER               SALESMAN
+	ADAMS                CLERK
+	
+	ENAME                JOB
+	-------------------- ------------------
+	JAMES                CLERK
+	FORD                 ANALYST
+	MILLER               CLERK
+	
+	select ename||'사원의 직책은'|| job||'입니다!!'
+	from emp;
+	
+	ENAME||'사원의직책은'||JOB||'입니다!!'
+	----------------------------------
+	SMITH사원의 직책은CLERK입니다!!
+	ALLEN사원의 직책은SALESMAN입니다!!
+	WARD사원의 직책은SALESMAN입니다!!
+	JONES사원의 직책은MANAGER입니다!!
+	MARTIN사원의 직책은SALESMAN입니다!!
+	BLAKE사원의 직책은MANAGER입니다!!
+	CLARK사원의 직책은MANAGER입니다!!
+	SCOTT사원의 직책은ANALYST입니다!!
+	KING사원의 직책은PRESIDENT입니다!!
+	TURNER사원의 직책은SALESMAN입니다!!
+	ADAMS사원의 직책은CLERK입니다!!
+	
+	ENAME||'사원의직책은'||JOB||'입니다!!'
+	-----------------------------------
+	
+	select ename||'사원의 직책은'|| job||'입니다!!' "직책정보"
+	from emp;
+	
+	직책정보
+	---------------------------------
+	SMITH사원의 직책은CLERK입니다!!
+	ALLEN사원의 직책은SALESMAN입니다!!
+	WARD사원의 직책은SALESMAN입니다!!
+	JONES사원의 직책은MANAGER입니다!!
+	MARTIN사원의 직책은SALESMAN입니다!!
+	BLAKE사원의 직책은MANAGER입니다!!
+	CLARK사원의 직책은MANAGER입니다!!
+	SCOTT사원의 직책은ANALYST입니다!!
+	KING사원의 직책은PRESIDENT입니다!!
+	TURNER사원의 직책은SALESMAN입니다!!
+	ADAMS사원의 직책은CLERK입니다!!
+	JAMES사원의 직책은CLERK입니다!!
+	FORD사원의 직책은ANALYST입니다!!
+	
+문제) 사원들이 갖는 직책들을 출력하시오
+	select job
+	from emp;
+	
+	JOB
+	------------------
+	CLERK
+	SALESMAN
+	SALESMAN
+	MANAGER
+	SALESMAN
+	MANAGER
+	MANAGER
+	ANALYST
+	PRESIDENT
+	SALESMAN
+	CLERK
+	CLERK
+	ANALYST
+	CLERK
+	
+<DISTINCT키워드> : 중복제거 기능
+형식)
+	SELECT DISTINCT (중복이 예상되는)컬럼명
+	FROM 테이블명;
+	
+문제) 사원들이 갖는 직책들을 출력하시오(직책종류만---> 중복된 데이터 제거)
+
+	select distinct job
+	from emp;
+	
+	JOB
+	------------------
+	CLERK
+	SALESMAN
+	PRESIDENT
+	MANAGER
+	ANALYST
+	
+	select distinct job 직책종류
+	from emp;
+	
+	직책종류
+	------------------
+	CLERK
+	SALESMAN
+	PRESIDENT
+	MANAGER
+	ANALYST
+	
+문제) 10과 3에 대한 산술연산 결과를 화면에 출력하시오
+
+	select 10+3 덧셈,10-3 뺄셈, 10*3 곱셈, 10/3 나눗셈
+	from dual;
+	
+		      덧셈 		    뺄셈  		  곱셈  	     나눗셈
+	---------- ---------- ---------- ----------
+	        13          7         30 3.33333333
+	        
+
+정리
+<SELECT문법>
+
+	SELECT DISTINCT(중복제거) 컬럼명, 데이터, 연산자 [AS] "별명(alies)"
+	FROM (컬럼명이 속한)테이블명;
+	
+---------------------------------------------------------------
+<SQL>
+- Structured Query Language
+- 데이터베이스에 질의, 수정, 삭제 등의 작업을 하는 언어의 표준.
+
+SQL*Plus 명령어 : 접속툴내에서 출력형식을 지정하는 등 환경설정
+
+<SQL> ★
+관계형 데이터베이스의 ANSI표준언어
+여러줄실행
+종결문자필요 (;)
+키워드 단축 불가
+버퍼에 마지막 명령문 저장
+대소문자 구분없음(단, 데이터를 표시할때는 반드시 대소문자를 구분함 ★)
+
+<SQL*Plus>
+오라클 DB접속 툴
+한줄 실행
+종결문자 불필요
+키워드 단축 가능
+버퍼저장 안함
+
+SQL*Plus명령어)
+L[IST] : 버퍼에 마지막으로 담긴 SQL문을 보여주고, 실행된 결과도 보여준다.
+SAVE 파일명 : 명시된 파일명으로 버퍼에 있는 sql문을 저장
+GET 파일명 : 명시된 파일 sql문 얻어오기
+ED[IT] 파일명 : 지정된 파일을 메모장을 통해 열어줌
+SPOOL(갈무리)  
+   시작)
+   spool 파일명
+     sql문1;
+     sql문2;
+     sql문3;
+   
+   끝)  
+   spool off
+  -----> sql문1 부터   sql문3까지 지정된 파일명으로 저장.
+  
+HOST: sql접속을 유지한 상태에서 커맨드 창으로 이동
+EXIT : cmd상태에서 sql프롬프트상태로 이동.
+LINE, PAGESIZE(한 페이지에 출력되는 라인사이즈): 출력형식
+  형식) SET 명령어 값
+ 
+  /,R[UN],@  : 실행명령어
+  
+SQL> select empno, ename, sal from emp;
+
+     EMPNO ENAME                       SAL
+---------- -------------------- ----------
+      7369 SMITH                       800
+      7499 ALLEN                      1600
+      7521 WARD                       1250
+      7566 JONES                      2975
+      7654 MARTIN                     1250
+      7698 BLAKE                      2850
+      7782 CLARK                      2450
+      7788 SCOTT                      3000
+      7839 KING                       5000
+      7844 TURNER                     1500
+      7876 ADAMS                      1100
+
+     EMPNO ENAME                       SAL
+---------- -------------------- ----------
+      7900 JAMES                       950
+      7902 FORD                       3000
+      7934 MILLER                     1300
+
+14 rows selected.
+
+SQL> set pages 17   -- 한페이지에 17줄을 출력하겠음
+SQL> select empno, ename, sal from emp;
+
+     EMPNO ENAME                       SAL
+---------- -------------------- ----------
+      7369 SMITH                       800
+      7499 ALLEN                      1600
+      7521 WARD                       1250
+      7566 JONES                      2975
+      7654 MARTIN                     1250
+      7698 BLAKE                      2850
+      7782 CLARK                      2450
+      7788 SCOTT                      3000
+      7839 KING                       5000
+      7844 TURNER                     1500
+      7876 ADAMS                      1100
+      7900 JAMES                       950
+      7902 FORD                       3000
+      7934 MILLER                     1300 
+      
+SQL> select * from dept;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   NEW YORK
+        20 RESEARCH                     DALLAS
+        30 SALES                        CHICAGO
+        40 OPERATIONS                   BOSTON
+
+SQL> / : 버퍼에 담겨있는 마지막 문장을 실행
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   NEW YORK
+        20 RESEARCH                     DALLAS
+        30 SALES                        CHICAGO
+        40 OPERATIONS                   BOSTON
+        
+
+<WHERE절> - 조건절, 출력행을 제어하는 역할
+SELECT 컬럼명				 -- 열 제어(필터)
+FROM 테이블명
+WHERE 조건식(conditions); -- 행 제어(필터)
+
+※조건식 구성
+ 기준컬럼명	연산자	비교데이터
+  ename       =      smith
+  smith       =      ename
+ 		  (비교연산자)
+ 		    >,<, >=(크거나 또는 같다), <=
+ 		     = (같다, 등가연산자)
+ 		    1=2 (false)   1==2 (x에러)
+ 		     !=, ^=, <> (다르다)
+ 		     
+문제) 전체 사원의 사원번호, 사원명, 부서번호를 출력하시오
+
+	select empno, ename, deptno
+	from emp;
+	
+	     EMPNO ENAME                    DEPTNO
+	---------- -------------------- ----------
+	      7369 SMITH                        20
+	      7499 ALLEN                        30
+	      7521 WARD                         30
+	      7566 JONES                        20
+	      7654 MARTIN                       30
+	      7698 BLAKE                        30
+	      7782 CLARK                        10
+	      7788 SCOTT                        20
+	      7839 KING                         10
+	      7844 TURNER                       30
+	      7876 ADAMS                        20
+	      7900 JAMES                        30
+	      7902 FORD                         20
+	      7934 MILLER                       10
+      
+문제) 30번 부서에 근무하는 사원의 사원번호, 사원명, 부서번호를 출력하시오.
+	select empno, ename, deptno
+	from emp
+	where deptno = 30;
+	
+	     EMPNO ENAME                    DEPTNO
+	---------- -------------------- ----------
+	      7499 ALLEN                        30
+	      7521 WARD                         30
+	      7654 MARTIN                       30
+	      7698 BLAKE                        30
+	      7844 TURNER                       30
+	      7900 JAMES                        30
+	      
+문제) 30번 부서에 근무하지 않는 사원의 사원번호, 사원명, 부서번호를 출력하시오
+	select empno, ename, deptno
+	from emp
+	where deptno != 30;
+	
+	select empno, ename, deptno
+	from emp
+	where deptno <> 30;
+	
+	select empno, ename, deptno
+	from emp
+	where deptno ^= 30;
+	
+	     EMPNO ENAME                    DEPTNO
+	---------- -------------------- ----------
+	      7369 SMITH                        20
+	      7566 JONES                        20
+	      7782 CLARK                        10
+	      7788 SCOTT                        20
+	      7839 KING                         10
+	      7876 ADAMS                        20
+	      7902 FORD                         20
+	      7934 MILLER                       10
+	      
+문제) 10번, 20번 부서에 근무하는 사원의 사원번호, 사원명, 부서번호를 출력하시오
+	select empno, ename, deptno
+	from emp
+	where deptno = 10 or deptno = 20;
+	
+	     EMPNO ENAME                    DEPTNO
+	---------- -------------------- ----------
+	      7369 SMITH                        20
+	      7566 JONES                        20
+	      7782 CLARK                        10
+	      7788 SCOTT                        20
+	      7839 KING                         10
+	      7876 ADAMS                        20
+	      7902 FORD                         20
+	      7934 MILLER                       10
+	      
+문제) SMITH사원의 사원번호, 사원명, 입사일, 부서번호를 출력하시오
+
+	select empno, ename, hiredate, deptno
+	from emp
+	where ename = smith;
+	where ename = smith
+	              *
+	ERROR at line 3:
+	-- smith를 컬럼명으로 인식 : emp테이블내에는 smith컬럼 없음!!
+	ORA-00904: "SMITH": invalid identifier
+
+	select empno, ename, hiredate, deptno
+	  2  from emp
+	  3  where ename = 'smith';
+	
+	no rows selected
+	===> 일치하는 행이 없음!!
+	===> SQL명령문, 컬럼명, 테이블명 : 대소문자 구분없이 사용!
+		데이터를 표현 : 대소문자를 확실하게 구분!! ★
+			'smith' <> 'SMITH'
+	
+	select empno, ename, hiredate, deptno
+	from emp
+	where ename = 'SMITH';
+	
+	     EMPNO ENAME                HIREDATE     DEPTNO
+	---------- -------------------- -------- ----------
+	      7369 SMITH                80/12/17         20
+	      
+참고) 대소문자 구분없이 비교!!
+
+	SelEct empNo, ename, Hiredate, deptno
+	from emp
+	where lower(ename) = lower('SmItH');
+	
+
+문제1) 20번 부서에 근무하는 사원의 사원번호, 사원명, 직책, 급여를 출력하시오.
+
+문제2) 직책이 MANAGER인 사원의 사원번호, 사원명, 직책, 입사일을 출력하시오.
+
+문제3) 급여가 2000이상인 사원의 사원번호, 사원명, 급여를 출력하시오.
+
+문제4) FORD사원의 사원번호, 사원명, 부서번호를 출력하시오.
+
+문제5) 1981년 6월 1일 이후에 입사한 사원의 사원번호, 사원명, 부서번호, 입사일을 출력하시오.
+
+문제6) 20번과 30번 부서에 근무하는 사원의 사원번호, 사원명, 직책, 매니저의 사원번호를 출력하시오.
+
+문제7) CLARK사원보다 먼저 입사한 사원의 사원번호, 사원명, 입사일, 부서번호를 조회하시오
+
+문제8) 10번과 20번부서의 부서번호, 부서명, 부서위치를 조회하시오/
+
+문제9) 3등급 급여의 최소 급여와 최대 급여를 출력하시오.
+
+----------------------------정답---------------------------------
+
+문제1) 20번 부서에 근무하는 사원의 사원번호, 사원명, 직책, 급여를 출력하시오.
+
+select empno, ename, job, sal
+from emp
+where deptno = 20;
+
+     EMPNO ENAME                JOB                       SAL
+---------- -------------------- ------------------ ----------
+      7369 SMITH                CLERK                     800
+      7566 JONES                MANAGER                  2975
+      7788 SCOTT                ANALYST                  3000
+      7876 ADAMS                CLERK                    1100
+      7902 FORD                 ANALYST                  3000
+      
+문제2) 직책이 MANAGER인 사원의 사원번호, 사원명, 직책, 입사일을 출력하시오.
+
+select empno, ename, job, hiredate
+from emp
+where job = 'MANAGER';
+
+     EMPNO ENAME                JOB                HIREDATE
+---------- -------------------- ------------------ --------
+      7566 JONES                MANAGER            81/04/02
+      7698 BLAKE                MANAGER            81/05/01
+      7782 CLARK                MANAGER            81/06/09
+      
+문제3) 급여가 2000이상인 사원의 사원번호, 사원명, 급여를 출력하시오.
+
+select empno, ename, sal
+from emp
+where sal>=2000;
+
+     EMPNO ENAME                       SAL
+---------- -------------------- ----------
+      7566 JONES                      2975
+      7698 BLAKE                      2850
+      7782 CLARK                      2450
+      7788 SCOTT                      3000
+      7839 KING                       5000
+      7902 FORD                       3000
+      
+문제4) FORD사원의 사원번호, 사원명, 부서번호를 출력하시오.
+
+select empno, ename, deptno
+from emp
+where ename = 'FORD';
+
+     EMPNO ENAME                    DEPTNO
+---------- -------------------- ----------
+      7902 FORD                         20
+      
+문제5) 1981년 6월 1일 이후에 입사한 사원의 사원번호, 사원명, 부서번호, 입사일을 출력하시오.
+
+select empno, ename, deptno, hiredate
+from emp
+where hiredate > '81/06/01';
+
+     EMPNO ENAME                    DEPTNO HIREDATE
+---------- -------------------- ---------- --------
+      7654 MARTIN                       30 81/09/28
+      7782 CLARK                        10 81/06/09
+      7788 SCOTT                        20 87/04/19
+      7839 KING                         10 81/11/17
+      7844 TURNER                       30 81/09/08
+      7876 ADAMS                        20 87/05/23
+      7900 JAMES                        30 81/12/03
+      7902 FORD                         20 81/12/03
+      7934 MILLER                       10 82/01/23
+      
+      대소비교를 위해서는 서로 일치하는 자료형을 가져야 함!!
+      DATE   >= NUMBER (X)
+      DATE   >= DATE   (O)
+      NUMBER >= NUMBER(O)
+      
+select empno, ename, deptno, hiredate
+from emp
+where hiredate > to_date('81/06/01');
+      DATE       DATE로 형변환
+      
+      			'81/06/01' ===> 'yy/mm/dd'패턴을 가지면 자동으로 형변환
+      							'yyyy/mm/dd'
+      							'yyyy-mm-dd'
+
+문제6) 20번과 30번 부서에 근무하는 사원의 사원번호, 사원명, 직책, 매니저의 사원번호를 출력하시오.
+
+select empno, ename, job, mgr
+from emp
+where deptno = 20 or deptno = 30;
+
+     EMPNO ENAME                JOB                       MGR
+---------- -------------------- ------------------ ----------
+      7369 SMITH                CLERK                    7902
+      7499 ALLEN                SALESMAN                 7698
+      7521 WARD                 SALESMAN                 7698
+      7566 JONES                MANAGER                  7839
+      7654 MARTIN               SALESMAN                 7698
+      7698 BLAKE                MANAGER                  7839
+      7788 SCOTT                ANALYST                  7566
+      7844 TURNER               SALESMAN                 7698
+      7876 ADAMS                CLERK                    7788
+      7900 JAMES                CLERK                    7698
+      7902 FORD                 ANALYST                  7566
+
+문제7) CLARK사원보다 먼저 입사한 사원의 사원번호, 사원명, 입사일, 부서번호를 조회하시오
+
+select empno, ename, hiredate, deptno
+from emp
+where hiredate < (select hiredate from emp where ename='CLARK');
+
+     EMPNO ENAME                HIREDATE     DEPTNO
+---------- -------------------- -------- ----------
+      7369 SMITH                80/12/17         20
+      7499 ALLEN                81/02/20         30
+      7521 WARD                 81/02/22         30
+      7566 JONES                81/04/02         20
+      7698 BLAKE                81/05/01         30
+
+문제8) 10번과 20번부서의 부서번호, 부서명, 부서위치를 조회하시오
+
+select deptno, dname, loc
+from dept
+where deptno = 10 or deptno = 20;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   NEW YORK
+        20 RESEARCH                     DALLAS
+
+문제9) 3등급 급여의 최소 급여와 최대 급여를 출력하시오.
+
+select losal, hisal
+from salgrade
+where grade = 3;
+
+     LOSAL      HISAL
+---------- ----------
+      1401       2000

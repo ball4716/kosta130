@@ -1,0 +1,102 @@
+XML?
+---> 데이터
+---> 데이터 저장 방식
+---> 표준 text 데이터호환성 특정app종속x
+
+<data>
+<driver>OracleDriver</driver>
+<user>soctt</user>
+</data>
+
+conn.properties의 경우
+(속성데이터, 라인통해 구분 속성name = 속성 value)
+driver = OracleDriver
+user = scott
+
+javascript의 경우
+
+(배열)
+var data = ["OracleDriver", "scott"];
+			data[0]			data[1]
+(JSON)
+var db = {"driver":"OracleDriver", "user":"scott"};
+			key	  :	value			key	 : value
+			
+XML Spec
+---> 최소 한개 이상의 element(태그) 존재
+---> 전체 문서를 감싸는 하나의 태그 존재
+---> 데이터 표현법(1.서술태그안의 속성값, 2.서술태그 사이에)
+---> 서로 다른 속성은 반드시 공백으로 구분
+---> XML선언
+	 <?xml version="1.0" encoding="UTF-8"?>
+  공백x		필수			 	선택
+---> 데이터 text에 제한된 문자가 존재 '<','&'
+	해결: replace(&lt; &amp;), CDATA섹션 <![CDATA[ 내용 	]]>
+
+xml 문서 구조
+--------------------프롤로그---------------------
+<?xml version="1.0" ?>					      
+DTD ---> Document Type Definition(문서 형식 지정) 
+	---> 업글판 XML Schema : DTD보다 좀더 유연	(.xsd)
+--------------------프롤로그---------------------
+---------------------D.I-----------------------
+<root>
+	<name>홍길동</name>
+	<age>13</age>
+	comback KOSTA!
+	<!-- 나주석 -->
+</root>
+--------------------
+-D.I-----------------------
+XML파서
+DOM(Document Object Model)★ tree 기반 파싱
+SAX(Simple Api for XML) event 기반 파싱
+			  ┌name-홍
+			  ├age-13
+Document-root-│
+			  ├comeback KOSTA!
+			  └나주석
+Node: 트리를 구성하는 모든 요소
+
+Node
+- 추상 객체(부모 클래스)
+- 노드에 대한 get,set
+	nodeType(1~12):숫자를 이용한 타입 구분
+	nodeName: 태그이름, null
+	nodeValue: #text, null
+- 관계메소드(부모,자식,형제)
+- 조작메소드(추가,삭제,수정)
+
+Document
+- 위치: root Element 바로 위
+- 생성메소드: create~()
+
+<root>
+	<name id="na">홍길동</name>
+	<age name="ag">13</age>
+	<job>학생</job>
+</root>
+NodeList jobs = doc.getElementsByTagName("job");
+값 얻어오기:
+jobs.item(0).getFirsthild().getNodeValue();
+NodeList.Node.TextNode."학생"
+Element na = doc.getElementById("na"); ---> id는 유일
+NodeList ag = doc.getElementsByName("ag"); ---> name은 중복가능
+
+Element
+- 필수 객체
+- 속성 관련 메소드
+ele.getAttribute(key값);
+ele.getsetAttribute(key값,새로운value);
+ele.hasAttribute();
+ele.removeAttribute(key값);
+
+					+NodeList
+					NamedNodeMap
+
+==================================================
+
+
+
+
+

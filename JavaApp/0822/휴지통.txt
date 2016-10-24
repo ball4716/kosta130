@@ -1,0 +1,12 @@
+
+<오라클 10g부터 휴지통기능 지원>
+
+show recyclebin;  (휴지통보기)
+ 
+purge recyclebin; (휴지통비우기)
+
+purge table 테이블명; (휴지통에서 특정테이블 삭제)
+
+flashback table 테이블명 to before drop; (테이블 살리기)
+
+flashback table "휴지통에 저장된 임시객체명" to before drop; (테이블 살리기)

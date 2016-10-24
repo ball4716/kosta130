@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="myfun.js">
+</script>
+<script type="text/javascript">
+	function soonsin(){
+		alert("알리지마라~!!");
+		var msg = getMsg();
+		alert("MSG="+msg);
+	}
+	function hello() {
+		alert("안녕, 함수~!!");
+	}
+	function hello(name) {//이전에 있는 동일한 이름의 함수는 덮어쓰기 됨!!
+		alert("안녕, " + name + "~!!");
+	}
+	function hello(name, age) {
+		if (name == null) {
+			alert('이름이 입력되지 않았음!');
+		} else if (age == null) {//name입력, age입력x
+			alert("안녕, " + name + "~!!");
+		} else {//name입력, age입력
+			alert("안녕, " + name + "~!!\n당신의 나이는" + age);
+		}
+	}
+	
+	//변수선언, 변수초기화
+	su1=11;//전역변수
+	var su2 = 22;//전역변수
+	
+	function gildong(){
+		//변수선언, 변수초기화
+		su3=33;//전역변수
+		var su4=44;//지역변수
+		alert('길동함수호출\nsu1='+su1+', su2='+su2+', su3='+su3+', su4='+su4);
+	}
+	
+	function lime(){
+		alert('라임함수호출\nsu1='+su1+', su2='+su2);
+		alert('su3='+su3);
+		//alert('su4='+su4); 다른함수에서 var 정의한 변수는 지역변수로 참조 불가하다
+	}
+</script>
+</head>
+<body>
+	<!-- function_test.html -->
+	<h3>javascript 함수 테스트</h3>
+	<input type="button" value="안녕1" onclick="hello()">
+	<input type="button" value="안녕2" onclick="hello('길동')">
+	<input type="button" value="안녕3" onclick="hello('길동',13)"><br><br>
+	<input type="button" value="길동" onclick="gildong()">
+	<input type="button" value="라임" onclick="lime()">
+	<input type="button" value="주원" onclick="juwon()">
+	<input type="button" value="순신" onclick="soonsin()">
+	
+	<script type="text/javascript">
+		//hello();
+	</script>
+</body>
+</html>

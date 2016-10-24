@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>너무쉬운계산기</title>
+	<script type="text/javascript">
+		/*
+			1. '계산하기' 버튼 클릭시 동작할 함수를 정의
+				function plus(){
+					//결과값을 result에 출력
+				}
+			2. 만약 su1과 su2에 빈 값이 입력되었다면
+			알림창을 통해 '데이터 입력' 메시지
+			3. su1과 su2에 숫자 아닌값이 입력되었다면
+			알림창을 통해 '숫자만 입력' 메시지
+		*/
+		function plus(){
+				var su1 = document.calcForm.su1.value;
+				var su2 = document.calcForm.su2.value;
+				/*
+				빈값체크? 변수 == "", 변수명.length==0
+				var s1="JavaScript";
+				var s2="JAVASCRIPT";
+				===> 문자열 내용 비교 : s1.equals(s2) (x)
+									s1 == s2	  (o)
+				*/
+				if(su1==""||su2==""){
+					alert('데이터 입력');
+					document.calcForm.su1.value="";
+					document.calcForm.su2.value="";
+					return;
+				}
+				if(isNaN(su1) || isNaN(su2)){
+					alert('숫자만 입력');
+					document.calcForm.su1.value="";
+					document.calcForm.su2.value="";
+					return;
+				}
+				document.calcForm.result.value = parseInt(su1)+parseInt(su2);
+		}
+	</script>
+</head>
+<body align="center">
+	<!-- calc.html -->
+	<form name="calcForm">
+	<h3>너무 쉬운 계산기</h3>
+	<hr>
+	<input type="text" name="su1" size="4"> +
+	<input type="text" name="su2" size="4"> =
+	<input type="text" name="result" size="10">
+	<input type="button" value="계산하기" onclick="plus()">
+	</form>
+</body>
+</html>

@@ -1,0 +1,5 @@
+<!ELEMENT persons (person)+>
+<!ELEMENT person (name,age,job)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT age (#PCDATA)>
+<!ELEMENT job (#PCDATA)>

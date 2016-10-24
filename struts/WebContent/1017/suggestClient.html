@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+	<script type="text/javascript" src="../js/ajax.js"></script>
+	<script type="text/javascript">
+		//상태체크
+		var checkFirst=false;//제시어 검색 시작
+		var loopSendKeyword=false;//제시어에 대한 반복 호출
+		
+		var lastKeyword='';
+		
+		function startSuggest(){
+			if(!checkFirst){
+				setTimeout("sendKeyword()",500);
+				loopSendKeyword=true;
+			}
+			checkFirst=true;
+		}//startSuggest
+		
+		function sendKeyword(){//서버 페이지 요청!!
+			if(!loopSendKeyword) return;
+			var keyword = document.search.keyword.value;
+			if(keyword==''){
+				hide('suggest');
+				lastKeyword='';
+				loopSendKeyword=false;
+				checkFirst=false;
+			}else if(keyword != lastKeyword){
+				lastKeyword = keyword;
+				var params="keyword="+keyword;//keyword=자바
+				sendRequest("suggest.jsp",params,displayResult,'POST');
+			}
+			setTimeout("sendKeyword()",500);
+		}//sendKeyword
+		function displayResult(){//콜백함수 : 서버 요청후 실행할 함수
+			if(xhr.readyState==4){//응답데이터 전부 
+				if(xhr.status ==200){
+					var resultText = xhr.responseText;//"3|java,jsp,jo"
+					var result = resultText.split("|");//result[]={"3","java,jsp,jo"}
+					var count = parseInt(result[0]);
+					if(count>0){//제시어가 한 개 이상일때
+						var keywordList = result[1].split(",");
+						//keywordList[] = {"java","jsp","jo"};
+						var html='';
+						for(var i=0; i<keywordList.length; i++){
+							html += "<a href=\"javascript:select('"+keywordList[i]+"')\">"+keywordList[i]+"</a><br>";
+						}
+						var suggestList = document.getElementById("suggestList");
+						suggestList.innerHTML=html;
+						show('suggest');
+					}else{
+						hide('suggest');
+					}
+				}else{
+					alert('서버에러: '+xhr.status);
+				}
+			}
+		}//displayResult
+		
+		function select(selectedKeyword){//제시어중 선택된 제시어 ===> 텍스트필드 전달
+			document.search.keyword.value=selectedKeyword
+			loopSendKeyword=false;
+			checkFirst=false;
+			hide('suggest');
+		}
+	
+		function show(elementId){
+			var frm = document.getElementById(elementId);
+			frm.style.display='';
+		}
+		function hide(elementId){
+			var frm = document.getElementById(elementId);
+			frm.style.display='none';
+		}
+	</script>
+</head>
+<!-- suggestClient.html -->
+<body>
+	<form name="search">
+		<input type="text" name="keyword" onkeydown="startSuggest()">
+		<input type="button" value="전송">
+	</form>
+	<div id="suggest" style="display:;position:absolute;left:10px;top:30px"><!-- 스타일(보이기,감추기)정의 -->
+		<div id="suggestList"></div>
+	</div>
+<!-- 	<br><button onclick="show()">보여라</button>
+	<button onclick="hide()">숨겨라</button> -->
+
+</body>
+</html>

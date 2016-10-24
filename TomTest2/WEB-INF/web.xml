@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+	http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+	id="WebApp_ID" version="3.1">
+	<display-name>TomTest2</display-name>
+	
+	<!-- 전체 Servlet과 JSP에서 공통적으로 사용할 변수 -->
+	<context-param>
+		<param-name>young</param-name>
+		<param-value>김현영</param-value>
+	</context-param>
+	
+	<!-- 서블릿클래스 등록 -->
+	<servlet>
+		<servlet-name>jung</servlet-name>
+		<servlet-class>t0920.MyServlet</servlet-class>
+		<init-param>
+			<param-name>oh</param-name>
+			<param-value>오정훈</param-value>
+		</init-param>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>cnt</servlet-name>
+		<servlet-class>t0920.CountServlet</servlet-class>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>param</servlet-name>
+		<servlet-class>t0920.ParamServlet</servlet-class>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>calc</servlet-name>
+		<servlet-class>t0920.CalcServlet</servlet-class>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>emp</servlet-name>
+		<servlet-class>t0921.EmpServlet</servlet-class>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>test</servlet-name>
+		<servlet-class>t0926.Controller</servlet-class>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>empInfo</servlet-name>
+		<servlet-class>t0927.EmpController</servlet-class>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>guest</servlet-name>
+		<servlet-class>t0929.GuestController</servlet-class>
+	</servlet>
+	
+	<!-- (서블릿클래스에 매핑될)가상의 경로 설정 -->
+	<servlet-mapping>
+		<servlet-name>guest</servlet-name>
+		<url-pattern>/control</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>empInfo</servlet-name>
+		<url-pattern>/empInfo</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>test</servlet-name>
+		<url-pattern>/0926/test</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>jung</servlet-name>
+		<url-pattern>/kosta/junghoon</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>cnt</servlet-name>
+		<url-pattern>/cnt</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>param</servlet-name>
+		<url-pattern>/0920/param</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>calc</servlet-name>
+		<url-pattern>/0920/calc</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>emp</servlet-name>
+		<url-pattern>/0921/emp</url-pattern>
+	</servlet-mapping>
+	
+	<!-- <error-page>
+		<error-code>500</error-code>
+		<location>/0922/error.jsp</location>
+	</error-page> -->
+	
+	<!-- 필터클래스 등록 -->
+	<filter>
+		<filter-name>enc</filter-name>
+		<filter-class>t0930.EncFilter</filter-class>
+		<init-param>
+			<param-name>encType</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>enc</filter-name>
+		<url-pattern>*.jsp</url-pattern>
+	</filter-mapping>
+	
+	<!-- 리스너 등록 -->
+	<listener>
+		<listener-class>t0930.MyListener</listener-class>
+	</listener>
+	
+	<welcome-file-list>
+		<welcome-file>hello.jsp</welcome-file>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+</web-app>

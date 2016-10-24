@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="../js/ajax.js"></script>
+<script type="text/javascript">
+	function loadEmp(){
+		//서버데이터(XML) 요청
+		sendRequest('emp.do',null,loadedEmp);
+	}
+	function loadedEmp(){//콜백함수: 요청(이벤트)후 실행할 함수
+		if(xhr.readyState==4 && xhr.status==200){
+			var doc = xhr.responseXML; //doc: Document
+			//alert(doc.documentElement.tagName);
+			var empnoList = doc.getElementsByTagName('empno');
+			var enameList = doc.getElementsByTagName('ename');
+			var salList = doc.getElementsByTagName('sal');
+			//empnoList,enameList,salList ===> NodeList
+			
+			var msg='';
+			for(var i=0; i<empnoList.length; i++){
+				var no = empnoList.item(i).firstChild.nodeValue;//사번 얻기
+						//<empno>			7788텍스트노드	텍스트값
+				var name = enameList.item(i).firstChild.nodeValue;
+				var sal = salList.item(i).firstChild.nodeValue;
+				
+				msg += '사번'+no+' : '+name+'(급여: '+sal+')\n';
+			}
+			alert(msg);
+		}
+	}
+	window.onload=function(){
+		loadEmp();
+	}
+</script>
+</head>
+<!-- viewEmpInfo.html -->
+<body>
+	<h3>사원정보를 alert창을 통해 출력</h3>
+</body>
+</html>

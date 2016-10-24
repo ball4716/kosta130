@@ -1,0 +1,238 @@
+
+
+<emp.jsp페이지 작성하기>
+
+문제1)
+    JSP페이지 내에서 Connection 객체를 얻어오시오. (DAO 사용없이)
+    Connection conn = DM.getConnection();
+    out.println("DB연결성공!!");
+
+문제2) 사원테이블(EMP)과 부서테이블(DEPT)을 검색하여
+     브라우저 화면에 사원번호, 사원명, 입사일, 급여, 부서명을 출력하시오
+     (HTML 테이블에 출력)
+    ====>  DAO사용
+    
+     
+========================================================================
+<JSP기본태그>
+1. <%!    %> declaration
+   ----> 서블릿 변환시 클래스 멤버
+   ----> 멤버변수
+   ----> 메소드 정의(비권장)    
+   
+   
+2. <%   %> Scriptlet
+   ----> 서블릿 변환시 service()메소드 안에 들어갈 코드.
+   ----> 변수선언, 초기화, 메소드 호출, 조건문, 반복문
+   
+
+3. <%= 데이터 %> Expression
+   ----> 서블릿 변환시 out.print(데이터)메소드로 변환!!
+   ----> 변환된 메소드는 service()메소드 안에 위치함.
+
+4. <%--  --%> Comment
+   ----> JSP주석
+   
+===============================================================
+※ JSP지시어(지시자) : Directives
+- JSP파일의 속성을 기술.
+- JSP컨테이너에게 해당페이지를 어떻게 처리해야 하는지 전달하기 위한
+  내용을 담는다.
+- 종류에는 page, include, taglib 가 있음.  
+<%@ page    %>  (O)
+<%@page    %>   (O)
+
+1. page지시어
+   형식)
+    <%@ page  속성1="속성값" 속성2="속성값"%>
+    
+   속성종류) 
+     contentType (text/html;charset=UTF-8) : JSP가 생성할 문서의 타입지정.
+     pageEncoding : JSP페이지 자체의 캐릭터 인코딩을 지정. 
+     import : JSP페이지에서 사용할 자바 클래스를 지정.
+            <%@page import="java.util.ArrayList" %>
+            <%@page import="java.util.Calendar" %>
+
+            <%@page import="java.util.Calendar,java.util.Calendar" %>
+            
+            
+     session (true) : JSP페이지가 세션을 사용할 지의 여부 지정.
+     buffer (8kb) : JSP페이지의 출력버퍼크기를 지정.
+     autoFlush (true) : 출력버퍼가 다 찼을 경우 자동으로 버퍼에 있는 데이터를 출력.
+     errorPage    : JSP페이지 실행중 에러발생시 이동할 페이지 설정.
+     isErrorPage (false)  : 에러발생시 에러관련된 객체지원. 
+   
+2. include지시어
+   형식)
+    <%@include file="경로명" %>
+
+3. taglib지시어 (외부에서 정의된 태그를 사용할 때)
+   형식)
+    <%@taglib uri="경로" prefix="접두사" %>
+    <%@taglib tagdir="경로" prefix="접두사" %>   
+
+==================================================================
+※JSP기본객체(내장객체)
+
+- JSP내에서 선언하지 않고 사용하는 객체.
+
+종류)
+  1. request(javax.servlet.http.HttpServletRequest)
+    - HTML폼요소의 선택값 등 사용자 입력 정보를 읽어 올 때 사용.
+    HttpServletRequest request = new HttpServletRequest();
+    
+    주요메소드)
+    getParameter(String name)
+      - 문자열 name과 같은 이름을 가진 파라미터의 값 얻어오기
+    setAttribute(String key, Object value);  
+    getAttribute(String key);  
+      
+    getParameterNames();  
+      
+      
+    getCookies()
+      - 모든 쿠기값을 javax.servlet.http.Cookie의 배열형태로 얻어오기
+    getMethod()
+      - 요청방식을 문자열로 얻어오기 ("GET","POST")
+    getSession()
+      - 현재 세션객체 얻어오기
+    getRemoteAddr()
+      - 클라이언트의 IP주소 얻어오기
+    getProtocol()
+      - 현재 서버의 프로토콜을 문자열 형태로 얻어오기
+    setCharacterEncoding("문자집합명")
+     - HTML 폼에서 한글 입력시 정상적으로 처리해주기 위해 설정.
+    
+    
+  2. response(java.servlet.http.HttpServletResponse)
+    - 사용자 요청에 대한 응답을 처리하기 위해 사용.
+    
+    주요메소드)
+     setContentType(type)
+       - 문자열형태의 type에 지정된 MIME Type으로 contentType을 설정.
+     setHeader(name,value)
+       - 문자열 name의 이름으로 문자열 value의 값을 헤더로 설정.
+     setDateHeader(name,date)
+       - 문자열 name의 이름으로 date에 설정된 밀리세컨드 시간 값을 
+          헤더에 설정.
+     sendError(status, msg)
+       - 오류코드를 세팅하고 메시지를 보낸다.
+     sendRedirect(url)
+       - 클라이언트 요청을 다른 페이지로 보낸다.(페이지 이동)
+     
+    
+  3. pageContext(javax.servlet.jsp.PageContext)
+    - 현재 JSP실행에 대한 context정보를 참조하기 위해 사용.
+    
+  4. session(javax.servlet.http.HttpSession) ★★★
+    - 클라이언트에 대한 세션정보를 처리하기 위해 사용.
+    - 비연결형 프로토콜 HTTP
+      (한 페이지가 출력된 다음에 서버와 클라이언트 연결은 끊어짐.)에 대해
+       마치 계속 연결되어있는 것처럼 해주는 메커니즘.
+    - 쿠키는 사용자PC에 세션은 서버에 사용자와 관련된 정보를 보관.
+    
+    세션의 사용용도)
+      - 사용자 로그인
+      - 쇼핑몰에서 장바구니 기능 구현
+      - 사용자가 어떤 페이지를 다녀갔는지 웹 페이지 트래킹 기능을 구현.
+      
+    주요메소드)
+      getId()
+        - 각 접속에 대한 세션 고유의 ID를 문자열형태로 리턴.
+      getCreatingTime()
+        - 세션이 생성된 시간을 long형 밀리세컨드 값으로 리턴
+          (January 1, 1970 GMT기준)
+      getLastAccessedTime()
+        - 현재 세션으로 마지막 작업한 시간을 long형 밀리세컨드 값으로 리턴.
+      getMaxInactiveInterval()
+        - 세션의 유지시간을 초로 반환.
+      setMaxInactiveInterval(t)
+        - 세션의 유효시간을 t에 설정된 초 값으로 설정.
+        
+        setAttribute("k1","홍길동");
+        setAttribute("k2","길라임");
+        setAttribute("k3","김주원");
+        
+        removeAttribute("k1"); ---> k1키만 삭제
+        
+      invalidate() ★ ---> 세션 해제(모든 키가 삭제)
+        - 현재 세션을 종료.
+        - 로그아웃에서 사용
+      getAttribute(key)
+        - 문자열 key로 설정된 세션 값을 Object형태로 반환.
+      setAttribute(key, value)
+        - 문자열 key으로 Object value을 설정.   
+        
+     예제1)     
+		sessionT1.jsp  --> 로그인 화면
+		sessionT2.jsp  --> 로그인 체크
+		sessionT3.jsp  --> 서비스 화면
+		sessionT4.jsp  --> 로그아웃      
+		
+     예제2)
+        login.jsp        --> 로그인 화면, 사용자 이름만 입력         
+        selProduct.jsp --> 상품을 선택하는 화면 (추가버튼 클릭) 
+        add.jsp         --> 선택한 상품에 대해 세션에 추가
+        checkOut.jsp  --> 선택한 상품에 대한 상품목록 보이기		
+       
+    
+  5. application(javax.servlet.ServletContext)
+    - 웹서버의 애플리케이션 처리와 관련된 정보를 참조하기 위해 사용.
+    
+    개발자를 위한 서버정보)
+      getServerInfo()
+        - JSP/서블릿 컨테이너의 이름과 버전을 리턴
+      getMajorVersion()
+        - 컨테이너가 지원하는 서블릿 API의 Major버전정보 리턴
+      getMinorVersion()
+        - 컨테이너가 지원하는 서블릿 API의 Minor버전정보 리턴
+    
+    서버자원정보)
+      getMimeType(filename)
+        - 지정된 파일에 대한 MIME Type을 리턴
+      getResource(path)
+        - path에 지정된 자원을 URL객체로 리턴
+      getResourceAsStream(path)
+        - path에 지정된 자원을 InputStream객체로 리턴
+      getRealPath(path)
+        - path에 지정된 자원의 파일시스템의 실제 경로 리턴
+      getContext(path)
+        - path에 지정된 자원의 컨텍스트 정보를 리턴
+      getRequestDispatcher(path)
+        - path에 지정된 자원을 위한 request dispatcher를 생성
+        
+    로그관련정보)
+      log(message)
+        - 문자열 message의 내용을 로그 파일에 기록.
+      log(message, exception)
+        - 예외상황에 대한 정보를 포함하여 로그 파일에 기록.
+     
+    
+    
+  6. out(javax.servlet.jsp.JspWriter)
+    - 사용자에게 전달하기 위한 output스트림을 처리.
+    - 브라우저 출력객체
+    
+    주요메소드)
+    getBufferSize()
+      - 출력버퍼의 크기를 byte로 알려준다.
+    getRemaining()
+      - 남아있는 버퍼의 크기 중 사용 가능한 비율을 알려준다.
+    clearBuffer()
+      - 버퍼에 있는 컨텐츠를 모두 지운다.
+    flush()
+      - 버퍼를 비우고 output stream도 비운다.
+    close()
+      - output stream을 닫고 버퍼를 비운다.
+    println(content)
+      - content내용을 newline과 함께 출력
+    print(content)
+      - content내용을 출력
+    
+    
+  7. config(javax.servlet.ServletConfig)
+    - 현재 JSP에 대한 초기화 환경을 처리하기 위해 사용.
+  8. page(java.lang.Object)
+    - 현재 JSP페이지에 대한 클래스정보.
+  9. exception(java.lang.Throwable)
+    - 예외 처리를 위해 사용.     

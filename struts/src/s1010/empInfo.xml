@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd" >
+<!-- s1010/empInfo.xml -->
+<sqlMap namespace="test">
+	<select id="select" parameterClass="int" resultClass="String">
+		select ename from emp where deptno=#deptno#
+	</select>
+</sqlMap>

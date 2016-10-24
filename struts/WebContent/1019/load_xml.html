@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+	<script type="text/javascript" src="../js/ajax2.js"></script>
+	<script type="text/javascript" src="person2.js"></script>
+	<script type="text/javascript">
+		window.onload=function(){
+			new ajax.xhr.Request('person_xml.jsp','',viewInfo);
+		}
+		function viewInfo(xhr){//콜백함수
+			if(xhr.readyState==4){
+				if(xhr.status==200){
+					var div1 = document.getElementById('div1');
+					
+					var doc = xhr.responseXML;//doc: Document
+					
+					var code = doc.getElementsByTagName('code').item(0).firstChild.nodeValue;
+					//String	Document	NodeList			Node	TextNode	텍스트값
+					if(code=='success'){
+						var name = doc.getElementsByTagName('name').item(0).firstChild.nodeValue;
+						var age = doc.getElementsByTagName('age').item(0).firstChild.nodeValue;
+						var job = doc.getElementsByTagName('job').item(0).firstChild.nodeValue;
+						
+						var p = new Person2(name,age,job);
+						div1.innerHTML = p.toString();
+					}else{
+						div1.innerHTML = "실패닷~!!";
+					}
+				}else{
+					alert("서버에러 "+xhr.status)
+				}
+			}
+		}
+	</script>
+</head>
+<!-- load_xml.html -->
+<body>
+	<div id="div1"></div>
+</body>
+</html>

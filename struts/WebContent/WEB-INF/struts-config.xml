@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+   
+         http://www.apache.org/licenses/LICENSE-2.0
+   
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+
+<!DOCTYPE struts-config PUBLIC
+          "-//Apache Software Foundation//DTD Struts Configuration 1.3//EN"
+          "http://struts.apache.org/dtds/struts-config_1_3.dtd">
+
+<!--
+     This is a blank Struts configuration file with an example
+     welcome action/page and other commented sample elements.
+
+     Struts Validator is configured using the factory defaults
+     and is ready-to-use.
+
+     NOTE: If you have a generator tool to create the corresponding Java classes
+     for you, you could include the details in the "form-bean" declarations.
+     Otherwise, you would only define the "form-bean" element itself, with the
+     corresponding "name" and "type" attributes, as shown here.
+-->
+
+
+<struts-config>
+
+
+<!-- ================================================ Form Bean Definitions -->
+
+    <form-beans>
+    <!-- ActionForm클래스를 등록 -->
+    <form-bean name="testForm"
+    		   type="s1005.forms.MyActionForm"/>
+    <form-bean name="loginForm"
+    		   type="s1006.forms.LoginActionForm"/>
+    <form-bean name="calcForm"
+    		   type="s1006.forms.CalcActionForm"/>
+    <!-- sample form bean descriptor for an ActionForm
+        <form-bean
+            name="inputForm"
+            type="app.InputForm"/>
+    end sample -->
+
+    <!-- sample form bean descriptor for a DynaActionForm
+        <form-bean
+            name="logonForm"
+            type="org.apache.struts.action.DynaActionForm">
+            <form-property
+                name="username"
+                type="java.lang.String"/>
+            <form-property
+                name="password"
+                type="java.lang.String"/>
+       </form-bean>
+    end sample -->
+    </form-beans>
+
+
+<!-- ========================================= Global Exception Definitions -->
+
+    <global-exceptions>
+        <!-- sample exception handler
+        <exception
+            key="expired.password"
+            type="app.ExpiredPasswordException"
+            path="/changePassword.jsp"/>
+        end sample -->
+    </global-exceptions>
+
+
+<!-- =========================================== Global Forward Definitions -->
+
+    <global-forwards>
+        <!-- Default forward to "Welcome" action -->
+        <!-- Demonstrates using index.jsp to forward -->
+        <forward
+            name="welcome"
+            path="/Welcome.do"/>
+        <!-- 자주 사용되는 페이지 설정 -->
+        <forward name="result" path="/hello.jsp"/>
+    </global-forwards>
+
+
+<!-- =========================================== Action Mapping Definitions -->
+
+    <action-mappings>
+            <!-- Default "Welcome" action -->
+            <!-- Forwards to Welcome.jsp -->
+        <action
+            path="/Welcome"
+            forward="/pages/Welcome.jsp"/>
+        <!-- URL 매핑 정의
+        	 path속성: 가상경로(서로 다른 action태그를 구분하는 식별자,명찰)
+        	 forward속성: 이동할 실제 경로(실제 페이지)
+        -->
+        <!-- JSP 단순 포워딩
+        	 /a/b/hello
+        실제요청은: http://localhost/struts/a/b/hello.do
+        -->
+        <!-- hello.jsp페이지를 등록 -->
+        <action
+        	path="/a/b/hello"
+        	forward="/hello.jsp"/>
+        		
+        <!-- MyAction(Action클래스)등록 -->
+        <action
+        		path="/my"
+        		type="s1004.actions.MyAction">
+        	<forward name="suc" path="/hello.jsp"></forward>
+        	<forward name="success" path="/hello.jsp" redirect="true"/>
+        	<forward name="fail" path="/hello.jsp"></forward>
+        	<!-- 
+        		forward태그의 path속성 : 실제 JSP 페이지 경로
+        					name속성 : 서로 다른 forward를 구분하는 이름,식별자
+        	 -->
+        </action>
+        
+        <!-- 로그인폼 JSP 매핑추가 -->
+        <action path="/login/form"
+        		forward="/1005/login_form.jsp"></action>
+        <!-- struts/login/form.do 요청시
+        	브라우저에 login_form.jsp를 출력하자 -->
+        
+        <!-- 로그인 처리 LoginAction 등록 -->
+        <action path="/login/login"
+        		type="s1005.actions.LoginAction">
+        	<!-- forward태그 : Action-execute()실행 후 이동할 페이지 설정 -->
+        	<forward name="success" path="/1005/success.jsp"
+        			redirect="true"/>
+        	<forward name="fail" path="/1005/fail.jsp"/>
+        </action>
+        
+        <!-- 계산기 JSP 매핑추가 -->
+        <action path="/calc/form"
+        		forward="/1005/calc_form.jsp"></action>
+        
+        <!-- 계산 처리 CalcAction 등록 -->
+        <action path="/calc/calc"
+        		type="s1005.actions.CalcAction">
+        	<forward name="success" path="/1005/calc_result.jsp"/>
+        	<forward name="fail" path="/1005/calc_result.jsp" redirect="true"/>		
+        </action>
+        
+        <action path="/test/form"
+        		forward="/1005/my_form.jsp"></action>
+        
+        <!-- MyAction등록 -->
+		<action path="/test/my"
+				type="s1005.actions.MyAction"
+				name="testForm"
+				scope="request"
+				validate="true"
+				input="/1005/my_form.jsp"></action>
+			<!-- action태그 input속성 : MyActionForm의 validate 거쳐서
+				 만약 유효하지 못한 데이터(원치않는 데이터)가 입력되었을 때 이동할 페이지-->
+		
+		<!-- 로그인폼2 등록 -->
+		<action path="/login2/form"
+				forward="/1006/login_form.jsp"></action>
+				
+		<!-- 로그인폼2에 대한 ActionForm과 Action 등록 -->
+		<action path="/login2/login"
+				type="s1006.actions.LoginAction"
+				name="loginForm"
+				scope="request"
+				validate="true"
+				input="/login2/form.do">
+			<forward name="success" path="/login2/form.do" redirect="true"/>		
+		</action>
+		
+		<!-- 세션 로그아웃 Action클래스 등록 -->
+		<action path="/login2/logout"
+				type="s1006.actions.LogoutAction">
+			<forward name="logout" path="/login2/form.do" redirect="true"></forward>		
+		</action>
+		
+		<!-- 계산기폼2 등록 -->
+		<action path="/calc2/form"
+				forward="/1006/calc_form.jsp"></action>
+				
+		<!-- 계산기폼2에 대한 ActionForm과 Action 등록 -->
+		<action path="/calc2/calc"
+				type="s1006.actions.CalcAction"
+				name="calcForm"
+				scope="request"
+				validate="true"
+				input="/calc2/form.do">
+			<forward name="resultDone" path="/calc2/form.do"/>
+		</action>
+		
+		<!-- tiles에 정의된 definition을 등록 -->
+		<action path="/tiles/main"
+				forward=".main"/>
+		<action path="/tiles/menu1"
+				forward=".menu1"/>
+		<action path="/tiles/menu2"
+				forward=".menu2"/>
+				
+		<action path="/ibatis/form"
+				forward="/1010/ibatis_test.jsp"></action>
+				
+		<action path="/ibatis/emp"
+				type="s1010.actions.IbatisAction">
+			<forward name="success" path="/1010/result.jsp"></forward>		
+		</action>
+		
+		<action path="/1011/emp"
+				type="s1011.actions.EmpAction">
+			<forward name="success" path="/1011/empInfo.jsp"></forward>		
+		</action>
+		
+		<action path="/1017/emp"
+				type="s1017.actions.EmpAction">
+			<forward name="success" path="/1017/emp.jsp"></forward>		
+		</action>
+		
+		<action path="/1018/emp"
+				type="s1018.actions.EmpAction">
+			<forward name="success"	path="/1018/emp.jsp"></forward>	
+		</action>
+		
+		<!-- 댓글관련 요청 -->
+		<action path="/reply/add"
+				type="reply.actions.AddAction">
+			<forward name="success" path="/reply/addResult.jsp"></forward>		
+		</action>
+		
+		<action path="/reply/list"
+				type="reply.actions.ListAction">
+			<forward name="success" path="/reply/replyList.jsp"></forward>		
+		</action>
+		
+    <!-- sample input and input submit actions
+
+        <action
+            path="/Input"
+            type="org.apache.struts.actions.ForwardAction"
+            parameter="/pages/Input.jsp"/>
+
+        <action
+            path="/InputSubmit"
+            type="app.InputAction"
+            name="inputForm"
+            scope="request"
+            validate="true"
+            input="/pages/Input.jsp"/>
+
+            <action
+                path="/edit*"
+                type="app.Edit{1}Action"
+                name="inputForm"
+                scope="request"
+                validate="true"
+                input="/pages/Edit{1}.jsp"/>
+
+    end samples -->
+    </action-mappings>
+	
+	<!-- 사용자 정의 컨트롤러 등록 -->
+	<controller processorClass="control.MyRequestProcessor"></controller>
+
+<!-- ======================================== Message Resources Definitions -->
+
+    <message-resources parameter="resources.application" />
+
+
+<!-- =============================================== Plug Ins Configuration -->
+
+  <!-- ======================================================= Tiles plugin -->
+  <!--
+     This plugin initialize Tiles definition factory. This later can takes some
+	 parameters explained here after. The plugin first read parameters from
+	 web.xml, thenoverload them with parameters defined here. All parameters
+	 are optional.
+     The plugin should be declared in each struts-config file.
+       - definitions-config: (optional)
+            Specify configuration file names. There can be several comma
+		    separated file names (default: ?? )
+       - moduleAware: (optional - struts1.1)
+            Specify if the Tiles definition factory is module aware. If true
+            (default), there will be one factory for each Struts module.
+			If false, there will be one common factory for all module. In this
+            later case, it is still needed to declare one plugin per module.
+            The factory will be initialized with parameters found in the first
+            initialized plugin (generally the one associated with the default
+            module).
+			  true : One factory per module. (default)
+			  false : one single shared factory for all modules
+	   - definitions-parser-validate: (optional)
+	        Specify if xml parser should validate the Tiles configuration file.
+			  true : validate. DTD should be specified in file header (default)
+			  false : no validation
+
+	  Paths found in Tiles definitions are relative to the main context.
+
+      To use this plugin, download and add the Tiles jar to your WEB-INF/lib
+      directory then uncomment the plugin definition below.
+
+    <plug-in className="org.apache.struts.tiles.TilesPlugin" >
+
+      <set-property property="definitions-config"
+                       value="/WEB-INF/tiles-defs.xml" />
+      <set-property property="moduleAware" value="true" />
+    </plug-in>
+  -->  
+
+
+  <!-- =================================================== Validator plugin -->
+  <plug-in className="org.apache.struts.tiles.TilesPlugin">
+    <set-property property="definitions-config" value="/WEB-INF/config/tiles-defs.xml"/>
+    <set-property property="definitions-debug" value="2"/>
+    <set-property property="definitions-parser-details" value="2"/>
+    <set-property property="definitions-parser-validate" value="true"/>
+  </plug-in>
+
+
+  <plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+    <set-property
+        property="pathnames"
+        value="/org/apache/struts/validator/validator-rules.xml,
+               /WEB-INF/validation.xml"/>
+  </plug-in>
+
+</struts-config>
+

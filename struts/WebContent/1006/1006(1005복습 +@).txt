@@ -1,0 +1,70 @@
+- Action
+ActionForward execute(){
+	1
+	2
+	3
+	return "이동할 페이지";
+}
+
+- ActionForm
+ActionErrors validate(){
+	4
+	5
+	6
+	return "에러바구니";
+}
+
+application.properties 파일
+invalidid=올바르지 않은 아이디입니다. {0}
+invalidpass=비밀번호를 입력하세요
+invalidlogin=아이디나 비밀번호가 일치하지 않습니다
+
+
+Struts프레임워크
+
+setUserage(I)
+
+class MyActionForm : 유효성검사
+- getUsername()
+- setUsername(String username){this.username = username; } ==> 2
+- reset() ==> 1
+- validate(){username에 대한 체크} ==> 3
+
+<form-beans>
+	<form-bean type="MyActionForm"
+			   name="gildong" />
+</form-beans>
+
+<action path="/sub/my" ---> (사용자가 브라우저를 통해)URL요청
+	1. forward="JSP페이지 경로"
+	
+	2. type="MyAction"
+	
+	3. type="MyAction" ---> (MyActionform결과에 따라)나중 실행
+	   name="gildong"
+	   validate="true"
+	   scope="request"
+	   input="유효하지 못한 데이터 입력시 이동할 JSP페이지 경로"
+	>
+	2.<forward path="JSP페이지 경로(~.jsp,~.do)" redirect="true" />
+</action>
+
+=================================================================
+
+※Mission(계산기)
+- 뷰 : calc_form.jsp
+- 컨트롤러 : s1006.actions.CalcAction, s1006.forms.CalcActionForm
+				execute()					validate()
+			모델호출, 결과값을 영역저장				유효성검사
+- 모델 : Calculator
+
+1. 정상적인 실행
+	결과값 : 2+3=5
+2. 유효성 검사
+	- 숫자만 입력하세요!
+	- 두개의 수를 입력하세요!
+	- 0으로 나눌 수 없습니다!
+	
+is_not_num_error=숫자만 입력 가능합니다
+by_zero_error=0으로 나눌 수 없습니다
+is_empty_error=공백은 계산할 수 없습니다

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+"-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+"http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+<tiles-definitions>
+	<definition name=".main" path="/1007/base.jsp">
+		<!-- path:레이아웃을 설정한 기준 페이지
+			 put엘리먼트: 기준페이지에서 포함할 페이지를 정의
+		-->
+		<put name="header" value="/1007/header.jsp"/>
+		<put name="menu" value="/1007/menu.jsp"/>
+		<put name="body" value="/1007/body.jsp"/>
+		<put name="footer" value="/1007/footer.jsp"/>
+	</definition>
+	
+	<definition name=".menu1" extends=".main">
+		<!-- extends: 부모 definition에 정의된 put value를 사용하겠다! -->
+		<put name="body" value="/1007/menu1.jsp"/>
+	</definition>
+	
+	<definition name=".menu2" extends=".main">
+		<put name="body" value="/1007/menu2.jsp"/>
+	</definition>
+</tiles-definitions>

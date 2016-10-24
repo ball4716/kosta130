@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd" >
+<!-- reply.xml -->
+<sqlMap namespace="reply">
+	<typeAlias alias="reply" type="reply.dto.Reply"/>
+	<insert id="add" parameterClass="reply">
+		insert into reply values (reply_seq.nextval, #name#, #content#)
+	</insert>
+	
+	<delete id="delete" parameterClass="int">
+		delete from reply
+		where no=#no#
+	</delete>
+	
+	<update id="update" parameterClass="reply">
+		update reply
+		set name=#name#, content=#content#
+	</update>
+	
+	<select id="find" parameterClass="int" resultClass="reply">
+		select name,content
+		from reply
+		where no=#no#
+	</select>
+	
+	<select id="findAll" resultClass="reply">
+		select no,name,content
+		from reply
+	</select>
+</sqlMap>

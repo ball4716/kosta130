@@ -1,0 +1,70 @@
+<Ajax>
+javascript + 비동기 서버 통신(서버에게 데이터 요청)
+ㄴ문서조작(HTML,css)
+ㄴ폼데이터 유효성 검사
+
+---> 객체 생성 XMLHttpRequest : 브라우저 지원!!
+
+var xhr = new XMLHttpRequest(); <--비IE(크롬,파이어폭스,사파리),IE11
+
+	xhr = new ActiveXObject("키값"); <== IE(~IE10)
+	
+[속성]
+xhr.readyState
+0 : 객체만 생성, 초기화x
+1 : open 메소드 호출, send메소드 불리지않음
+2 : send 메소드 호출, status와 헤더는 도착하지않음
+3 : 데이터의 전달 도중
+4 : 데이터 전달 완료
+xhr.onreadystatechange
+콜백함수명
+xhr.Status
+서버상태
+200
+404
+500
+...
+xhr.statusText
+
+[함수]
+xhr.open(Http요청방식,요청URL,비동기)
+xhr.send(파라미터-서버에게전송)
+---------------------------------
+Client(HTML)
+
+xhr.open("GET","data1.jsp");
+xhr.open("GET","data2.jsp");
+xhr.open("GET","data3.jsp");
+xhr.open("GET","data4.jsp");
+
+▽▽▽▽▽▽▽▽▽▽▽
+
+Server 
+
+data1.jsp(text)
+	안녕!
+data2.jsp(text-->JSON)
+{name : '길동',
+age : 13}
+data3.jsp(html)
+<h3>안녕!</h3>
+data4.jsp
+<?xml version="1.0 ?>
+<person>
+	<name>길동</name>
+</person>
+	
+▽▽▽▽▽▽▽▽▽▽▽
+Client(HTML)
+
+var msg = xhr.responseText; : 응답text String
+
+var json = eval("("+xhr.responseText+")"); : JSON으로 변환
+json.name;
+json.age;
+
+var html = xhr.responseText;
+
+var doc = xhr.responseXML;
+var name = doc.getElementsByTagName("name").item(0).firstChild
+

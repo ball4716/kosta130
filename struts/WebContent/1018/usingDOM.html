@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+	<script type="text/javascript">
+		window.onload=function(){//브라우저에 HTML문서 전체가 로딩된 후
+			//document ===> 현재 문서에 대한 Document객체!!
+			var root = document.documentElement;
+			//root: Element
+			
+			var msg="";
+			//루트 엘리먼트 명
+			var tagName1 = root.tagName;
+			var tagName2 = root.nodeName;
+			msg+='루트태그명:'+tagName1+'<br>'+
+				 '루트엘리먼트명:'+tagName2+'<br>';
+				 
+			//<body>태그 객체 얻기 : id속성이 존재하지 않으므로 tagName을 통해
+			
+			var bodyNode = document.getElementsByTagName('body').item(0);
+						  //Document NodeList:<body>			첫번째요소Node
+						  
+			msg += 'body태그명:'+bodyNode.nodeName+'<br>';
+			
+			//<body>엘리먼트의 마지막 자식요소 얻기
+			var last = bodyNode.firstChild;//last: Node
+			msg += 'body의 마지막 자식:'+last.nodeName+'<br>';
+			
+			var childList = bodyNode.childNodes;
+			msg += 'body의 자식노드 수: '+childList.length+'<br>';
+			for(var i=0;i<childList.length;i++){
+				msg += (i+1)+'번째 자식: '+childList.item(i).nodeName+'<br>';
+			}
+			
+			//span태그들 구하기
+			var spanList = document.getElementsByTagName('span');
+			//<span id='a'></span>, <span id='b'></span>, <span id='c'></span>
+			msg += '-----------------------------<br>';
+			for(var i=0; i<spanList.length; i++){
+				var span = spanList.item(i);
+				msg += (i+1)+'번째 span id='+span.getAttribute('id')+'<br>'
+						+'내용: '+span.firstChild.nodeValue+'<br>';
+			}
+			
+			var console = document.getElementById('console');
+			//console: Element
+			console.innerHTML = msg;
+		}
+	</script>
+</head>
+<!-- usingDOM.html -->
+<BODY>
+	<span id="a">A</span>
+	<p><span id="b">B</span></p>
+	<div><span id="c">C</span></div>
+	<div id="console" style="border: 1px solid #f00"></div>
+</BODY>
+</html>

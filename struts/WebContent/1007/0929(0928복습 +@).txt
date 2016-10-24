@@ -1,0 +1,53 @@
+
+
+<방명록 기능분석>
+1. 방명록 리스트 (최신 게시물을 맨위로 해서 보여줌)
+2. 방명록 입력 (작성자, 비밀번호, 이메일, 전화번호, 내용)
+3. 방명록 수정 
+4. 방명록 삭제
+
+
+방명록 JSP ---> guest폴더
+방명록 Java ---> guest패키지
+
+
+<방명록 화면목록>
+1. 리스트화면 (list.jsp) (v)
+2. 입력폼       (inputForm.jsp) (v)
+3. 수정/삭제화면 (editForm.jsp) (v)
+
+
+<방명록 프로그램 구성>(클래스)
+1. GuestDAO 
+  -DB insert,delete, update, select 수행  
+   
+2. GuestBean (v)
+   방명록 데이터객체(테이블내 특정행과 매핑)
+   
+3. GuestController (서블릿)
+    - 사용자 요청 분석
+      action code=list(리스트),insert(입력처리),edit(수정폼),
+                  update(수정처리),delete(삭제처리),form(입력폼)
+      
+      예) http://192.168.0.133/TomTest2/guest?action=form 요청
+      ----> 화면에 inputForm.jsp출력
+      
+      
+    - 사용자 입력데이터 얻어오기
+    - 알맞은 모델호출
+    - 이동할 페이지 설정(forward,redirect) 
+     
+  
+<방명록 테이블 설계>
+테이블 명: guest
+컬럼
+ - id           number       primary key --글번호
+ - name         varchar2(15)  not null
+ - pass         varchar2(15)   not null
+ - email        varchar2(30)
+ - tel          varchar2(15)
+ - contents     varchar2(200)
+ - gdate        date           --작성일자
+ 
+시퀀스: guest_seq (1부터시작, 1씩증가) 
+

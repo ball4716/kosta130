@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<!-- load_json.html -->
+	<script type="text/javascript" src="../js/ajax2.js"></script>
+	<script type="text/javascript" src="person2.js"></script>
+	<script type="text/javascript">
+		window.onload=function(){
+			new ajax.xhr.Request('person_json.jsp','',viewInfo);
+		}
+		/*
+		{
+	"code":"success",
+	data:{
+		person:{
+			name:'영조',
+			age:30,
+			job:"대왕"
+		}
+	}
+}
+		*/
+		function viewInfo(xhr){//콜백함수
+			if(xhr.readyState==4){
+				if(xhr.status==200){
+					var div1 = document.getElementById('div1');
+					
+					//var result = xhr.responseText;//result:String
+					var result = eval('('+xhr.responseText+')');//result:JSON
+					if(result.code=='success'){
+						var p = result.data.person;
+						var person = new Person2(p.name,p.age,p.job);
+						div1.innerHTML = person.toString;
+					}else{
+						div1.innerHTML = "실패닷~!!";
+					}
+				}else{
+					alert("서버에러 "+xhr.status)
+				}
+			}
+		}
+	</script>
+</head>
+<body>
+	<div id="div1"></div>
+</body>
+</html>

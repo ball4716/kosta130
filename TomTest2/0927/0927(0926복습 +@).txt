@@ -1,0 +1,130 @@
+
+<데이터베이스 커넥션 풀> DataBase Connection Pool (DBCP)
+ - 애플리케이션에서 필요로 하는 시점에 커넥션을 만드는 것이 아니라
+   미리 일정 수의 커넥션을 만들어 놓고 필요한 시점에 애플리게이션에
+   제공하는 서비스 및 관리 체계를 말한다.
+   
+ 동작형태)
+   1. 웹애플리케이션 서버가 시작될 때 일정 수의 커넥션을 미리 생성.
+   2. 웹애플리케이션 요청에 따라 생성된 커넥션 객체를 전달.
+   3. 일정 수 이상의 커넥션이 사용되면 새로운 커넥션을 만듬.
+   4. 사용하지 않는 커넥션은 종료하고 최소한의 기본 커넥션을 유지.
+ 
+ 톰켓에 javax.sql.DataSource설정)
+   - <Context> 태그내에 <Resource>태그 정의
+   - <Resource>태그 속성
+      name : 커넥션 풀(DataSource)에 대한 이름지정
+      auth : 실행 컨테이너
+      type : DataSource
+      driverClassName : 드라이버명
+      url : 접속 DB서버 ip,port,sid
+      username : 접속 계정
+      password : 접속 비밀번호
+      maxActive : 커넥션풀이 제공할 최대 커넥션 수
+      maxIdle : 사용되지 않고 풀에 저장 될 수 있는 최대 커넥션 수
+      maxWait : 사용되는 대기 시간 (1/1000초) 
+                  음수값은 무한 대기
+                  
+======================================================================
+<Mission>
+
+- t0927패키지의 EmpDAO클래스를 복사해서 EmpDAO2클래스생성
+- EmpDAO2클래스를 Connection Pool을 사용하도록 수정
+- 메소드 selectEmp()추가
+  ----> 검색항목: 사원번호, 사원명, 급여
+  
+- 0927폴더에 emp6.jsp 생성
+  ----> HTML테이블을 통해 사원정보 출력.
+  
+=============================================================
+<사용자인증JSP>
+userinput.jsp  (사용자정보 입력폼)
+  
+userprocess.jsp (사용자정보 DB저장)
+ - insert
+
+userconfirm.jsp (로그인 화면)
+ - select
+
+confirmprocess.jsp (로그인 처리)
+ - 아이디,패스워드에 대한 존재와 일치를 체크
+ - select 
+
+modifyuser.jsp (사용자정보 수정폼)
+ - select
+  
+modifyprocess.jsp (사용자정보 DB수정처리)
+ - 수정폼의 수정버튼을 클릭했을때 실행
+ - update
+ 
+deleteid.jsp (사용자정보 DB삭제)
+ - delete
+
+confirmid.jsp (아이디 중복여부 처리)
+ - select
+
+service.jsp <------ sessionT3.jsp 내용복사
+
+------------------------------------
+UserInfo.java
+UserInfoDao.java
+
+테이블명: UserInfo
+drop table userinfo;
+create table userinfo(
+   id       varchar2(20)  primary key,
+   pass     varchar2(20)  not null,
+   name     varchar2(30)  not null,
+   jumin    varchar2(14)  not null,
+   birth    varchar2(10),
+   zip      varchar2(7),
+   addr     varchar2(100),
+   email    varchar2(50)  not null,
+   job      varchar2(30)
+);
+
+
+------------------------------------
+
+1. userinput.jsp(입력폼,회원가입폼)에서 월과 일에 대한 숫자 출력.
+   01,02~09,10,11,12 (자바 for문을 통해 출력)
+
+2. UserInfo.java 작성 (테이블의 한 레코드 표현)
+
+3. UserInfoDao.java 작성
+   
+4. DB insert작업(userprocess.jsp)
+     insert(입력값); 호출
+     호출결과에 따라 적당한 메시지 출력
+     
+5. userconfirm.jsp (로그인 화면) --이동-->confirmprocess.jsp
+     - UserInfoDao클래스내에 selectLogin() 메소드 구현
+     - 로그인처리        
+     - 호출결과에 따라 적당한 메시지 출력
+     - 로그인 성공시 세션적용(설정)
+     
+6. 수정폼에 기존 데이터 뿌리기
+     - UserInfoDao클래스내에 select() 메소드 구현
+     - 호출후 결과값을 HTML에 뿌려주기
+     
+7. 수정폼에 입력된 데이터를 실제 DB에 반영         
+     - UserInfoDao클래스내에 update() 메소드 구현
+     - 호출결과에 따라 적당한 메시지 출력
+     
+8. 삭제(회원탈퇴)버튼 클릭시 
+    - 정말 삭제할지를 확인
+    - DB에서 삭제처리     
+    - 호출결과에 따라 적당한 메시지 출력
+
+9. 입력폼에 있는 '아이디 중복확인'에 대한 처리
+   ---> confirmid.jsp (window.open처리)
+
+10. 입력폼과 수정폼의 데이터 입력에 대한 유효성검사.
+    (빈값, 주민번호에 대한 숫자체크와 자릿수, 
+    이메일에 대한 유효성검사- jaelee1004@naver.com)
+    -  [영문자와 숫자조합6~15]@[영문자].[영문자]
+    ----> javascript처리
+        
+작업순서)
+   회원정보입력 ----> 로그인처리 ----> 수정처리 
+   ----> 삭제처리 ----> 아이디중복처리 ------> 유효성검사

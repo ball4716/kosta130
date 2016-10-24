@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+	<script type="text/javascript" src="../js/ajax2.js"></script>
+	<script type="text/javascript">
+		function toServer(){//서버페이지 요청
+			new ajax.xhr.Request('data_print.jsp',
+								'username='+document.frm.username.value,
+								fromServer,'POST');
+		}
+		function fromServer(xhr){//콜백 함수
+			if(xhr.readyState==4){
+				if(xhr.status==200){
+					var msg = xhr.responseText;
+					
+					alert(msg);
+					var div1 = document.getElementById("div1");
+					div1.innerHTML=msg;
+				}else{
+					alert('서버에러:'+xhr.status);
+				}
+			}
+		}
+	</script>
+</head>
+<!-- ajax2_test.html -->
+<body>
+	<form name="frm">
+		<input type="text" name="username">
+		<br>
+		<input type="button" value="전송" onclick="toServer()">
+	</form>
+	<div id="div1"></div>
+</body>
+</html>

@@ -1,0 +1,198 @@
+C:\Tomcat 8.0 (서버 Home Directory)
+	├bin : 바이너리 폴더, 실행파일, 명령어 파일(서버 시작,정지,재시작)
+	├lib : 라이브러리 폴더, jar파일(패키지화 된 자바class파일 - servlet-api.jar, jsp-api.jar, jasper.jar...)
+	├conf : 환경 설정 관련(server.xml,web.xml,context.xml)
+	├logs : 기록 폴더(어떤 client가 어떤 ip로 어떤 페이지를 몇시에 어떤 방식으로 접근)
+	├webapps : 웹서비스할 자원들이 위치(개발 웹페이지 저장)
+	└work : 개발자가 작성한 JSP에 매핑된 서블릿 클래스가 위치하는 곳(참조 폴더)
+	
+C:\Tomcat 8.0 (서버 Home Directory)
+	└webapps : 웹서비스할 자원들이 위치(개발 웹페이지 저장)
+		├ROOT
+		├gildong
+Web		├TomTest----------------->TomTest ----> WAR(Web Archive)웹어플리케이션 디렉토리를 묶어주는 단위
+Context	├VendingMachine				├js
+		├DVDShop					├HTML,javascript,css,이미지파일,JSP
+		└ShoppingMall				├sub폴더
+									├image
+									└WEB-INF(자바클래스 관련 파일)
+									★	├web.xml(특정 Context에 대한 웹서비스 설정)
+										├src : ~.java (서블릿,모델,EJB컴포넌트)
+									★	├classes : ~.class (src의 java파일을 컴파일한 결과)
+									★	└lib : ~.jar
+
+
+환경변수: TOMCAT_HOME
+
+Servlet/JSP ---> 문법 해석/실행
+- 자바 웹 어플리케이션
+(Java)Web Application Server---> WAS - Tomcat JVM설치 필수(jdk필수)
+- 웹 서비스 단위(페이지)
+
+<Servlet>
+public class MyServlet extends Servlet
+{
+	public void service(request,response)
+	{
+		/*HTML*/
+		A obj = new A();
+		DAO dao = new DAO();
+		결과데이터 = dao.select();
+		<HTML>
+		<BODY>
+		... 결과데이터를 넘겨 받음
+	}
+}
+
+<JSP> Java Server Page
+---> Tomcat서버를 만나서 Servlet으로 변환되어 서비스 된다.
+<HTML>
+	<HEAD>
+	</HEAD>
+	<BODY>
+	</BODY>
+</HTML>
+
+=======================================================================
+<서블릿>  javax.servlet.Servlet
+- 자바플랫폼에서 컴포넌트를 기반으로 한 웹 애플리케이션을 개발할때 사용.
+- 스레드를 기반으로 하므로 웹 애플리케이션 운영에 효율적.
+- 자바를 기반으로 하므로 자바 API를 모두 사용할 수 있다.
+- 운영체제나 하드웨어에 영향을 받지 않으므로 
+   한번 개발된 애플리케이션은 다양한 서버환경에서도 실행이 가능.
+- 웹애플리케이션에서 효율적인 자료 공유 방법을 제공.
+- JSP는 서블릿을 기반으로 한 기술.
+
+
+
+
+<웹애플리케이션 개발 시 서블릿을 사용하면 좋은 점>
+- 콘텐츠와 비즈니스 로직을 분리 할 수 있다.
+- 컨트롤러와 뷰의 역할 분담으로 인해 웹 디자이너와 개발자 간의 원활한
+   작업이 가능.
+- 유지보수가 수월.
+- 기능확장이 용이.
+
+<서블릿 클래스의 상속관계>
+  javax.servlet.Servlet(인터페이스)
+              |
+              |
+  javax.servlet.GenericServlet(클래스)
+              |
+              |
+  javax.servlet.http.HttpServlet(클래스)
+
+
+http://www.eclipsetotale.com/tomcatPlugin.html (이클립스 마르스버전 지원)
+----> Help메뉴 - MarketPlace클릭 (이클립스 neon버전부터)
+      ---> tomcat plugin 검색
+      ---> 인스톨
+----> 이클립스에서 사용할 톰켓 플러그인을 지원
+
+  
+<서블릿의 생명주기 메소드> ★ Life Cycle
+1. init()메소드
+   - 서블릿 로딩
+   - 서블릿 초기화 메소드
+   - 마치 생성자같이!!
+   
+2. service()메소드
+   - 웹브라우저 서비스 메소드
+   - 클라이언트 요청에 따라 doGet()이나  doPost()메소드로 분기
+   - 사용자요청처리는 request(요청객체,client)로 
+              응답처리는 response(응답객체,server)객체로 처리함.
+3. destroy()메소드
+   - 컨테이너로부터 서블릿 종료요청이 있을때
+     서블릿 종료직접에 해야할 작업을 명시할 때 사용.
+   - 대부분의 경우 컨테이너가 종료될 때 실행.
+   
+<GET방식과 POST방식> - 클라이언트 기준!!
+1. GET방식
+   - 서버에 있는 정보를 가져오기 위해 설계된 방법
+   - 경우에 따라 서버로 전달할 수 있는 데이터크기는 최대240byte.
+   - QUERY_STRING을 통해서 서버로 데이터가 서버에 전달.
+   예)
+      http://192.168.0.133:8080/TomTest2/gildong/test.do
+      http://192.168.0.133:8080/TomTest2/gildong/test.do?id=gildong&pass=1234
+      
+                            
+                             
+      http://192.168.0.133:8080/gildong/hello.jsp?id=gildong&pass=1234
+      
+   - QUERY_STRING은 '속성=값' 형태를 갖고 두개이상의 속성인 경우
+     '&'를 통해 구분.
+   - URL이 노출되기 때문에 보안 문제가 발생할 수 있음.
+
+2. POST방식
+   - 서버로 정보를 올리기 위해 설계된 방법.
+   - 서버에 전달할 수 있는 데이터 크기는 제한이 없다.
+   - URL에는 파라미터가 표시되지 않는다.(보안에 유리)
+
+서블릿 실행)
+http://localhost:8282/TomTest2/servlet/t0920.MyServlet
+---> 보안상 취약(현재 사용X)
+
+web.xml에 서블릿 클래스를 등록
+---> 서블릿 클래스를 대신할 수 있는 가상의 경로 설정
+
+=======================================================
+<경로이동 표현 다시정리>
+기준) http://192.168.0.133:8282/TomTest2/a/b/c.html
+
+ 1.
+  <form action="http://192.168.0.133:8282/TomTest2/test.html">
+  이동) http://192.168.0.133:8282/TomTest2/test.html
+
+ 2.
+  <form action="/test.html"> 
+  이동) http://192.168.0.133:8282/test.html
+
+ 3.
+  <form action="test.html"> 
+  이동) http://192.168.0.133:8282/TomTest2/a/b/test.html 
+
+ 4.
+  <form action="../test.html"> 
+  현재폴더 ==> b
+  부모폴더 ==> a
+  부모부모폴더 ==> TomTest2
+ 
+  이동) http://192.168.0.133:8282/TomTest2/a/test.html  
+ 
+ 5.
+  <form action="../../test.html">
+
+  이동) http://192.168.0.133:8282/TomTest2/test.html
+
+ 6.
+  <form action="aa/bb/test.html">
+
+  이동) http://192.168.0.133:8282/TomTest2/a/b/aa/bb/test.html
+  
+============================================================
+<문제> 
+- 서블릿으로 계산기 만들기(HTML사용X)
+- 클래스명: CalcServlet 새로작성, 이전 Calculator사용
+ 
+ 첫페이지) doGet
+              서블릿 계산기
+   -----------------------------------
+     su1    oper    su2     계산(버튼) 
+ 
+ ==================================================== 
+ 두번째 페이지) doPost 숫자입력후 계산버튼을 클릭을 했을때
+            
+              서블릿 계산기
+   -----------------------------------
+     su1    oper    su2     계산(버튼) 
+     
+   -----------------------------------
+            결과값 : 2+5=7  
+     
+참고) 
+   주소표시줄에 URL입력, <a href="이동경로">, location.href="이동경로",
+  <form action="이동경로"> ,  <form action="이동경로" method="get">
+        ====> GET요청
+        
+        
+  <form method="post">

@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<!-- 	abc{스타일} ===> 문서내에서 <abc>태그에 스타일 적용
+		.abc{스타일} ===> 문서내에서 <ccc class="abc">태그에 스타일 적용
+		#abc{스타일} ===> 문서내에서 <abc id="abc">태그에 스타일 적용 -->
+	<style type="text/css">
+		.reply{
+			border: 1px solid purple;
+		}
+	</style>
+	<script type="text/javascript" src="../js/ajax2.js"></script>
+	<script type="text/javascript">
+		//댓글 등록 작업 : addReply, addResult
+		function addReply(){//댓글 등록 요청
+			var name = document.addForm.name.value;
+			var content = document.addForm.content.value;
+			var params = "name="+name+"&content="+content;//"name=길동&content=안녕"
+			new ajax.xhr.Request("add.do",params,addResult,'POST');
+		
+			new ajax.xhr.Request();
+		}
+		function addResult(xhr){//등록 요청후 실행할 콜백 함수
+			if(xhr.readyState==4){
+				if(xhr.status==200){
+					var msg = xhr.responseText;
+					alert(msg.trim());
+					loadReplyList();
+					document.addForm.name.value='';
+					document.addForm.content.value='';
+					document.addForm.name.focus();
+					
+				}else{
+					alert("서버에러:");
+				}
+			}
+		}//addResult
+		
+		
+		
+		function loadReplyList(){//목록요청
+			new ajax.xhr.Request('list.do',null,loadReplyResult);
+		}
+		
+		function loadReplyResult(xhr){//콜백: 목록출력
+			if(xhr.readyState==4){
+				if(xhr.status==200){
+					var list = eval('('+xhr.responseText+')');//[{no:1,name:'길동',content:'내용'},{},{}]
+					
+					var replyList = document.getElementById('replyList');
+					//이전자식노드 삭제
+					var divList = replyList.childNodes;
+					while(divList.length!=0){
+						replyList.removeChild(replyList.firstChild);
+					}
+					
+					for(var i=0;i<list.length;i++){
+						var replyDiv = makeReplyView(list[i]);
+						replyList.appendChild(replyDiv);
+					}
+				}else{
+					alert('서버에러:'+xhr.status);
+				}
+			}	
+		}
+		
+		window.onload=function(){
+			loadReplyList();
+		}
+		
+		function makeReplyView(reply){//댓글에 대한 <div>태그 생성
+		//repply: {no:1, name:'나기롱', content:'Ajax재밌어요~!!'};
+			var replyDiv = document.createElement('div');//<div></div>
+			replyDiv.setAttribute("id","r"+reply.no);//<div id="r1"></div>
+			var html = '<strong>'+reply.name+'</strong><br>'
+						+reply.content.replace('/\n/g','\n<br>')+'<br>'+
+						'<input type="button" value="수정">'+
+						'<input type="button" value="삭제">';
+			replyDiv.innerHTML = html;//<div id="r1">나길롱<br>안녕<br>수정|삭제</div>
+			replyDiv.reply = reply;
+			replyDiv.className='reply';//<div id="r1" class="reply">내용</div>
+			return replyDiv;
+		}
+	</script>
+</head>
+<!-- replyclient.html -->
+<body>
+	<!-- 댓글 목록 출력 -->
+	<div id="replyList"></div>
+	
+	<!-- 댓글 입력 폼 -->
+	<div id="replyAdd">
+		<form action="" name="addForm">
+			이름: <input type="text" name="name" size="10"><br>
+			내용: <textarea rows="2" cols="20" name="content"></textarea><br>
+			<input type="button" value="등록" onclick="addReply()">
+		</form>
+	</div>
+	
+	<!-- 댓글 수정폼 -->
+	<div id="replyUpdate">
+		<form action="" name="updateForm">
+			이름: <input type="text" name="name" size="10"><br>
+			내용: <textarea rows="2" cols="20" name="content"></textarea><br>
+			<input type="button" value="수정">
+			<input type="button" value="취소">
+		</form>
+	</div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+	<script type="text/javascript">
+		var cnt=0;
+		function addItem(){
+			cnt++;
+			var newDiv = document.createElement("div"); //<div></div>
+			newDiv.setAttribute('id','item_'+cnt);//<div id="i1"></div>
+			
+			newDiv.innerHTML = '새로운 아이템['+cnt+'] <input type=button id=item_'+cnt+' value=삭제 onclick=removeItem('+cnt+')>';
+			//<div>새로운 아이템</div>
+			
+			var itemList = document.getElementById('itemList');
+			itemList.appendChild(newDiv);
+		}
+		function removeItem(no){
+			var delDiv = document.getElementById('item_'+no);
+			//부모노드.removeChild(삭제할 자식노드);
+			//var itemList = document.getElementById('itemList');
+			//itemList.removeChild(delNode);
+			delDiv.parentNode.removeChild(delDiv);
+		}
+	</script>
+</head>
+<!-- changeUsingDom.html -->
+<body>
+	<input type="button" value="추가" onclick="addItem()">
+	<div id="itemList"></div>
+</body>
+</html>

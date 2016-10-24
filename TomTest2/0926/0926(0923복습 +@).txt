@@ -1,0 +1,287 @@
+<JSP>
+-Java Server Page
+
+JSP페이지 : HTML+JAVA
+---> 서비스: Tomcat내에서 서블릿으로 변환 후 서비스
+
+<%! 멤버 %>
+<% 메소드 %>
+<%= 데이터 %>
+<%-- 설명 %>
+
+directive
+<%@page 속성명="속성값"	%> : 현재 페이지 속성 지정
+<%@include	%> : 다른 페이지를 포함
+<%@taglib	%> : 외부 태그를 참조하라는 지정
+
+영역객체)
+PageContext pageContext
+HttpServletRequest request
+HttpSession session
+ServletContext application
+
+---> 데이터 저장,검색,삭제
+setAttribute(String key, Object value);
+removeAttribute(key);
+getAttribue(key);
+
+=========================================
+
+<javascript와 Java>
+
+
+==hello.jsp==
+
+<html>
+	<head>
+	</head>
+	<body>
+		<%
+			int sum=50;
+			String name="길동";
+		%>
+		
+		<script>
+			//자바스크립트(클라이언트 스크립트) ---> 브라우저에서 실행
+			var str="홍길동";
+			document.write(str);
+			document.write(<%=sum%>); (o)
+			document.write('<%=name%>'); (o)
+		</script>
+		
+		<%
+			//자바코드(서버 스크립트) ---> 서버(JVM)에서 실행
+			int su=13;
+			out.print(su);
+			
+			out.print(str); (X) ---> 서버가 먼저 실행된 후 위의 자바스크립트가 실행되므로
+			String h = "안녕";
+		%>
+		
+		<input type='text' value="<%=h%>" name=name>
+	</body>
+</html>
+
+=======================================================
+
+※JSP액션(Action)
+-JSP페이지간 흐름 제어
+- 자바애플릿 지원
+- 자바빈즈 컴포넌트와 JSP 상호작용지원
+
+액션종류)
+1. include : 다른 페이지를 현재 페이지에 포함시킨다.
+형식)
+<jsp:include page="포함될 페이지경로"/>
+
+2. forward : 현재페이지의 제어를 다른 페이지로 전달(페이지 이동)
+형식)
+<jsp:forward page="이동할 페이지 경로"/>
+
+3. useBean : 클래스객체를 생성하고 사용할 범위를 지정
+형식)
+        <jsp:useBean  class='pack.A'  id="obj" scope="page"/>
+      pack.A obj = new pack.A();      
+      
+      
+      <jsp:useBean  class='pack.A'  id="obj" scope="request"/>
+      
+      A obj;
+      if(request영역에 obj라는 A클래스 객체가 없다면){
+        obj = new A();
+      }else{
+        obj = request.getAttribute("obj");
+      }
+
+    영역 scope속성) 
+      scope="page" (기본값)
+         - 현 페이지에서만 객체 사용
+      scope="request"
+         - request호출 관계에 있는 페이지간의 객체 공유
+           (forward를 통한 페이지 이동을 했을 경우)
+      scope="session"
+         - 동일브라우저(같은 세션간의)내에 표시되는 페이지간의 객체 공유
+      scope="application"
+         - ServletContext application(톰켓서버)
+         - 동일 서버내에서 서비스되어지는 페이지간의 객체 공유
+         
+     ----> 객체표현: 영역객체
+      1. PageContext pageContext
+      2. HttpRequest request
+      3. HttpSession  session
+      4. ServletContext application
+     ----> 공통점 : 영역내에 데이터를 저장, 삭제, 수정
+     
+      공통메소드)
+         setAttribute(String key, Object value); 
+         getAttribute(String key);
+         removeAttribute(String key); 
+      
+         
+  
+  4. setProperty : useBean의 세터메소드 호출.
+    <jsp:setProperty name="useBean에서 사용한 id" 
+                     property="속성명" value="데이터" />
+  
+  5. getProperty : useBean의 게터메소드 호출.
+    <jsp:getProperty name="useBean에서 사용한 id" 
+                     property="속성명" />
+                     
+    예) <jsp:useBean class="test.Person" id="p"/>
+           ------> test.Person p = new test.Person();
+        <jsp:setProperty name="p" property="age" value="13"/>  
+           ------>   p.setAge(Integer.parseInt("13"));               
+        <jsp:getProperty name="p" property="age"/>    
+           ------>   out.print(p.getAge());
+           
+                        
+
+=====================================================================
+<<표현언어>> Expression Language : EL
+ - 처음 JSTL(JSP Standard Tag Library)에서 소개
+    현재 JSP스펙에 포함되어 사용.
+ - 자바빈즈 속성 값을 보다 쉽고 제약을 덜 받는 방법으로 
+    사용하기 위해 나온것.
+ - JSP파일이 useBean 액션태그나 표현식등으로 복잡해 지는것을 막고
+    일종의 템플릿코드처럼 사용할 수 있도록 해줌.
+    
+  문법)
+    - 표현언어는 '$'로 시작
+    - 모든 내용은 '{표현식}'과 같이 구성.
+    
+    ------> ${   }
+         
+    - 표현식에는 기본적으로 변수명 
+      혹은 '속성명.메소드명' 구조를 갖는다.
+    - 표현식에 부가적으로 숫자, 문자열, boolean, null과 같은 상수값도 가능.
+    - 표현식에는 기본적인 연산가능.
+    
+  속성접근)
+     ${person.name} 또는 {person["name"]}   : person.getName()
+     ${row[0]}  : row라는 이름의 컬렉션의 첫번째 아이템
+     
+  내장객체)
+    pageScope, requestScope, sessionScope, applicationScope,
+  param, paramValues, header, headerValues, initParam, cookie, pageContext  
+
+  ${param.username}
+  ------> out.print(request.getParameter("username"));
+
+   ${k1}
+   
+====================================================================
+<커스텀 태그> Custom Tag
+- JSP페이지에서 반복적인 프로그램 로직을 캡슐화하기 위해 고안.
+- 기본적으로 제공되는 태그 이외에 사용자가 확장한 태그라는 의미에서
+  붙여진 이름.
+  
+ 커스텀태그 사용이유)
+   1. 비즈니스 로직으로부터 화면 표현을 분리
+   2. 비즈니스 로직의 캡슐화
+   3. 보다 손쉬운 웹 페이지 제작
+ 
+ 종류)
+   JSP 1.2커스텀태그
+   JSP 2.0커스텀태그
+   
+<JSP 1.2커스텀태그 요소>
+1. 태그 핸들러 클래스(Tag Handler Class)   .class
+   - 자바 클래스 파일로 태그의 동작을 구현해놓은 파일.   
+   
+2. 태그 라이브러리 기술자(Tag Library Descriptor)  .tld (XML문법)
+   - 태그이름등 태그 정보 및 태그 핸들러 클래스와의 관계를 기술.
+
+3. TagSupport
+   - doStartTag() : 시작태그를 만날 때 호출
+   - doEndTag()   : 끝태그를 만날 때 호출
+   - doAfterBody() : 태그바디가 있을 때 처리를 취해 자동호출   
+   
+예제)  WEB-INF/classes/MyTagHandler.class
+        WEB-INF/tld/MyTag.tld
+   
+   
+<JSP 2.0커스텀태그 요소>
+1. 태그파일         .tag
+   - 몇가지 제약사항을 제외하고 대부분 JSP파일과 동일한 구성을 갖음.
+   - WEB-INF/tags 폴더에 저장.  
+   
+예제) WEB-INF/tags/juwon.tag      
+
+=====================================================================
+<JSTL> JSP Standard Tag Library 표준태그 라이브러리
+- JSP페이지에서 많이 사용되는 논리적인 판단, 반복처리, 포맷처리를 위한
+  커스텀 태그를 표준으로 만들어서 정의한 것.
+- http://search.maven.org/#browse%7C-658715035
+  http://search.maven.org 
+     --------> 검색: jstl
+     
+종류)
+ 1. 코어(변수지원, 흐름제어, URL처리)
+   - http://java.sun.com/jsp/jstl/core
+ 
+ 2. XML (XML코어, 흐름제어, XML변환)
+   - http://java.sun.com/jsp/jstl/xml
+   
+ 3. 국제화 (지역, 메시지형식, 숫자 및 날짜 형식)
+   - http://java.sun.com/jsp/jstl/fmt
+   
+ 4. 데이터베이스(SQL)
+   - http://java.sun.com/jsp/jstl/sql
+   
+ 5. 함수(컬렉션 처리, String 처리)  
+   - http://java.sun.com/jsp/jstl/functions
+   
+<코어태그>
+1. 변수지원 : set, remove   <c:set>
+2. 흐름제어 : if, choose, forEach, forTokens
+3. URL처리 : import, redirect, url
+4. 기타 : catch, out    
+   
+<c:if태그>
+형식)
+  <c:if test="조건식">
+     조건식 참일때 실행할 텍스트.
+  </c:if>
+  
+예)
+  <c:if test="true">      -----> 무조건 실행.
+     조건식 참일때 실행할 텍스트.
+  </c:if>
+  <c:if test="some text">   -----> 실행 안함.
+     조건식 참일때 실행할 텍스트.
+  </c:if>
+  <c:if test="${expr}">
+     조건식 참일때 실행할 텍스트.
+  </c:if>
+  <c:if test="<%= expr %>">
+     조건식 참일때 실행할 텍스트.
+  </c:if>
+
+<c:choose>태그
+ 형식)
+   <c:choose>
+      <c:when test="조건식1">
+         조건식1 참일때 실행할 텍스트.
+      </c:when>
+      <c:when test="조건식2">
+         조건식2 참일때 실행할 텍스트.
+      </c:when>
+      <c:when test="조건식3">
+         조건식3 참일때 실행할 텍스트.
+      </c:when>
+      <c:otherwise>
+         조건식1,2,3 거짓일때 실행할 텍스트.
+      </c:otherwise>
+   </c:choose>
+   
+<c:forEach>태그
+  형식)
+     <c:forEach var="변수" items="아이템">
+        반복실행할 텍스트
+     </c:forEach>
+     아이템====> 배열,리스트
+     
+     <c:forEach var="변수" begin="1" end="10" step="2">
+        반복실행할 텍스트
+     </c:forEach>
+     

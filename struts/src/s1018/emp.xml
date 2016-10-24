@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd" >
+<!-- s1018/emp.xml -->
+<sqlMap namespace="s1018">
+	<select id="select" resultClass="s1018.dto.Emp">
+		select empno,ename,sal
+		from emp
+	</select>
+</sqlMap>

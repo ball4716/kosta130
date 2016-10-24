@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+	//서버 데이터 요청 ==> XMLHttprequest
+	var xhr;
+
+	function setXMLHttpRequest() {
+		//IE경우
+		if (window.ActiveXObject) {//true: IE 10버전까지
+			//alert('당신의 브라우저는 IE입니다~!!');
+			try {
+				xhr = new ActiveXObject("Msxml2.XMLHTTP");
+			} catch (e) {
+				xhr = new ActiveXObject("Microsoft.XMLHTTP");
+			}
+		} else {//비IE(크롬,사파리,파이어폭스...),IE11
+			//alert('당신의 브라우저는 IE가 아닙니다~!!');
+			//alert('나찾았어?');
+			xhr = new XMLHttpRequest();
+		}
+	}//setXMLHttpRequest
+	
+	function load(fileName){//서버페이지(데이터 출력)요청 : URL 요청
+		setXMLHttpRequest();
+		xhr.onreadystatechange=viewMessage;
+		xhr.open("GET",fileName,true);
+		xhr.send(null);
+	}
+	
+	function viewMessage(){//콜백 함수 : 요청후 응답을 받는 함수
+		//★할일: 응답데이터 얻기(responseText, responseXML), 문서조작
+		if(xhr.readyState==4){//응답데이터를 완전히 다 받았다면
+			alert('xhr.status : '+ xhr.status);
+			if(xhr.status==200){//서버상태가 정상상태라면
+				//alert('viewMessage함수: '+xhr.readyState);
+				//서버가 보낸 데이터 얻기, 현재페이지 문서 조작!!
+				
+				var msg = xhr.responseText;
+				//alert(msg);
+				var d1 = document.getElementById("d1");
+				//d1: Element객체 ===> 속성 innerHTML, innerText
+				d1.innerHTML=msg;
+				//d1.innerText=msg;
+			}else{
+				alert('서버에러: '+xhr.status+" : "+xhr.statusText);
+			}
+		}
+	}
+	/*
+		XMLHttpRequest xhr;
+		<속성>
+			xhr.readyState : 요청에서 응답까지의 상태를 표현하는 정수(0~4)
+			xhr.onreadystatechange : readyState상태값이 변할때를 체크하는 이벤트
+			==>사용) xhr.onreadystatechange=콜백함수명;
+			xhr.status : 서버의 상태를 표현하는 정수(200(정상)403,404,405,500)
+		<함수>
+			xhr.open();//URL요청
+			   .open("HTTP요청방식(GET,POST)","요청URL",비동기true)
+			xhr.send();//파라미터 전달
+			   .send(null) ==> 전달데이터 없음
+			   .send("name=나길동&age=13")
+	 */
+</script>
+</head>
+<!-- ajax_test.html -->
+<body>
+	<h3>Ajax(XMLHttpRequest)테스트</h3>
+	<hr>
+	<input type="button" value="애국가1절" onclick="load('song.jsp')">
+	<input type="button" value="애국가2절" onclick="load('song2.jsp')">
+	<div id="d1">
+
+	</div>
+</body>
+</html>

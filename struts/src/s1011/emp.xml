@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd" >
+<!-- emp.xml -->
+<sqlMap namespace="semp">
+	<typeAlias alias="emp" type="s1011.beans.Emp"/>
+	<!-- 
+		문제1)브라우저 화면에 7788사번을 갖는 사원의 정보
+		(사원번호,사원명,급여,입사일,부서번호)를 출력하시오
+		-empInfo.jsp
+	 -->
+	 <!-- 
+	 resultClass의 빈즈는 기본생성자를 호출하기 때문에 기본생성자를 기본적으로 꼭 만들어줘야한다.
+	 프레임워크에서 자주 쓰는 클래스이다
+	  -->
+	 <select id="select" parameterClass="int" resultClass="s1011.beans.Emp">
+	 	select empno, ename, sal, hiredate, deptno
+	 	from emp
+	 	where empno=#empno#
+	 </select>
+	 
+	 <select id="selectAll" resultClass="emp">
+	 	select empno, ename, sal, hiredate, deptno
+	 	from emp
+	 </select>
+	 
+	 <select id="selectCommon" resultClass="s1011.beans.Emp"
+	 						   parameterClass="emp">
+	 	select empno, ename, sal, hiredate, deptno
+	 	from emp
+	 	<isNotEmpty property="deptno">
+	 		where deptno=#deptno#
+	 	</isNotEmpty>						   
+	 </select>
+	 
+	 <!-- 
+	 문제3)20번 부서에서 급여를 2000이상 받는 사원의 정보를 출력하시오
+	  -->
+	 <select id="selectEx3" parameterClass="emp" resultClass="emp" >
+	 	select empno, ename, sal, hiredate, deptno
+	 	from emp
+	 	where deptno=#deptno#
+	 		  and sal>=#sal#
+	 </select>
+	 
+	 <select id="selectEx4" parameterClass="emp" resultClass="emp" ><![CDATA[
+	 	select empno, ename, sal, hiredate, deptno
+	 	from emp
+	 	where deptno=#deptno#
+	 		  and sal<#sal#
+	 ]]></select>
+	 
+	 <select id="selectEx5" parameterClass="java.util.Map" resultClass="emp">
+	 	select empno, ename, sal, hiredate, deptno
+	 	from emp
+	 	where deptno=#dno#
+	 		  and ename not like #pattern#
+	 </select>
+</sqlMap>

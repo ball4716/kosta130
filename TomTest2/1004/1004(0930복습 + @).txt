@@ -1,0 +1,93 @@
+Servlet/JSP : (Java) Web Application
+---> Web Application Server : WAS 서버 : Apache Tomcat --> Servlet Container
+
+Servlet:
+class Myservlet
+{
+	out.write("HTML Text");
+}
+
+JSP:
+<html>
+	<!-- 자바코드 -->
+</html>
+
+기본적 MVC
+모델 : 자바
+뷰 : JSP
+컨트롤러 : Servlet
+
+Tomcat서버를 사용하는 이유 : Servlet, JSP를 사용하기 위해서
+(웹스피어, 웹로직, 제이런, 제이보스 등도 있다)
+
+Tomcat서버 Home
+	├bin : 서버 on,off 명령어 (exe,bat)
+	├conf : 환경설정(server.xml, web.xml, context.xml)
+	├lib : *.jar, servlet-api.jar, jsp-api.jar
+	├logs : 서버 실행중 기록 파일
+	├work : JSP매핑 서블릿
+	├webapps : 개발 프로젝트 위치
+		└TomTest2 : 웹디렉토리 구조
+			├파일 : JSP, HTML, javascript, css, 이미지
+			└폴더┬사용자 정의 folder
+				└WEB-INF (v)
+					├classes (v) : *.class
+					├lib (v) : *.jar
+					├src : *.java
+					└lib (v)
+
+<서블릿과 서블릿의 등록(web.xml)>
+
+package pack;
+
+public class MyServlet extends HttpServlet
+{
+	init(){} 초기화
+	service(HttpServletRequest req, HttpServletResponse resp)
+						요청객체,			응답객체
+						req.setCharacterEncoding("UTF-8")
+						req.getParameter("username")
+						req.getParameter("age") : form안의 데이터뿜 아니라 url의 파마미터도 얻을수 있다
+										resp.sendRedirect("이동할페이지url")
+										getServletContext().getRequestDispatcher("이동페이지").forward(req,resp)
+										: HttpServlet이 가지고 있는 getServletContext를 사용한다. req의 forward는 deplicated
+	{
+		//브라우저 서비스 --> 컨트롤러
+		1. 사용자 요청 분석 (URL) : if(action.equals("insert"))
+		2. 사용자 입력 데이터 얻어오기 : request.getParameter("name")
+		3. 모델 객체 생성, 호출 
+		4. 데이터를 영역에 저장
+		: pageContext (안씀)
+		: request
+		: session
+		: application
+		5. 페이지 이동 : forward, redirect
+	}
+	dextroy(){} 소멸
+}
+
+서블릿 등록 --> web.xml
+<web-app>
+	<servlet>
+		<servlet-name>amu</servlet-name>
+		<servlet-class>pack.MyServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>amu</servlet-name>
+		<url-pattern>/any</url-pattern>
+	</servlet-mapping>
+</web-app>
+
+test.html
+...
+<form action="/TomTest2/any?age=13">
+	<input type="text" name="username">
+
+	
+JSP 실행 순서
+1. JSP 페이지 유무
+2. 매핑 서블릿 유무(Sorce)
+3. 서블릿 컴파일(Object)
+4. 메모리 적재
+5. init()
+6. service()

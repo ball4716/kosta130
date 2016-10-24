@@ -1,0 +1,68 @@
+ServletContext: 하나의 context내에서 다른 Servlet간 공유가능한 data 혹은 자원
+ServletConfig: 하나의 Servlet에 관련된 초기화 파라미터들
+
+
+<영역(scope) 객체> ★★
+								★				String	Object
+1.PageContext pageContext		┐공통 메소드┌ setAttribute(key,value);
+2.HttpServletRequest request	│		 └ Object getAttribute(key);
+3.HttpSession session			│			removeAttribute(key);
+4.ServletContext application	┘			...
+
+1. pageContext(PageContext)
+   - 현재 페이지를 표현하는 객체
+   pageContext.getRequest();
+   pageContext.getOut();
+   pageContext.getSession();
+   
+2. request(HttpServletRequest)
+   - 요청페이지간의 관계를 표현.
+     (form action이동, forward이동) 
+   request.getSession();  
+       
+3. session(HttpSession)
+   - 동일브라우저를 표현
+   session.getServletContext();   
+   
+4. application(ServletContext)
+   - 동일Context(예:TomTest2)내의 객체를 표현
+===> 공통 메소드 
+     - setAttribute(String key, Object value)
+     - Object getAttribute(String key)
+     - removeAttribute(String key)
+
+JSP페이지이동
+├ forward : request를 새롭게 하지 않고 앞선 페이지의 request자원을 그대로 사용한다 
+└ reward
+						  a b c
+pageContext - 현재 페이지 영역 ㅁ|ㅁ|ㅁ
+								  a		b
+request - 호출 관계에 있는 페이지 간의 영역 ㅁ --> ㅁ
+
+session - 동일 접속 브라우저 내 페이지들의 영역
+
+application - 동일 Context 영역
+├Tomcat
+└TomTest2 : 이하의 모든 페이지
+
+
+<페이지 이동>
+
+	시작페이지			버튼1						   포워드 이동
+pageMove_test.jsp	---->	forward_test.jsp	---> result.jsp
+					버튼2						리다이렉트 이동
+					---->	redirect_test.jsp	---> result.jsp
+					
+==================================================================
+
+예제1)
+        login.jsp        --> 로그인 화면 (사용자 이름만 입력)        
+        selProduct.jsp --> 상품을 선택하는 화면 (추가버튼 클릭) 
+        add.jsp         --> 선택한 상품에 대해 세션에 추가
+        checkOut.jsp  --> 선택한 상품에 대한 상품목록 보이기	
+예제2)     
+		sessionT1.jsp  --> 로그인 화면
+		sessionT2.jsp  --> 로그인 체크
+		sessionT3.jsp  --> 서비스 화면
+		sessionT4.jsp  --> 로그아웃      
+		

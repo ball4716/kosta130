@@ -1,0 +1,54 @@
+<서버>
+Tomcat8.0
+   └ webapps
+        └ struts
+            └ WEB-INF
+                 ├ web.xml(서블릿등록(<servlet-mapping>),필터등록,리스너등록,환영페이지)
+                 │
+                 └ struts-config.xml
+==================================================================================
+web.xml
+<servlet>
+   <servlet-class>ActionServlet</servlet-class>                 
+</servlet>
+
+<init-param>
+   <param-name>config</param-name>
+   <param-value>/WEB-INF/struts-config.xml</param-value>
+</init-param>
+
+<servlet-mapping> ---> 서블릿 등록
+   <url-pattern>*.do</url-pattern>
+</servlet-mapping>
+                
+※struts-config.xml
+<struts-config>
+   <action-mappings>
+      1.단순 JSP페이지 포워딩
+      <action path="/hello(.do)" ---> URL요청
+            forward="/sub/hello.jsp"> ---> 서비스할 실제 페이지
+      </action>
+      2.Action 클래스 등록(JSP 포워딩)
+      <action path="/my"
+      		type="s1004.actions.MyAction"> ---> execute()실행
+      		<forward name="s"
+      			     path="/sub/success.jsp"/>
+      		<forward name="f"
+      				 path="/sub/fail.jsp"/>
+      </action>
+
+package s1004;
+public class MyAction extends Action{
+	public ActionForward execute(ActionMapping mapping,
+								 ActionForm form,
+								 HttpServletRequest request,
+								 HttpServletResponse response)
+	{
+		ActionForward forward = mapping.findForward("s");
+	}
+}
+
+path가존재하는데
+jsp가 없으면 404
+
+없는 path 요청시에는 500

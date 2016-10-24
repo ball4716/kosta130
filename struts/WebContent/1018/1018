@@ -1,0 +1,59 @@
+<DOM> - Document Object Model
+- 트리기반의 파서
+- text문서 ===> 포함관계에 따른 계층 tree로 메모리에 로딩 후 프로그램
+
+1. Node
+- 추상객체(XML문서를 구성하는 요소들의 부모)
+- 메소드)
+	노드의 정보를 얻거나 정하는 메소드
+		XML문서를 구성하는 요소 : 12개 분류
+		nodeType(1~12)
+		nodeName	- 태그명, 속성명
+		nodeValue	- 텍스트내용, 속성값, 주석값
+	조작메소드
+		- 추가,삭제,수정
+		appendChild, removeChild, replaceChild
+		
+		부모노드.appendChild(자식노드)
+		
+	관계메소드
+
+Element		Node	Node n = new Element();
+Attribute	Node	
+Text		Node
+Document	Node
+Comment		Node
+
+2. Document
+	- 문서객체
+	- 위치 : XML문서트리에서 최상위에 위치
+			==> 루트엘리먼트 바로 위에 위치
+					==> 특정 XML문서의 루트 엘리먼트 얻어오는 것이 가능
+					Element root = doc.documentElement;
+	- 생성 관련 메소드
+	  createElement("gildong");
+	  createAttribute("su","10");
+	  createTextNode("안녕");
+	
+	- 자주 사용 메소드
+	  doc.getElementById("String id");
+	  doc.getElementsByTagName("String tagName");
+	  
+3. Element
+	- XML문서를 구성하는 기본 객체
+	- 속성 관련된 메소드
+	  setAttribute
+	  removeAttribute
+	  hasAttribute
+	  
+4. NodeList
+	- XML문서를 구성하는 요소들을 담는 클래스(단, 속성Attribute는 제외)
+	
+5. NamedNodeMap
+	- 태그 안의 Attribute들을 담는 클래스
+
+4,5번 공통 속성, 메소드 : length속성, item(int index)
+	NodeList list;
+	for(var i=0; i<list.length; i++){
+		list.item(i);
+	}

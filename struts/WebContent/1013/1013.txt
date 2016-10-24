@@ -1,0 +1,77 @@
+<Ajax>
+Asynchronous Javascript and XML
+비동기 자바스크립트와 XML
+
+case1)
+JSP만 사용 ---> JAVA
+my1.jsp
+입력폼에서 입력한 내용을 화면에 그대로 출력하기 위해 '리로딩'
+<%= request.getParameter("name") %>
+==> 두페이지 사용
+
+case2)
+JavaScript 사용
+var name = document.frm.name.value;
+<div id="d1"></div>
+var d1 = document.getElementById("d1");
+d1.innerHtml = name;
+출력
+==> 한페이지만 사용(페이지 이동X) 리로딩하지 않음
+
+[my.jsp]
+(HTML + JAVA)
+ ▲css,javascript
+코드)
+<%
+	String name="홍길동";
+%>
+이름: <% out.write(name) %>
+
+<script>
+	var name2 = "길라임";
+</script>
+이름2: <script> document.write(name2); </script>
+이름1: <script> document.write(name); </script> ---> 출력 안됨 물과기름!!
+---> 수정 	document.write('<%=name %>');
+
+<%
+	out.write("이름2: "+name2); // 실행 될 수 없다!!
+%>
+
+출력결과)
+이름: 홍길동
+이름2: 길라임
+이름1: 홍길동
+
+코드)
+my.jsp
+
+<script>
+	var str="동해물과 백두산이
+			마르고 닳도록
+			만세~!";
+</script>
+
+my.html
+[]텍스트필드 [애국가버튼]
+[가사출력]
+
+
+---> DB에 있는 가사(현 페이지에 없는 데이터)를 출력하려면??
+Ajax
+--> 서버 데이터 요청(url)
+==> XMLHttpRequest(비동기 서버통신)
+open(data.do)
+send()
+
+<--응답
+text,JSON{key:value}
+HTML <font color> </font>
+XML
+
+var D = new Date(); 처럼
+//비동기 서버통신
+var xhr = new XMLHttpRequest();
+
+xhr.open("POST","hello.jsp","true");
+xhr.send("name=나길동&age=13");

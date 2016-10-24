@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+    version="2.0">
+    <description>커스텀태그테스트</description>
+    <tlib-version>1.2</tlib-version>
+    <short-name>MsgTag</short-name>
+    <!-- 태그이름정의, 핸들러클래스 매핑 -->
+    <tag>
+    	<name>gildong</name>
+    	<tag-class>t0926.MyTagHandler</tag-class>
+    	<body-content>empty</body-content>
+    </tag>
+    
+    <tag>
+    	<name>lime</name>
+    	<tag-class>t0926.MyTagHandler2</tag-class>
+    	<body-content>empty</body-content>
+    </tag>
+</taglib>
+    
+<!-- WEB-INF/tld/myTag.tld -->

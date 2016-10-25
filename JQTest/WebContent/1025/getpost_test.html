@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="../js/jquery-1.min.js"></script>
+<script type="text/javascript">
+	//$(document).ready(function(){}); == $(function(){});
+	$(function(){
+		$('#b1').click(function(){
+			//$.get(url,callback);
+			//$.get(url,function(data응답데이터,status,xhr));
+			//$.get('getData.jsp?username=gildong',function(resultData){
+			$.get('getData.jsp',{username:'홍길동'},function(resultData){
+				$('div').html(resultData);
+			});
+		});//b1클릭
+		$('#b2').click(function(){
+			//$.post(URL,JSONdata,callback);
+			$.post('getData2.jsp',
+					{name:$('input').val(),
+					 age:13},
+					function(result,status,xhr){
+						 $('div').html(result);
+					});
+		});
+	});//ready
+</script>
+</head>
+<!-- getpost_test.html(요청페이지): get요청, post요청 -->
+<body>
+	이름: <input type="text" name="name"><br>
+	<button id="b1">get요청</button>
+	<button id="b2">post요청</button>
+	<div>요청결과출력</div>
+</body>
+</html>

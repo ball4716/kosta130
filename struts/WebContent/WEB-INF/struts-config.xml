@@ -242,6 +242,10 @@
 			<forward name="success" path="/reply/replyList.jsp"></forward>		
 		</action>
 		
+		<!-- 10/26 미션 -->
+		<action path="/1026/mission1"
+				forward="/1026/mission1.jsp"></action>
+		
     <!-- sample input and input submit actions
 
         <action

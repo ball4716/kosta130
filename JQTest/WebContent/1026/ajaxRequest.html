@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="../js/jquery-1.min.js"></script>
+<script type="text/javascript">
+   $(function() {
+      $('#b1').click(function() {
+         $.ajax({
+            url : 'response1.jsp',
+            success : function(result,status,xhr) {
+               //callback함수의 파라미터 (client가 요청한 데이터, 서버상태, xhr객체)
+               //function(result, status, xhr)
+               $('#div1').text(result);
+               alert('result : '+result+'\nstatus : '+status+'\nxhr : ' +xhr)
+            }
+         });//ajax
+      });//b1 click
+      $('#b2').click(function() {
+         $.ajax({
+            url : 'response2.jsp',
+            success : function(result, status, xhr) {
+               $('div').html(result);
+               alert('status: ' + status //success
+                     + '\nxhr: ' + xhr
+                     + '\nxhr.statusText: ' + xhr.statusText);
+            },
+            error: function(xhr,status,error) {
+            //error함수 (xhr,status,error)
+            alert('status : ' +status +
+                 '\nerror : ' +error);
+            $('div').text('에러발생 : ' +xhr.statusText)
+            }
+         });//ajax
+      })//b2 click
+
+      $('#b3').click(function() {
+         $.ajax({
+            url : 'response3.jsp',
+            success : function(doc,status,xhr) {
+               //result객체는 document객체이므로 doc로 받음
+               alert(doc);
+               var name = doc.getElementsByTagName("name").item(0).firstChild.nodeValue;
+               var age = doc.getElementsByTagName("age").item(0).firstChild.nodeValue;
+               var job = doc.getElementsByTagName("job").item(0).firstChild.nodeValue;
+               
+               var resultText = '이름 : '+name+'<br>나이 : '+age+'<br>직업 : '+job;
+               $('div').html(resultText);
+               //$('div').html(doc);
+               alert('status: ' + status //success
+                  + '\nxhr: ' + xhr
+                  + '\nxhr.statusText: ' + xhr.statusText); 
+            },
+            type: 'GET', //생략가능
+            dataType : 'xml' //생략가능
+         });//ajax
+      })//b3 click
+
+      $('#b4').click(function() {
+         $.ajax({
+            url : 'response4.jsp',
+            success : function(result, status, xhr) {
+      /*          alert('이건?');
+               alert(result);
+               alert('result : '+result.data.person.name ); */
+               var person = result.data.person;
+               var name =  person.name;
+               var age =  person.age;
+               var job =  person.job
+               var resultText = '이름 : '+name+'<br>나이 : '+age+'<br>직업 : '+job;
+               $('div').html(resultText);
+            },
+            dataType: "json", //json데이터는 반드시 dataType을 json으로 명시해야 Object타입으로 변환됨
+            error: function(error, status, xhr){
+               alert('에러발생' +status+'\n에러내용 : '+ xhr.statusText);
+            }
+         });//ajax
+      })//b4 click
+      
+      $('#b5').click(function() {
+         $.ajax({
+            url : 'response5.jsp',
+            success:function(doc){
+               var data = doc.getElementsByTagName('data').item(0).firstChild.nodeValue;
+               //<data>태그 내에 기술된 json데이터가 var data에 담김
+               
+               var data = eval('('+doc.getElementsByTagName('data').item(0).firstChild.nodeValue+')');
+               //xml+json데이터 일시 태그 내에 json데이터 까지 접근해서 객체를 가져온뒤 json데이터를 eval함수를
+               //이용해서 key와 value를 분리
+               var person = data.person;
+               var resultText = '이름 : '+person.name+'<br>나이 : '+person.age+'<br>직업 : '+person.job;
+               $('div').html(resultText);
+               
+            }
+         });//ajax
+      });//b5
+      
+      $('#b6').click(function() {
+         $.ajax({
+            url :'response6.jsp',
+            success : function(result) {
+               //alert(result);
+               for (var i = 0; i < result.length; i++) {
+                  var person = result[i].name + ","+
+                           result[i].age + ","+
+                           result[i].job + "<hr>";
+                           $("#div1").append(person);
+               }
+            },
+            dataType : "json",
+            error: function(error,status,xhr) {
+               alert('error : '+error
+                     +'\nstatus : '+status
+                     +'\nxhr : '+xhr.statusText);
+            }
+         });//ajax
+      });//b6
+      $('#b7').click(function() {
+         $.ajax({
+            url : 'response7.jsp',
+            //클라이언트가 데이터를 전송하는 페이지
+            type : 'POST',
+            //전송방식
+            data : {username : $('input').val() },
+            //전송데이터 : json
+            success:function(result){
+               $('div').html(result);
+            }
+         });//ajax
+      });//b7
+
+   });//ready(after html loading)
+</script>
+</head>
+<body>
+   <h3>jquery에서의 ajax요청</h3>
+   <hr>
+   <button id="b1">text 데이터 요청</button>
+   <button id="b2">html 데이터 요청</button>
+   <button id="b3">xml 데이터 요청</button>
+   <button id="b4">json 데이터 요청</button>
+   <button id="b5">xml+json 데이터 요청</button>
+   <button id="b6">여러 json 데이터 요청</button><br>
+   <input type="text" name="username">
+   <button id="b7">클라이언트 데이터 전송</button>
+
+   <br>
+   <br>
+   <div id="div1"></div>
+
+
+</body>
+</html>

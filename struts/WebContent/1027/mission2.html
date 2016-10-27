@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+  <script type="text/javascript" src="../js/jquery-1.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function(){
+       $('button').click(function(){
+    	  $.ajax({
+    		  url:'mission2.do',
+    		  data:{
+    			    su1: $('input[name=su1]').val(),
+    		  	    su2: $('[name=su2]').val(),
+    			    oper: $('select').val()
+    			    },
+    		  success:function(result){
+    			  $('div').html(result);
+    			  $('[name=su1]').val('');
+    			  $('[name=su2]').val('');
+    		  }
+    	  });//ajax
+       });//button click	
+    });//ready
+  </script>
+</head>
+<!-- mission2.html -->
+<body>
+  <center>
+     <h3>jQuery계산기</h3>
+     <hr>
+     <input type="text" size="4" name="su1">
+     <select name="oper">
+       <option>+</option>
+       <option>-</option>
+       <option>*</option>
+       <option>/</option>
+     </select>
+     <input type="text" size="4" name="su2">
+     <button>계산</button>
+     <hr>
+     <div></div>     
+  </center>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="../js/jquery-1.min.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$('button').click(function(){
+			//alert( $('[name=emp]:checked').val());
+			$.ajax({
+				url:'mission3.do',
+				data:{
+					//검색조건
+					//키워드
+					search:$('[name=emp]:checked').val(),
+					keyword:$('[name=keyword]').val()
+				},
+				type:'POST',
+				success:function(result){
+					$('#div1').html(result);
+				}
+			});
+		});
+	});//load complete
+</script>
+</head>
+<body>
+	<h3>사원검색</h3>
+	<hr>
+	<input type="radio" name="emp" checked value="ename">사원명 <input type="radio" name="emp" value="deptno">부서번호<br>
+	<input type='text' name="keyword"><button>검색</button><br>
+	<div id="div1"></div>
+</body>
+</html>

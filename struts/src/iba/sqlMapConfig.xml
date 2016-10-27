@@ -28,4 +28,5 @@
   <sqlMap resource="./s1017/emp.xml"/>
   <sqlMap resource="./s1018/emp.xml"/>
   <sqlMap resource="./reply/dao/reply.xml"/>
+  <sqlMap resource="./s1027/sql/emp.xml"/>
 </sqlMapConfig>

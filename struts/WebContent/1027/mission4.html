@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="../js/jquery-1.min.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$.ajax({
+			url : 'mission4.do',
+			data:{
+				delim:'sido'
+			},
+			success : function(data){
+				$('#sp1').html(data);
+			}
+		});//시도 요청
+		
+		$('#sp1').change(function(){
+			$.ajax({
+				url : 'mission4.do',
+				data:{
+					delim:'gugun',//구분자 파라미터
+					info:$('#sp1 > select').val()//구분자 파라미터
+				},
+				success : function(data){
+					$('#sp2').html(data);
+				}
+			});//구군 요청
+		});//sp2체인지
+		
+		$('#sp2').change(function(){
+			$.ajax({
+				url : 'mission4.do',
+				data:{
+					delim:'dong',//구분자 파라미터
+					info:$('#sp2 > select').val()//구분자 파라미터
+				},
+				success : function(data){
+					$('#sp3').html(data);
+				}
+			});//구군 요청
+		});//sp2체인지
+	});//ready
+</script>
+</head>
+<!-- mission4.html -->
+<body>
+	<h3>시도구군동 테스트</h3>
+	<hr>
+	<span id="sp1"><select><option>==선택==</option></select></span>
+	<span id="sp2"><select><option>==선택==</option></select></span>
+	<span id="sp3"><select><option>==선택==</option></select></span>
+</body>
+</html>

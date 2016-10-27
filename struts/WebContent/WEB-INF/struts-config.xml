@@ -243,8 +243,19 @@
 		</action>
 		
 		<!-- 10/26 미션 -->
-		<action path="/1026/mission1"
-				forward="/1026/mission1.jsp"></action>
+		<!-- <action path="/1027/mission1"
+				type="s1027.mission.actions.Mission1Action">
+			<forward name="success" path="1027/mission1.jsp"/>
+		</action>
+		
+		<action path="/1027/mission2"
+				type="s1027.mission.actions.Mission2Action">
+			<forward name="success" path="1027/mission2.jsp"/>
+		</action> -->
+		<action path="/1027/mission*"
+				type="s1027.mission.actions.Mission{1}Action">
+			<forward name="success" path="/1027/mission{1}.jsp"/>
+		</action>
 		
     <!-- sample input and input submit actions
 

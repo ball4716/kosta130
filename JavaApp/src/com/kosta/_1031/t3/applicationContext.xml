@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<!-- 빈(자바클래스) 관리 -->
+	<bean class="com.kosta._1031.t3.MessageBeanVi" id="msgBean"></bean><!-- 추상클래스나 인터페이스는 안됨!! 객체생성이 가능한 것만!! -->
+</beans>

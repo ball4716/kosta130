@@ -4,5 +4,12 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="lib" path="C:/ball4716/driver/ojdbc6.jar"/>
 	<classpathentry kind="lib" path="C:/ball4716/driver/ibatis-2.3.4.726.jar"/>
+	<classpathentry kind="lib" path="C:/ball4716/util/SpringFramework/lib/aopalliance-1.0.jar"/>
+	<classpathentry kind="lib" path="C:/ball4716/util/SpringFramework/lib/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="C:/ball4716/util/SpringFramework/lib/spring-aop-4.2.3.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/ball4716/util/SpringFramework/lib/spring-beans-4.2.3.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/ball4716/util/SpringFramework/lib/spring-context-4.2.3.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/ball4716/util/SpringFramework/lib/spring-core-4.2.3.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/ball4716/util/SpringFramework/lib/spring-expression-4.2.3.RELEASE.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

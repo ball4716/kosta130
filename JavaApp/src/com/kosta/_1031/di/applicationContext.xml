@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<!-- 빈(자바클래스) 관리 : 스프링프레임워크에서 관리받고자 하는 클래스를 등록-->
+	<!-- 추상클래스나 인터페이스는 안됨!! 객체생성이 가능한 것만!! -->
+	<bean class="com.kosta._1031.di.FileOutputer" id="fileOutput"></bean>
+	
+	<bean class="com.kosta._1031.di.MessageBeanImpl" id="msgBean">
+	<!-- DI : Dependency Injection (의존 주입) : 세터주입, 생성자 주입-->
+		<!-- 생성자 주입 -->
+		<constructor-arg value="김주원">
+			<!-- <value>김주원</value> -->
+		</constructor-arg>
+		<constructor-arg ref="fileOutput">
+			<!-- <ref bean="fileOutput"/> -->
+			<!-- <bean class="com.kosta._1031.di.FileOutputer"/> -->
+		</constructor-arg>
+	
+		<!-- 세터 주입 -->
+		<property name="greeting"><!-- setGreeting()호출 -->
+			<value>안녕하세요!</value><!-- xml자체가 텍스트문서, 기본값이 java.util.String이므로 생략가능 -->
+		</property>
+	</bean>
+</beans>

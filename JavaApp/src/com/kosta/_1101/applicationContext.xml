@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean class="com.kosta._1101.My" id="m1"></bean>
+	<!-- My m1 = new My(); -->
+	
+	<bean class="com.kosta._1101.My" id="m2">
+		<constructor-arg>
+			<bean class="com.kosta._1101.B"/>
+		</constructor-arg>
+	</bean>
+	
+	<bean class="com.kosta._1101.C" id="c"/>
+	<bean class="com.kosta._1101.My" id="m3">
+		<!-- 세터메소드 호출 -->
+		<property name="obj" ref="c"><!-- setObj(newC()) -->
+			<!-- <bean class="com.kosta._1101.C"/> -->
+		</property>
+	</bean>
+</beans>

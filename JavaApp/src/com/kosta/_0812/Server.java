@@ -18,7 +18,7 @@ public class Server extends Thread{//소켓서비스준비, 클라이언트 접속 대기!!
 	
 	public Server() {
 	  try {
-		ss = new ServerSocket(8282); //자신의 ip와 명시된 포트번호로 서버실행!!
+		ss = new ServerSocket(9876); //자신의 ip와 명시된 포트번호로 서버실행!!
 		allVC = new Vector<>();
 		waitVC = new Vector<>();
 		roomVC = new Vector<>();

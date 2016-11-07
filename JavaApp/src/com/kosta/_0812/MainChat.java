@@ -62,7 +62,7 @@ public class MainChat extends JFrame implements Runnable, ActionListener{
      bt_exit.setBounds(320,410,150,30);
      
      p.setLayout(null);
-      p.setBackground(Color.orange);
+     p.setBackground(Color.orange);
      p.add(sp_roomInfo);
      p.add(sp_roomInwon);
      p.add(sp_waitInfo);
@@ -146,7 +146,7 @@ public class MainChat extends JFrame implements Runnable, ActionListener{
    public void connect(){
 	  try {
 		//Socket s = new Socket(String host, int port); 
-		  Socket s = new Socket("192.168.0.133", 8282);
+		  Socket s = new Socket("localhost", 3333);
 		  //참고) 내컴퓨터호스트 : "localhost" 또는 "127.0.0.1"		  
 		  in = new BufferedReader(new InputStreamReader(s.getInputStream()));
 		  out = s.getOutputStream();

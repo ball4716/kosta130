@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="youngsuk">
+  <!-- namespace 수정할것 -->
+  <select id="getTime" resultType="string">
+  	select sysdate from dual
+  </select>
+  
+  <insert id="insertMember" parameterType="member">
+  	insert into tbl_member (userid,userpw,username,email) values
+  	(#{userid},#{userpw},#{username},#{email})
+  	<!-- #{}안에 들어가는 변수는 key값 또는 getter할 변수명과 똑같이! -->
+  </insert>
+</mapper>
